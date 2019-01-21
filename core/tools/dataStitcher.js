@@ -64,16 +64,17 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
   this.reader.mostRecentWindow(idealStartTime, endTime, function(localData) {
     // now we know what data is locally available, what
     // data would we need from the exchange?
-
+    let idealExchangeStartTime;
+    let idealExchangeStartTimeTS;
     if(!localData) {
       log.info('\tNo usable local data available, trying to get as much as possible from the exchange..');
-      var idealExchangeStartTime = idealStartTime.clone();
-      var idealExchangeStartTimeTS = idealExchangeStartTime.unix();
+      idealExchangeStartTime = idealStartTime.clone();
+      idealExchangeStartTimeTS = idealExchangeStartTime.unix();
     }
     else if (idealStartTime.unix() < localData.from) {
       log.info('\tLocal data is still too recent, trying to get as much as possible from the exchange');
-      var idealExchangeStartTime = idealStartTime.clone();
-      var idealExchangeStartTimeTS = idealExchangeStartTime.unix();
+      idealExchangeStartTime = idealStartTime.clone();
+      idealExchangeStartTimeTS = idealExchangeStartTime.unix();
     }
     else {
       log.debug('\tAvailable local data:');
@@ -86,8 +87,8 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
 
       // make sure we grab back in history far enough
       const secondsOverlap = 60 * 15; // 15 minutes
-      var idealExchangeStartTimeTS = localData.to - secondsOverlap;
-      var idealExchangeStartTime = moment.unix(idealExchangeStartTimeTS).utc();
+      idealExchangeStartTimeTS = localData.to - secondsOverlap;
+      idealExchangeStartTime = moment.unix(idealExchangeStartTimeTS).utc();
 
       // already set the
       util.setConfigProperty(

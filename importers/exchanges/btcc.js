@@ -20,15 +20,17 @@ Fetcher.prototype.getTrades = function(fromTid, sinceTime, callback) {
     callback(result);
   }.bind(this);
 
+  let params;
+
   if(sinceTime)
-    var params = {
+     params = {
       limit: 1,
       sincetype: 'time',
       since: sinceTime
     };
 
   else if(fromTid)
-    var params = {
+     params = {
       limit: 5000,
       since: fromTid
     };

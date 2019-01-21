@@ -11,10 +11,11 @@ const daterange = config.importer.daterange;
 
 const from = moment.utc(daterange.from);
 
+let to;
 if(daterange.to) {
-  var to = moment.utc(daterange.to);
+  to = moment.utc(daterange.to);
 } else {
-  var to = moment().utc();
+  to = moment().utc();
   log.debug(
     'No end date specified for importing, setting to',
     to.format()

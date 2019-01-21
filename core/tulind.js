@@ -3,8 +3,9 @@ const _ = require('lodash');
 
 // validate that talib is installed, if not we'll throw an exception which will
 // prevent further loading or out outside this module
+let tulind;
 try {
-    var tulind = require("tulind");
+    tulind = require("tulind");
 } catch (e) {
     module.exports = null;
     return;

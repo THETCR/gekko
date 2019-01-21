@@ -87,14 +87,16 @@ const pluginHelper = {
     if (cannotLoad)
       return next(cannotLoad);
 
+    let Constructor;
     if (plugin.path)
-      var Constructor = require(pluginDir + plugin.path(config));
+      Constructor = require(pluginDir + plugin.path(config));
     else
-      var Constructor = require(pluginDir + plugin.slug);
+      Constructor = require(pluginDir + plugin.slug);
 
+    let instance;
     if (plugin.async) {
       inherits(Constructor, Emitter);
-      var instance = new Constructor(util.defer(function(err) {
+      instance = new Constructor(util.defer(function(err) {
         next(err, instance);
       }), plugin);
       Emitter.call(instance);
@@ -102,7 +104,7 @@ const pluginHelper = {
       instance.meta = plugin;
     } else {
       inherits(Constructor, Emitter);
-      var instance = new Constructor(plugin);
+      instance = new Constructor(plugin);
       Emitter.call(instance);
 
       instance.meta = plugin;

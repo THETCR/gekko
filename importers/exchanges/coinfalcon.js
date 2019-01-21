@@ -23,11 +23,12 @@ const fetch = () => {
 };
 
 const handleFetch = (unk, trades) => {
+  let next;
   if (trades.length > 0) {
     const last = moment.unix(_.last(trades).date).utc();
-    var next = last.clone();
+    next = last.clone();
   } else {
-    var next = from.clone().add(1, 'h');
+    next = from.clone().add(1, 'h');
     log.debug('Import step returned no results, moving to the next 1h period');
   }
 

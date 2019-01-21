@@ -119,10 +119,11 @@ server.on('request', app.callback());
 server.listen(config.api.port, config.api.host, '::', () => {
   const host = `${config.ui.host}:${config.ui.port}${config.ui.path}`;
 
+  let location;
   if(config.ui.ssl) {
-    var location = `https://${host}`;
+    location = `https://${host}`;
   } else {
-    var location = `http://${host}`;
+    location = `http://${host}`;
   }
 
   console.log('Serving Gekko UI on ' + location +  '\n');

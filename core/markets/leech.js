@@ -26,10 +26,11 @@ const error = exchangeChecker.cantMonitor(config.watch);
 if(error)
   util.die(error, true);
 
+let fromTs;
 if(config.market.from)
-  var fromTs = moment.utc(config.market.from).unix();
+  fromTs = moment.utc(config.market.from).unix();
 else
-  var fromTs = moment().startOf('minute').unix();
+  fromTs = moment().startOf('minute').unix();
 
 
 const Market = function() {

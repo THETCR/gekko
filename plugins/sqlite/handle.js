@@ -18,10 +18,11 @@ const cannotLoad = pluginHelper.cannotLoad(pluginMock);
 if (cannotLoad) util.die(cannotLoad);
 
 // should be good now
+let sqlite3;
 if (config.debug){
-  var sqlite3 = require('sqlite3').verbose();
+  sqlite3 = require('sqlite3').verbose();
 } else {
-  var sqlite3 = require('sqlite3');
+  sqlite3 = require('sqlite3');
 }
 
 const plugins = require(util.dirs().gekko + 'plugins');

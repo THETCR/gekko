@@ -6,12 +6,13 @@ const log = require(util.dirs().core + 'log');
 const _ = require('lodash');
 const moment = require('moment');
 
+let TICKRATE;
 if (util.getConfig().watch.tickrate){
-  var TICKRATE = util.getConfig().watch.tickrate;
+  TICKRATE = util.getConfig().watch.tickrate;
 } else if(util.getConfig().watch.exchange === 'okcoin'){
-  var TICKRATE = 2;
+  TICKRATE = 2;
 } else{
-  var TICKRATE = 20;
+  TICKRATE = 20;
 }
 
 const Heart = function() {

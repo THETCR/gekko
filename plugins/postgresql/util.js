@@ -1,8 +1,9 @@
 const config = require('../../core/util.js').getConfig();
 
 const watch = config.watch;
+let settings;
 if(watch) {
-  var settings = {
+  settings = {
     exchange: watch.exchange,
     pair: [watch.currency, watch.asset]
   }
