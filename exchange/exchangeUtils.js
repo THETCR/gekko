@@ -96,7 +96,7 @@ const scientificToDecimal = num => {
     const zero = '0';
     const parts = String(num).toLowerCase().split('e'); // split into coeff and exponent
     const e = parts.pop(); // store the exponential part
-    const l = Math.abs(e); // get the number of zeros
+    let l = Math.abs(e); // get the number of zeros
     const sign = e/l;
     const coeff_array = parts[0].split('.');
     if(sign === -1) {

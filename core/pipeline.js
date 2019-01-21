@@ -28,7 +28,7 @@ const pipeline = (settings) => {
   const GekkoStream = require(dirs.core + 'gekkoStream');
 
   // all plugins
-  const plugins = [];
+  let plugins = [];
   // all emitting plugins
   const emitters = {};
   // all plugins interested in candles
