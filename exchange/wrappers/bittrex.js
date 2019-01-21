@@ -261,7 +261,7 @@ Trader.prototype.cancelOrder = function(order, callback) {
   retry(null, fetch, handle);
 };
 
-Trader.prototype.getTrades = function(since, callback, descending) {;
+Trader.prototype.getTrades = function(since, callback, descending) {
   const firstFetch = !!since;
 
   const handle = (err, data) => {

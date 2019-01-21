@@ -23,8 +23,7 @@ const Trader = function(config) {
       this.currency = config.currency;
       this.asset = config.asset;
       this.pair = this.asset + '_' + this.currency;
-  };
-
+  }
   this.name = 'EXMO';
   this.nonce = new Date() * 1000;
 };
@@ -73,9 +72,9 @@ Trader.prototype.api_query = function(method, params, callback){
 			  }
             console.log(error);
         	callback(error);
-            };
-       };
-     });
+      }
+        }
+  });
 };
 
 Trader.prototype.getTrades = function(since, callback, descending) {
