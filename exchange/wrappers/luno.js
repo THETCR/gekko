@@ -6,7 +6,7 @@ const Errors = require('../exchangeErrors');
 const retry = require('../exchangeUtils').retry;
 const name = 'Luno';
 
-var tradeAttempt = 0;
+let tradeAttempt = 0;
 
 const Trader = function(config) {
   if (_.isObject(config)) {

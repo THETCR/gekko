@@ -112,7 +112,7 @@ Trader.prototype.getPortfolio = function(callback) {
   const result = (err, data) => {
     if (err) return callback(err);
 
-    var portfolio = data.map(function(account) {
+    const portfolio = data.map(function(account) {
       return {
         name: account.currency.toUpperCase(),
         amount: parseFloat(account.available),
@@ -210,7 +210,7 @@ Trader.prototype.checkOrder = function(order, callback) {
 
     // @link:
     // https://stackoverflow.com/questions/48132078/available-gdax-order-statuses-and-meanings
-    var status = data.status;
+    const status = data.status;
     if(status == 'pending') {
       // technically not open yet, but will be soon
       return callback(undefined, { executed: false, open: true, filledAmount: 0 });
@@ -267,12 +267,12 @@ Trader.prototype.cancelOrder = function(order, callback) {
 };
 
 Trader.prototype.getTrades = function(since, callback, descending) {
-  var lastScan = 0;
+  let lastScan = 0;
 
   const handle = function(err, data) {
     if (err) return callback(err);
 
-    var result = _.map(data, function(trade) {
+    const result = _.map(data, function(trade) {
       return {
         tid: trade.trade_id,
         amount: parseFloat(trade.size),
@@ -282,8 +282,8 @@ Trader.prototype.getTrades = function(since, callback, descending) {
     });
 
     if (this.scanback) {
-      var last = _.last(data);
-      var first = _.first(data);
+      const last = _.last(data);
+      const first = _.first(data);
 
       // Try to find trade id matching the since date
       if (!this.scanbackTid) {
@@ -390,15 +390,15 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 };
 
 Trader.prototype.getMaxDecimalsNumber = function(number, decimalLimit = 8) {
-  var decimalNumber = parseFloat(number);
+  const decimalNumber = parseFloat(number);
 
   // The ^-?\d*\. strips off any sign, integer portion, and decimal point
   // leaving only the decimal fraction.
   // The 0+$ strips off any trailing zeroes.
-  var decimalCount = (+decimalNumber).toString().replace(/^-?\d*\.?|0+$/g, '')
+  const decimalCount = (+decimalNumber).toString().replace(/^-?\d*\.?|0+$/g, '')
     .length;
 
-  var decimalMultiplier = 1;
+  let decimalMultiplier = 1;
   for (i = 0; i < decimalLimit; i++) {
     decimalMultiplier *= 10;
   }

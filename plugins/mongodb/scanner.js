@@ -1,9 +1,9 @@
 const async = require('async');
-var _ = require('lodash');
-var util = require('../../core/util.js');
-var log = require(`${util.dirs().core}log`);
+const _ = require('lodash');
+const util = require('../../core/util.js');
+const log = require(`${util.dirs().core}log`);
 
-var handle = require('./handle');
+const handle = require('./handle');
 
 module.exports = done => {
     this.db = handle;

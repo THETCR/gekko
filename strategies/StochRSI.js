@@ -6,13 +6,13 @@
 
  */
 // helpers
-var _ = require('lodash');
-var log = require('../core/log.js');
+const _ = require('lodash');
+const log = require('../core/log.js');
 
-var RSI = require('./indicators/RSI.js');
+const RSI = require('./indicators/RSI.js');
 
 // let's create our own method
-var method = {};
+const method = {};
 
 // prepare everything our method needs
 method.init = function() {
@@ -51,7 +51,7 @@ method.update = function(candle) {
 // for debugging purposes log the last
 // calculated parameters.
 method.log = function() {
-  var digits = 8;
+  const digits = 8;
 
   log.debug('calculated StochRSI properties for candle:');
   log.debug('\t', 'rsi:', this.rsi.toFixed(digits));

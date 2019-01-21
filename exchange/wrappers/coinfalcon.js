@@ -4,10 +4,10 @@ const marketData = require('./coinfalcon-markets.json');
 
 const CoinFalcon = require('coinfalcon');
 
-var Trader = function(config) {
+const Trader = function(config) {
   _.bindAll(this, [
     'roundAmount',
-    'roundPrice'
+    'roundPrice',
   ]);
 
   this.makerFee = 0;
@@ -23,7 +23,7 @@ var Trader = function(config) {
   this.name = 'coinfalcon';
 
   this.market = _.find(Trader.getCapabilities().markets, (market) => {
-    return market.pair[0] === this.currency && market.pair[1] === this.asset
+    return market.pair[0] === this.currency && market.pair[1] === this.asset;
   });
 
   this.coinfalcon = new CoinFalcon.Client(this.key, this.secret);
@@ -109,7 +109,7 @@ Trader.prototype.processResponse = function(method, args, next) {
 };
 
 Trader.prototype.retry = function(method, args) {
-  var wait = +moment.duration(1, 'seconds');
+  const wait = +moment.duration(1, 'seconds');
 
   // run the failed method again with the same arguments after wait
   setTimeout(() => {
@@ -125,7 +125,7 @@ Trader.prototype.getTicker = function(callback) {
     callback(null, {bid: +res.data.bids[0].price, ask: +res.data.asks[0].price})
   });
 
-  var url = "markets/" + this.pair + "/orders?level=1";
+  const url = 'markets/' + this.pair + '/orders?level=1';
 
   this.coinfalcon.get(url).then(handle.success).catch(handle.failure);
 };
@@ -139,9 +139,9 @@ Trader.prototype.getPortfolio = function(callback) {
     if(err)
       return callback(err);
 
-    var portfolio = res.data.map(account => ({
+    const portfolio = res.data.map(account => ({
       name: account.currency_code.toUpperCase(),
-      amount: parseFloat(account.available_balance)
+      amount: parseFloat(account.available_balance),
     }));
 
     callback(null, portfolio);
@@ -195,9 +195,9 @@ Trader.prototype.addOrder = function(type, amount, price, callback) {
 });
 
 const round = function(number, precision) {
-  var factor = Math.pow(10, precision);
-  var tempNumber = number * factor;
-  var roundedTempNumber = Math.round(tempNumber);
+  const factor = Math.pow(10, precision);
+  const tempNumber = number * factor;
+  const roundedTempNumber = Math.round(tempNumber);
   return roundedTempNumber / factor;
 };
 
@@ -206,8 +206,8 @@ Trader.prototype.getPrecision = function(tickSize) {
   if (!isFinite(tickSize)) {
     return 0;
   }
-  var e = 1;
-  var p = 0;
+  let e = 1;
+  let p = 0;
   while (Math.round(tickSize * e) / e !== tickSize) {
     e *= 10; p++;
   }
@@ -319,10 +319,10 @@ Trader.prototype.cancelOrder = function(order, callback) {
 };
 
 Trader.prototype.getTrades = function(since, callback, descending) {
-  var args = _.toArray(arguments);
+  const args = _.toArray(arguments);
 
-  var success = function(res) {
-    var parsedTrades = [];
+  const success = function(res) {
+    const parsedTrades = [];
     _.each(
       res.data,
       function(trade) {
@@ -333,7 +333,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
           amount: parseFloat(trade.size),
         });
       },
-      this
+      this,
     );
 
     if (descending) {
@@ -343,12 +343,12 @@ Trader.prototype.getTrades = function(since, callback, descending) {
     }
   }.bind(this);
 
-  var failure = function (err) {
+  const failure = function(err) {
     err = new Error(err);
     return this.retry(this.getTrades, args, err);
   }.bind(this);
 
-  var url = "markets/" + this.pair + "/trades";
+  let url = 'markets/' + this.pair + '/trades';
 
   if (since) {
     url += '?since_time=' + (_.isString(since) ? since : since.format());

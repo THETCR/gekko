@@ -3,28 +3,28 @@ const util = require('../../core/util.js');
 const _ = require('lodash');
 const log = require('../../core/log');
 
-var config = util.getConfig();
-var dirs = util.dirs();
+const config = util.getConfig();
+const dirs = util.dirs();
 
-var Fetcher = require(dirs.exchanges + 'coinfalcon');
+const Fetcher = require(dirs.exchanges + 'coinfalcon');
 
 util.makeEventEmitter(Fetcher);
 
-var end = false;
-var done = false;
-var from = false;
+let end = false;
+const done = false;
+let from = false;
 
-var fetcher = new Fetcher(config.watch);
+const fetcher = new Fetcher(config.watch);
 
-var fetch = () => {
+const fetch = () => {
   fetcher.import = true;
   log.debug('[CoinFalcon] Getting trades from: ', from);
   fetcher.getTrades(from, handleFetch, true);
 };
 
-var handleFetch = (unk, trades) => {
+const handleFetch = (unk, trades) => {
   if (trades.length > 0) {
-    var last = moment.unix(_.last(trades).date).utc();
+    const last = moment.unix(_.last(trades).date).utc();
     var next = last.clone();
   } else {
     var next = from.clone().add(1, 'h');
@@ -34,7 +34,7 @@ var handleFetch = (unk, trades) => {
   if (from.add(1, 'h') >= end) {
     fetcher.emit('done');
 
-    var endUnix = end.unix();
+    const endUnix = end.unix();
     trades = _.filter(trades, t => t.date <= endUnix);
   }
 

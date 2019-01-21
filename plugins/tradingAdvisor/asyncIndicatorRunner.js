@@ -80,8 +80,8 @@ AsyncIndicatorRunner.prototype.calculateIndicators = function(next) {
   );
 
   // handle result from tulip
-  var tulindResultHander = name => (err, result) => {
-    if(err)
+  const tulindResultHander = name => (err, result) => {
+    if (err)
       util.die('TULIP ERROR:', err);
 
     this.tulipIndicators[name].result = _.mapValues(result, v => _.last(v));
@@ -120,7 +120,7 @@ AsyncIndicatorRunner.prototype.addTalibIndicator = function(name, type, paramete
   if(this.setup)
     util.die('Can only add talib indicators in the init method!');
 
-  var basectx = this;
+  const basectx = this;
 
   this.talibIndicators[name] = {
     run: talib[type].create(parameters),
@@ -139,7 +139,7 @@ AsyncIndicatorRunner.prototype.addTulipIndicator = function(name, type, paramete
   if(this.setup)
     util.die('Can only add tulip indicators in the init method!');
 
-  var basectx = this;
+  const basectx = this;
 
   this.tulipIndicators[name] = {
     run: tulind[type].create(parameters),

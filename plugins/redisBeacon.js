@@ -1,21 +1,21 @@
-var log = require('../core/log.js');
-var util = require('../core/util');
-var config = util.getConfig();
-var redisBeacon = config.redisBeacon;
-var watch = config.watch;
+const log = require('../core/log.js');
+const util = require('../core/util');
+const config = util.getConfig();
+const redisBeacon = config.redisBeacon;
+const watch = config.watch;
 
-var subscriptions = require('../subscriptions');
-var _ = require('lodash');
+const subscriptions = require('../subscriptions');
+const _ = require('lodash');
 
-var redis = require("redis");
+const redis = require('redis');
 
-var Actor = function(done) {
+const Actor = function(done) {
   _.bindAll(this);
 
   this.market = [
     watch.exchange,
     watch.currency,
-    watch.asset
+    watch.asset,
   ].join('-');
 
   this.init(done);
@@ -28,15 +28,17 @@ var Actor = function(done) {
 // only binds to events redis is going to
 // emit.
 
-var proto = {};
+const proto = {};
 _.each(redisBeacon.broadcast, function(e) {
   // grab the corresponding subscription
-  var subscription = _.find(subscriptions, function(s) { return s.event === e });
+  const subscription = _.find(subscriptions, function(s) {
+    return s.event === e;
+  });
 
   if(!subscription)
     util.die('Gekko does not know this event:' + e);
 
-  var channel = redisBeacon.channelPrefix + subscription.event;
+  const channel = redisBeacon.channelPrefix + subscription.event;
 
   proto[subscription.handler] = function(message, cb) {
     if(!_.isFunction(cb))
@@ -60,7 +62,7 @@ Actor.prototype.init = function(done) {
 Actor.prototype.emit = function(channel, message) {
   log.debug('Going to publish to redis channel:', channel);
 
-  var data = JSON.stringify(message);
+  const data = JSON.stringify(message);
   this.client.publish(channel, data);
 };
 

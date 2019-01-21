@@ -1,4 +1,4 @@
-var method = {};
+const method = {};
 // Prepare everything our method needs
 method.init = function() {
   this.name = 'tulip-adx';
@@ -14,8 +14,8 @@ method.log = function() {
   // nothing!
 };
 method.check = function(candle) {
-  var price = candle.close;
-  var adx = this.tulipIndicators.myadx.result.result;
+  const price = candle.close;
+  const adx = this.tulipIndicators.myadx.result.result;
   // console.dir(adx)
 
   if(this.settings.thresholds.down > adx && this.trend !== 'short') {

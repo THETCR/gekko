@@ -1,47 +1,47 @@
-var _ = require('lodash');
-var log = require('../core/log.js');
-var util = require('../core/util.js');
-var config = util.getConfig();
-var twitterConfig = config.twitter;
-var TwitterApi = require('twitter');
+const _ = require('lodash');
+const log = require('../core/log.js');
+const util = require('../core/util.js');
+const config = util.getConfig();
+const twitterConfig = config.twitter;
+const TwitterApi = require('twitter');
 
 require('dotenv').config();
 
-var Twitter = function(done) {
-    _.bindAll(this);
+const Twitter = function(done) {
+  _.bindAll(this);
 
-    this.twitter;
-    this.price = 'N/A';
-    this.done = done;
-    this.setup();
+  this.twitter;
+  this.price = 'N/A';
+  this.done = done;
+  this.setup();
 
 };
 
 Twitter.prototype.setup = function(done){
-    var setupTwitter = function (err, result) {
-        this.client = new TwitterApi({
-          consumer_key: twitterConfig.consumer_key,
-          consumer_secret: twitterConfig.consumer_secret,
-          access_token_key: twitterConfig.access_token_key,
-          access_token_secret: twitterConfig.access_token_secret
-        });
+  const setupTwitter = function(err, result) {
+    this.client = new TwitterApi({
+      consumer_key: twitterConfig.consumer_key,
+      consumer_secret: twitterConfig.consumer_secret,
+      access_token_key: twitterConfig.access_token_key,
+      access_token_secret: twitterConfig.access_token_secret,
+    });
 
-        if(twitterConfig.sendMessageOnStart){
-            var exchange = config.watch.exchange;
-            var currency = config.watch.currency;
-            var asset = config.watch.asset;
-            var body = "Watching "
-                +exchange
-                +" "
-                +currency
-                +" "
-                +asset;
-            this.mail(body);
-        }else{
-            log.debug('Skipping Send message on startup')
-        }
-    };
-    setupTwitter.call(this)
+    if (twitterConfig.sendMessageOnStart) {
+      const exchange = config.watch.exchange;
+      const currency = config.watch.currency;
+      const asset = config.watch.asset;
+      const body = 'Watching '
+        + exchange
+        + ' '
+        + currency
+        + ' '
+        + asset;
+      this.mail(body);
+    } else {
+      log.debug('Skipping Send message on startup');
+    }
+  };
+  setupTwitter.call(this)
 };
 
 Twitter.prototype.processCandle = function(candle, done) {
@@ -52,14 +52,14 @@ Twitter.prototype.processCandle = function(candle, done) {
 
 Twitter.prototype.processAdvice = function(advice) {
 	if (advice.recommendation == "soft" && twitterConfig.muteSoft) return;
-	var text = [
-        'New  ', config.watch.asset, ' trend. Attempting to ',
-        advice.recommendation == "short" ? "sell" : "buy",
-        ' @',
-        this.price,
-    ].join('');
+  const text = [
+    'New  ', config.watch.asset, ' trend. Attempting to ',
+    advice.recommendation == 'short' ? 'sell' : 'buy',
+    ' @',
+    this.price,
+  ].join('');
 
-    this.mail(text);
+  this.mail(text);
 };
 
 Twitter.prototype.mail = function(content, done) {

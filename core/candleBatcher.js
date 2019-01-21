@@ -9,11 +9,11 @@
 //
 // input are transported candles.
 
-var _ = require('lodash');
-var util = require(__dirname + '/util');
+const _ = require('lodash');
+const util = require(__dirname + '/util');
 
-var CandleBatcher = function(candleSize) {
-  if(!_.isNumber(candleSize))
+const CandleBatcher = function(candleSize) {
+  if (!_.isNumber(candleSize))
     throw new Error('candleSize is not a number');
 
   this.candleSize = candleSize;
@@ -60,11 +60,11 @@ CandleBatcher.prototype.flush = function() {
 
 CandleBatcher.prototype.calculate = function() {
   // remove the id property of the small candle
-  var { id, ...first } = this.smallCandles.shift();
+  const { id, ...first } = this.smallCandles.shift();
 
   first.vwp = first.vwp * first.volume;
 
-  var candle = _.reduce(
+  const candle = _.reduce(
     this.smallCandles,
     function(candle, m) {
       candle.high = _.max([candle.high, m.high]);
@@ -75,7 +75,7 @@ CandleBatcher.prototype.calculate = function() {
       candle.trades += m.trades;
       return candle;
     },
-    first
+    first,
   );
 
   if(candle.volume)

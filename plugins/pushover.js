@@ -1,11 +1,11 @@
-var push = require( 'pushover-notifications' );
-var _ = require('lodash');
-var log = require('../core/log.js');
-var util = require('../core/util.js');
-var config = util.getConfig();
-var pushoverConfig = config.pushover;
+const push = require('pushover-notifications');
+const _ = require('lodash');
+const log = require('../core/log.js');
+const util = require('../core/util.js');
+const config = util.getConfig();
+const pushoverConfig = config.pushover;
 
-var Pushover = function() {
+const Pushover = function() {
   _.bindAll(this);
 
   this.p;
@@ -15,39 +15,39 @@ var Pushover = function() {
 };
 
 Pushover.prototype.setup = function() {
-  var setupPushover = function() {
-    this.p = new push( {
-        user: pushoverConfig.user,
-        token: pushoverConfig.key,
+  const setupPushover = function() {
+    this.p = new push({
+      user: pushoverConfig.user,
+      token: pushoverConfig.key,
     });
 
-    if(pushoverConfig.sendPushoverOnStart) {
+    if (pushoverConfig.sendPushoverOnStart) {
       this.send(
-        "Gekko has started",
+        'Gekko has started',
         [
-          "I've just started watching ",
+          'I\'ve just started watching ',
           config.watch.exchange,
           ' ',
           config.watch.currency,
           '/',
           config.watch.asset,
-          ". I'll let you know when I got some advice"
-        ].join('')
+          '. I\'ll let you know when I got some advice',
+        ].join(''),
       );
     } else
-    log.debug('Setup pushover adviser.');
+      log.debug('Setup pushover adviser.');
   };
-    setupPushover.call(this);
+  setupPushover.call(this);
 };
 
 Pushover.prototype.send = function(subject, content) {
-  var msg = {
-      // These values correspond to the parameters detailed on https://pushover.net/api
-      // 'message' is required. All other values are optional.
-      message: content,
-      title: pushoverConfig.tag + subject,
-      device: 'devicename',
-      priority: 1
+  const msg = {
+    // These values correspond to the parameters detailed on https://pushover.net/api
+    // 'message' is required. All other values are optional.
+    message: content,
+    title: pushoverConfig.tag + subject,
+    device: 'devicename',
+    priority: 1,
   };
 
   this.p.send( msg, function( err, result ) {
@@ -67,11 +67,11 @@ Pushover.prototype.processCandle = function(candle, callback) {
 
 Pushover.prototype.processAdvice = function(advice) {
   if (advice.recommendation == 'soft' && pushoverConfig.muteSoft) return;
-  var text = [
+  const text = [
     advice.recommendation,
-    this.price
+    this.price,
   ].join(' ');
-  var subject = text;
+  const subject = text;
   this.send(subject, text);
 };
 

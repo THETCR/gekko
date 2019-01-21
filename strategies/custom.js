@@ -8,10 +8,10 @@
 // a 10% chance it will recommend to change your position (to either
 // long or short).
 
-var log = require('../core/log');
+const log = require('../core/log');
 
 // Let's create our own strat
-var strat = {};
+const strat = {};
 
 // Prepare everything our method needs
 strat.init = function() {

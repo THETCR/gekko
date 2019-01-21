@@ -8,11 +8,11 @@ function joinCurrencies(currencyA, currencyB){
     return currencyA + '-' + currencyB;
 }
 
-var Trader = function(config) {
+const Trader = function(config) {
   this.currency = config.currency;
   this.asset = config.asset;
 
-  if(!config.key) {
+  if (!config.key) {
     // no api key defined -> we need to set a
     // dummy key, otherwise the Bittrex module
     // will not work even for public requests.
@@ -30,12 +30,12 @@ var Trader = function(config) {
   this.pair = [this.currency, this.asset].join('-');
 
   Bittrex.options({
-    apikey:  this.key,
+    apikey: this.key,
     apisecret: this.secret,
     stream: false,
     verbose: false,
     cleartext: false,
-    inverse_callback_arguments: true
+    inverse_callback_arguments: true,
   });
 
   this.bittrexApi = Bittrex;
@@ -262,14 +262,14 @@ Trader.prototype.cancelOrder = function(order, callback) {
 };
 
 Trader.prototype.getTrades = function(since, callback, descending) {;
-  var firstFetch = !!since;
+  const firstFetch = !!since;
 
   const handle = (err, data) => {
     if(err) {
       return callback(err);
     }
 
-    var result = data.result;
+    let result = data.result;
 
     // Edge case, see here:
     // @link https://github.com/askmike/gekko/issues/479
@@ -282,21 +282,21 @@ Trader.prototype.getTrades = function(since, callback, descending) {;
       );
 
       result = _.map(result, function(trade) {
-        var mr = {
-            tid: trade.Id,
-            amount: +trade.Quantity,
-            date: moment.utc(trade.TimeStamp).unix(),
-            timeStamp: trade.TimeStamp,
-            price: +trade.Price
+        const mr = {
+          tid: trade.Id,
+          amount: +trade.Quantity,
+          date: moment.utc(trade.TimeStamp).unix(),
+          timeStamp: trade.TimeStamp,
+          price: +trade.Price,
         };
-      return mr;
+        return mr;
     });
 
     callback(null, result.reverse());
   };
 
-  var params = {
-    currencyPair: joinCurrencies(this.currency, this.asset)
+  const params = {
+    currencyPair: joinCurrencies(this.currency, this.asset),
   };
 
   if(since) {

@@ -1,9 +1,9 @@
 // helpers
-var _ = require('lodash');
-var log = require('../core/log.js');
+const _ = require('lodash');
+const log = require('../core/log.js');
 
 // let's create our own method
-var method = {};
+const method = {};
 
 // prepare everything our method needs
 method.init = function() {

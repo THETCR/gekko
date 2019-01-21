@@ -1,9 +1,9 @@
 /*
  * CCI
  */
-var log = require('../../core/log');
+const log = require('../../core/log');
 
-var Indicator = function(settings) {
+const Indicator = function(settings) {
   this.input = 'candle';
   this.tp = 0.0;
   this.result = false;
@@ -12,20 +12,20 @@ var Indicator = function(settings) {
   this.size = 0;
   this.constant = settings.constant;
   this.maxSize = settings.history;
-  for (var i = 0; i < this.maxSize; i++)
-      this.hist.push(0.0);
+  for (let i = 0; i < this.maxSize; i++)
+    this.hist.push(0.0);
 };
 
 Indicator.prototype.update = function(candle) {
 
   // We need sufficient history to get the right result.
 
-  var tp = (candle.high + candle.close + candle.low) / 3;
+  const tp = (candle.high + candle.close + candle.low) / 3;
   if (this.size < this.maxSize) {
       this.hist[this.size] = tp;
       this.size++;
   } else {
-      for (var i = 0; i < this.maxSize-1; i++) {
+      for (let i = 0; i < this.maxSize-1; i++) {
           this.hist[i] = this.hist[i+1];
       }
       this.hist[this.maxSize-1] = tp;
@@ -43,9 +43,9 @@ Indicator.prototype.update = function(candle) {
  */
 Indicator.prototype.calculate = function(tp) {
 
-   var sumtp = 0.0;
+  let sumtp = 0.0;
 
-	 for (var i = 0; i < this.size; i++) {
+  for (let i = 0; i < this.size; i++) {
      sumtp = sumtp + this.hist[i];
 	 }
 
@@ -53,12 +53,12 @@ Indicator.prototype.calculate = function(tp) {
 
     this.tp = tp;
 
-    var sum = 0.0;
-    // calculate tps
-    for (var i = 0; i < this.size; i++) {
+  let sum = 0.0;
+  // calculate tps
+    for (let i = 0; i < this.size; i++) {
 
-        var z = (this.hist[i] - this.avgtp);
-        if (z < 0) z = z * -1.0;
+      let z = (this.hist[i] - this.avgtp);
+      if (z < 0) z = z * -1.0;
         sum = sum + z;
 
     }

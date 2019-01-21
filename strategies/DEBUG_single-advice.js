@@ -1,37 +1,37 @@
-var settings = {
+const settings = {
   wait: 0,
   // advice: 'short'
-  advice: 'long'
+  advice: 'long',
 };
 
 // -------
 
-var _ = require('lodash');
-var log = require('../core/log.js');
+const _ = require('lodash');
+const log = require('../core/log.js');
 
-var i = 0;
+let i = 0;
 
-var method = {
+const method = {
   init: _.noop,
   update: _.noop,
   log: _.noop,
   check: function() {
 
     // log.info('iteration:', i);
-    if(settings.wait === i) {
+    if (settings.wait === i) {
       console.log('trigger advice!');
       this.advice({
         direction: settings.advice,
         trigger: {
           type: 'trailingStop',
-          trailPercentage: 0.5
-        }
+          trailPercentage: 0.5,
+        },
       });
     }
 
-    i++
+    i++;
 
-  }
+  },
 };
 
 module.exports = method;

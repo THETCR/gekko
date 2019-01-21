@@ -1,37 +1,38 @@
-var chai = require('chai');
-var expect = chai.expect;
-var should = chai.should;
-var assert = chai.assert;
-var sinon = require('sinon');
-var proxyquire = require('proxyquire');
+const chai = require('chai');
+const expect = chai.expect;
+const should = chai.should;
+const assert = chai.assert;
+const sinon = require('sinon');
+const proxyquire = require('proxyquire');
 
-var _ = require('lodash');
-var moment = require('moment');
+const _ = require('lodash');
+const moment = require('moment');
 
-var util = require(__dirname + '/../core/util');
-var config = util.getConfig();
-var dirs = util.dirs();
+const util = require(__dirname + '/../core/util');
+const config = util.getConfig();
+const dirs = util.dirs();
 
-var providerName = config.watch.exchange.toLowerCase();
-var providerPath = util.dirs().gekko + 'exchanges/' + providerName;
+const providerName = config.watch.exchange.toLowerCase();
+const providerPath = util.dirs().gekko + 'exchanges/' + providerName;
 
 return; // TEMP
 
-var mf;
+let mf;
 
-var spoofer = {};
+const spoofer = {};
 
-var TRADES = [
+const TRADES = [
   { tid: 1, amount: 1, price: 100, date: 1475837937 },
-  { tid: 2, amount: 1, price: 100, date: 1475837938 }
+  { tid: 2, amount: 1, price: 100, date: 1475837938 },
 ];
 
 // stub the exchange
-var FakeProvider = function() {};
-var getTrades = function(since, handler, descending) {
+const FakeProvider = function() {
+};
+const getTrades = function(since, handler, descending) {
   handler(
     null,
-    TRADES
+    TRADES,
   );
 };
 FakeProvider.prototype = {
@@ -39,14 +40,14 @@ FakeProvider.prototype = {
 };
 
 spoofer[providerPath] = FakeProvider;
-var getTradesSpy = sinon.spy(FakeProvider.prototype, 'getTrades');
+const getTradesSpy = sinon.spy(FakeProvider.prototype, 'getTrades');
 
 // stub the tradebatcher
-var TradeBatcher = require(util.dirs().budfox + 'tradeBatcher');
-var tradeBatcherSpy = sinon.spy(TradeBatcher.prototype, 'write');
+const TradeBatcher = require(util.dirs().budfox + 'tradeBatcher');
+const tradeBatcherSpy = sinon.spy(TradeBatcher.prototype, 'write');
 spoofer[util.dirs().budfox + 'tradeBatcher'] = TradeBatcher;
 
-var MarketFetcher = proxyquire(dirs.budfox + 'marketFetcher', spoofer);
+const MarketFetcher = proxyquire(dirs.budfox + 'marketFetcher', spoofer);
 
 describe('budfox/marketFetcher', function() {
   it('should throw when not passed a config', function() {
@@ -67,16 +68,16 @@ describe('budfox/marketFetcher', function() {
     mf.fetch();
     expect(getTradesSpy.callCount).to.equal(1);
 
-    var args = getTradesSpy.firstCall.args;
+    const args = getTradesSpy.firstCall.args;
 
     // test-config uses NO `tradingAdvisor`
-    var since = args[0];
+    const since = args[0];
     expect(since).to.equal(undefined);
 
-    var handler = args[1];
+    const handler = args[1];
     assert.isFunction(handler);
 
-    var descending = args[2];
+    const descending = args[2];
     expect(descending).to.equal(false);
   });
 

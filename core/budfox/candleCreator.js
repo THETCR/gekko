@@ -43,16 +43,16 @@
 // ]
 //
 
-var _ = require('lodash');
-var moment = require('moment');
+const _ = require('lodash');
+const moment = require('moment');
 
-var util = require(__dirname + '/../util');
+const util = require(__dirname + '/../util');
 
-var CandleCreator = function() {
+const CandleCreator = function() {
   _.bindAll(this);
 
   // TODO: remove fixed date
-  this.threshold = moment("1970-01-01", "YYYY-MM-DD");
+  this.threshold = moment('1970-01-01', 'YYYY-MM-DD');
 
   // This also holds the leftover between fetches
   this.buckets = {};
@@ -61,14 +61,14 @@ var CandleCreator = function() {
 util.makeEventEmitter(CandleCreator);
 
 CandleCreator.prototype.write = function(batch) {
-  var trades = batch.data;
+  let trades = batch.data;
 
   if(_.isEmpty(trades))
     return;
 
   trades = this.filter(trades);
   this.fillBuckets(trades);
-  var candles = this.calculateCandles();
+  let candles = this.calculateCandles();
 
   candles = this.addEmptyCandles(candles);
 
@@ -92,7 +92,7 @@ CandleCreator.prototype.filter = function(trades) {
 // put each trade in a per minute bucket
 CandleCreator.prototype.fillBuckets = function(trades) {
   _.each(trades, function(trade) {
-    var minute = trade.date.format('YYYY-MM-DD HH:mm');
+    const minute = trade.date.format('YYYY-MM-DD HH:mm');
 
     if(!(minute in this.buckets))
       this.buckets[minute] = [];
@@ -105,19 +105,19 @@ CandleCreator.prototype.fillBuckets = function(trades) {
 
 // convert each bucket into a candle
 CandleCreator.prototype.calculateCandles = function() {
-  var minutes = _.size(this.buckets);
+  const minutes = _.size(this.buckets);
 
   // catch error from high volume getTrades
   if (this.lastTrade !== undefined)
     // create a string referencing the minute this trade happened in
-    var lastMinute = this.lastTrade.date.format('YYYY-MM-DD HH:mm');
+    const lastMinute = this.lastTrade.date.format('YYYY-MM-DD HH:mm');
 
-  var candles = _.map(this.buckets, function(bucket, name) {
-    var candle = this.calculateCandle(bucket);
+  const candles = _.map(this.buckets, function(bucket, name) {
+    const candle = this.calculateCandle(bucket);
 
     // clean all buckets, except the last one:
     // this candle is not complete
-    if(name !== lastMinute)
+    if (name !== lastMinute)
       delete this.buckets[name];
 
     return candle;
@@ -127,11 +127,11 @@ CandleCreator.prototype.calculateCandles = function() {
 };
 
 CandleCreator.prototype.calculateCandle = function(trades) {
-  var first = _.first(trades);
+  const first = _.first(trades);
 
-  var f = parseFloat;
+  const f = parseFloat;
 
-  var candle = {
+  const candle = {
     start: first.date.clone().startOf('minute'),
     open: f(first.price),
     high: f(first.price),
@@ -139,7 +139,7 @@ CandleCreator.prototype.calculateCandle = function(trades) {
     close: f(_.last(trades).price),
     vwp: 0,
     volume: 0,
-    trades: _.size(trades)
+    trades: _.size(trades),
   };
 
   _.each(trades, function(trade) {
@@ -160,16 +160,16 @@ CandleCreator.prototype.calculateCandle = function(trades) {
 // - open, high, close, low, vwp are the same as the close of the previous candle.
 // - trades, volume are 0
 CandleCreator.prototype.addEmptyCandles = function(candles) {
-  var amount = _.size(candles);
+  const amount = _.size(candles);
   if(!amount)
     return candles;
 
   // iterator
-  var start = _.first(candles).start.clone();
-  var end = _.last(candles).start;
-  var i, j = -1;
+  const start = _.first(candles).start.clone();
+  const end = _.last(candles).start;
+  let i, j = -1;
 
-  var minutes = _.map(candles, function(candle) {
+  const minutes = _.map(candles, function(candle) {
     return +candle.start;
   });
 
@@ -181,7 +181,7 @@ CandleCreator.prototype.addEmptyCandles = function(candles) {
     if(_.contains(minutes, i))
       continue; // we have a candle for this minute
 
-    var lastPrice = candles[j].close;
+    const lastPrice = candles[j].close;
 
     candles.splice(j + 1, 0, {
       start: start.clone(),

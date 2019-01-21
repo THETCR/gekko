@@ -4,7 +4,7 @@
 // - etc..
 const _ = require('lodash');
 
-var ListManager = function() {
+const ListManager = function() {
   this._list = [];
 };
 

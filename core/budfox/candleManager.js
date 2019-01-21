@@ -2,18 +2,18 @@
 // - `candles`: array of minutly candles.
 // - `candle`: the most recent candle after a fetch Gekko.
 
-var _ = require('lodash');
-var moment = require('moment');
-var fs = require('fs');
+const _ = require('lodash');
+const moment = require('moment');
+const fs = require('fs');
 
-var util = require(__dirname + '/../util');
-var dirs = util.dirs();
-var config = util.getConfig();
-var log = require(dirs.core + 'log');
+const util = require(__dirname + '/../util');
+const dirs = util.dirs();
+const config = util.getConfig();
+const log = require(dirs.core + 'log');
 
-var CandleCreator = require(dirs.budfox + 'candleCreator');
+const CandleCreator = require(dirs.budfox + 'candleCreator');
 
-var Manager = function() {
+const Manager = function() {
   _.bindAll(this);
 
   this.candleCreator = new CandleCreator;

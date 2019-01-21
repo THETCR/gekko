@@ -138,7 +138,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
   const processResults = (err, data) => {
     if (err) return callback(err);
 
-    var parsedTrades = [];
+    const parsedTrades = [];
     _.each(
       data,
       function(trade) {
@@ -156,15 +156,15 @@ Trader.prototype.getTrades = function(since, callback, descending) {
     else callback(undefined, parsedTrades);
   };
 
-  var reqData = {
+  const reqData = {
     symbol: this.pair,
   };
 
   if (since) {
-    var endTs = moment(since)
+    const endTs = moment(since)
       .add(1, 'h')
       .valueOf();
-    var nowTs = moment().valueOf();
+    const nowTs = moment().valueOf();
 
     reqData.startTime = moment(since).valueOf();
     reqData.endTime = endTs > nowTs ? nowTs : endTs;
@@ -239,12 +239,12 @@ Trader.prototype.getTicker = function(callback) {
     if (err)
       return callback(err);
 
-    var result = _.find(data, ticker => ticker.symbol === this.pair);
+    const result = _.find(data, ticker => ticker.symbol === this.pair);
 
     if(!result)
       return callback(new Error(`Market ${this.pair} not found on Binance`));
 
-    var ticker = {
+    const ticker = {
       ask: parseFloat(result.askPrice),
       bid: parseFloat(result.bidPrice),
     };
@@ -259,14 +259,14 @@ Trader.prototype.getTicker = function(callback) {
 // Effectively counts the number of decimal places, so 0.001 or 0.234 results in 3
 Trader.prototype.getPrecision = function(tickSize) {
   if (!isFinite(tickSize)) return 0;
-  var e = 1, p = 0;
+  let e = 1, p = 0;
   while (Math.round(tickSize * e) / e !== tickSize) { e *= 10; p++; }
   return p;
 };
 
 Trader.prototype.round = function(amount, tickSize) {
-  var precision = 100000000;
-  var t = this.getPrecision(tickSize);
+  let precision = 100000000;
+  const t = this.getPrecision(tickSize);
 
   if(Number.isInteger(t))
     precision = Math.pow(10, t);

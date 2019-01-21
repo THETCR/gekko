@@ -35,16 +35,16 @@ let iterator = {
   to: from.clone().add(batchSize, 'm').subtract(1, 's')
 };
 
-var DONE = false;
+let DONE = false;
 
-var result = [];
-var reader = new Reader();
-var batcher;
-var next;
-var doneFn = () => {
+const result = [];
+const reader = new Reader();
+let batcher;
+let next;
+const doneFn = () => {
   process.nextTick(() => {
     next(result);
-  })
+  });
 };
 
 module.exports = function(candleSize, _next) {

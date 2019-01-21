@@ -1,21 +1,21 @@
-var log = require('../core/log');
-var moment = require('moment');
-var _ = require('lodash');
-var xmpp = require('node-xmpp-client');
-var config = require('../core/util').getConfig();
-var xmppbot = config.xmppbot;
-var utc = moment.utc;
+const log = require('../core/log');
+const moment = require('moment');
+const _ = require('lodash');
+const xmpp = require('node-xmpp-client');
+const config = require('../core/util').getConfig();
+const xmppbot = config.xmppbot;
+const utc = moment.utc;
 
 
-
-var Actor = function() {
+const Actor = function() {
   _.bindAll(this);
 
-  this.bot = new xmpp.Client({ jid: xmppbot.client_id,
-               password: xmppbot.client_pwd,
-               host: xmppbot.client_host,
-               port: xmppbot.client_port
-               });
+  this.bot = new xmpp.Client({
+    jid: xmppbot.client_id,
+    password: xmppbot.client_pwd,
+    host: xmppbot.client_host,
+    port: xmppbot.client_port,
+  });
 
   this.advice = 'Dont got one yet :(';
   this.adviceTime = utc();
@@ -28,22 +28,22 @@ var Actor = function() {
     ';;price': 'emitPrice',
     ';;donate': 'emitDonation',
     ';;real advice': 'emitRealAdvice',
-    ';;help': 'emitHelp'
+    ';;help': 'emitHelp',
   };
 
   this.rawCommands = _.keys(this.commands);
 
   this.bot.addListener('online', this.setState);
   this.bot.addListener('stanza', this.rawStanza);
-  this.bot.addListener("error", this.logError);
+  this.bot.addListener('error', this.logError);
   this.bot.connection.socket.setTimeout(0);
-  this.bot.connection.socket.setKeepAlive(true, 10000)
+  this.bot.connection.socket.setKeepAlive(true, 10000);
 
 };
 
 Actor.prototype.setState = function() {
-    var elem = new xmpp.Element('presence', { }).c('show').t('chat').up().c('status').t(this.state);
-    this.bot.send(elem);
+  const elem = new xmpp.Element('presence', {}).c('show').t('chat').up().c('status').t(this.state);
+  this.bot.send(elem);
 };
 
 Actor.prototype.rawStanza = function(stanza) {
@@ -55,13 +55,13 @@ Actor.prototype.rawStanza = function(stanza) {
      stanza.attrs.type !== 'error') {
 
      // Swap addresses...
-     var from = stanza.attrs.from;
-     var body = stanza.getChild('body');
-     if (!body) {
+   const from = stanza.attrs.from;
+   const body = stanza.getChild('body');
+   if (!body) {
        return;
      }
 
-     var message_recv = body.getText();   //Get Incoming Message
+   const message_recv = body.getText();   //Get Incoming Message
      this.verifyQuestion(from, message_recv);
   }
 };
@@ -101,7 +101,7 @@ Actor.prototype.newAdvice = function(receiver) {
 
 // sent advice
 Actor.prototype.emitAdvice = function(receiver) {
-  var message = [
+  const message = [
     'Advice for ',
     config.watch.exchange,
     ' ',
@@ -117,8 +117,8 @@ Actor.prototype.emitAdvice = function(receiver) {
     ' ',
     config.watch.asset,
     ' (from ',
-      this.adviceTime.fromNow(),
-    ')'
+    this.adviceTime.fromNow(),
+    ')',
   ].join('');
 
   this.sendMessageTo(receiver, message);
@@ -127,7 +127,7 @@ Actor.prototype.emitAdvice = function(receiver) {
 // sent price
 Actor.prototype.emitPrice = function(receiver) {
 
-  var message = [
+  const message = [
     'Current price at ',
     config.watch.exchange,
     ' ',
@@ -139,8 +139,8 @@ Actor.prototype.emitPrice = function(receiver) {
     ' ',
     config.watch.currency,
     ' (from ',
-      this.priceTime.fromNow(),
-    ')'
+    this.priceTime.fromNow(),
+    ')',
   ].join('');
 
   this.sendMessageTo(receiver, message);
@@ -148,19 +148,19 @@ Actor.prototype.emitPrice = function(receiver) {
 
 // sent donation info
 Actor.prototype.emitDonation = function(receiver) {
-  var message = 'You want to donate? How nice of you! You can send your coins here:';
+  let message = 'You want to donate? How nice of you! You can send your coins here:';
   message += '\nBTC:\t19UGvmFPfFyFhPMHu61HTMGJqXRdVcHAj3';
 
   this.sendMessageTo(receiver, message);
 };
 
 Actor.prototype.emitHelp = function(receiver) {
-  var message = _.reduce(
+  let message = _.reduce(
     this.rawCommands,
     function(message, command) {
       return message + ' ' + command + ',';
     },
-    'possible commands are:'
+    'possible commands are:',
   );
 
   message = message.substr(0, _.size(message) - 1) + '.';
@@ -172,14 +172,14 @@ Actor.prototype.emitHelp = function(receiver) {
 Actor.prototype.emitRealAdvice = function(receiver) {
   // http://www.examiner.com/article/uncaged-a-look-at-the-top-10-quotes-of-gordon-gekko
   // http://elitedaily.com/money/memorable-gordon-gekko-quotes/
-  var realAdvice = [
+  const realAdvice = [
     'I don\'t throw darts at a board. I bet on sure things. Read Sun-tzu, The Art of War. Every battle is won before it is ever fought.',
     'Ever wonder why fund managers can\'t beat the S&P 500? \'Cause they\'re sheep, and sheep get slaughtered.',
     'If you\'re not inside, you\'re outside!',
     'The most valuable commodity I know of is information.',
     'It\'s not a question of enough, pal. It\'s a zero sum game, somebody wins, somebody loses. Money itself isn\'t lost or made, it\'s simply transferred from one perception to another.',
     'What\'s worth doing is worth doing for money. (Wait, wasn\'t I a free and open source bot?)',
-    'When I get a hold of the son of a bitch who leaked this, I\'m gonna tear his eyeballs out and I\'m gonna suck his fucking skull.'
+    'When I get a hold of the son of a bitch who leaked this, I\'m gonna tear his eyeballs out and I\'m gonna suck his fucking skull.',
   ];
 
   this.sendMessageTo(receiver, _.first(_.shuffle(realAdvice)));

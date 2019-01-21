@@ -1,19 +1,19 @@
-var _ = require('lodash');
-var fs = require('fs');
-var moment = require('moment');
+const _ = require('lodash');
+const fs = require('fs');
+const moment = require('moment');
 
-var util = require('../util');
-var config = util.getConfig();
-var dirs = util.dirs();
-var log = require(dirs.core + '/log');
+const util = require('../util');
+const config = util.getConfig();
+const dirs = util.dirs();
+const log = require(dirs.core + '/log');
 
-var Stitcher = function(batcher) {
+const Stitcher = function(batcher) {
   this.batcher = batcher;
 };
 
 Stitcher.prototype.ago = function(ts) {
-  var now = moment().utc();
-  var then = moment.unix(ts).utc();
+  const now = moment().utc();
+  const then = moment.unix(ts).utc();
   return now.diff(then, 'minutes') + ' minutes ago';
 };
 
@@ -31,7 +31,7 @@ Stitcher.prototype.verifyExchange = function() {
   if(!exchange)
     util.die(`Unsupported exchange: ${slug}`);
 
-  var error = exchangeChecker.cantMonitor(config.watch);
+  const error = exchangeChecker.cantMonitor(config.watch);
   if(error)
     util.die(error, true);
 };
@@ -47,8 +47,8 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
   if(config.tradingAdvisor.historySize === 0)
     return done();
 
-  var requiredHistory = config.tradingAdvisor.candleSize * config.tradingAdvisor.historySize;
-  var Reader = require(dirs.plugins + config.adapter + '/reader');
+  const requiredHistory = config.tradingAdvisor.candleSize * config.tradingAdvisor.historySize;
+  const Reader = require(dirs.plugins + config.adapter + '/reader');
 
   this.reader = new Reader;
 
@@ -58,8 +58,8 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
     'minutes of historic data. Checking availablity..'
   );
 
-  var endTime = moment().utc().startOf('minute');
-  var idealStartTime = endTime.clone().subtract(requiredHistory, 'm');
+  const endTime = moment().utc().startOf('minute');
+  const idealStartTime = endTime.clone().subtract(requiredHistory, 'm');
 
   this.reader.mostRecentWindow(idealStartTime, endTime, function(localData) {
     // now we know what data is locally available, what
@@ -85,7 +85,7 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
 
 
       // make sure we grab back in history far enough
-      var secondsOverlap = 60 * 15; // 15 minutes
+      const secondsOverlap = 60 * 15; // 15 minutes
       var idealExchangeStartTimeTS = localData.to - secondsOverlap;
       var idealExchangeStartTime = moment.unix(idealExchangeStartTimeTS).utc();
 
@@ -98,8 +98,8 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
     }
 
     // Limit the history Gekko can try to get from the exchange.
-    var minutesAgo = endTime.diff(idealExchangeStartTime, 'minutes');
-    var maxMinutesAgo = 4 * 60; // 4 hours
+    const minutesAgo = endTime.diff(idealExchangeStartTime, 'minutes');
+    const maxMinutesAgo = 4 * 60; // 4 hours
     if(minutesAgo > maxMinutesAgo) {
       log.info('\tPreventing Gekko from requesting', minutesAgo, 'minutes of history.');
       idealExchangeStartTime = endTime.clone().subtract(maxMinutesAgo, 'minutes');
@@ -124,7 +124,7 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
         localData = false;
       }
 
-      var stitchable = localData && exchangeData.from <= localData.to;
+      const stitchable = localData && exchangeData.from <= localData.to;
       if(stitchable) {
         log.debug('\tStitching datasets');
 
@@ -150,8 +150,8 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
         }
 
         // seed all historic data up to the point the exchange can provide.
-        var from = localData.from;
-        var to = moment.unix(exchangeData.from).utc()
+        const from = localData.from;
+        const to = moment.unix(exchangeData.from).utc()
           .startOf('minute')
           .subtract(1, 'minute')
           .unix();
@@ -186,17 +186,17 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
 };
 
 Stitcher.prototype.checkExchangeTrades = function(since, next) {
-  var provider = config.watch.exchange.toLowerCase();
-  var DataProvider = require(util.dirs().gekko + 'exchange/wrappers/' + provider);
+  const provider = config.watch.exchange.toLowerCase();
+  const DataProvider = require(util.dirs().gekko + 'exchange/wrappers/' + provider);
 
-  var exchangeConfig = config.watch;
+  let exchangeConfig = config.watch;
 
   // include trader config if trading is enabled
   if (_.isObject(config.trader) && config.trader.enabled) {
     exchangeConfig = _.extend(config.watch, config.trader);
   }
 
-  var watcher = new DataProvider(exchangeConfig);
+  const watcher = new DataProvider(exchangeConfig);
   watcher.getTrades(since, function(e, d) {
     if(e) {
       util.die(e.message);

@@ -1,5 +1,5 @@
-var semver = require("semver");
-var _ = require('lodash');
+const semver = require('semver');
+const _ = require('lodash');
 
 // validate that talib is installed, if not we'll throw an exception which will
 // prevent further loading or out outside this module
@@ -10,41 +10,41 @@ try {
     return;
 }
 
-var tulindError = 'Gekko was unable to configure Tulip Indicators:\n\t';
+const tulindError = 'Gekko was unable to configure Tulip Indicators:\n\t';
 
 // Wrapper that executes a tulip indicator
-var execute = function(callback, params) {
-    var tulindCallback = function(err, result) {
-        if (err) return callback(err);
-        var table = {};
-        for (var i = 0; i < params.results.length; ++i) {
-            table[params.results[i]] = result[i];
-        }
-        callback(null, table);
-    };
+const execute = function(callback, params) {
+  const tulindCallback = function(err, result) {
+    if (err) return callback(err);
+    const table = {};
+    for (let i = 0; i < params.results.length; ++i) {
+      table[params.results[i]] = result[i];
+    }
+    callback(null, table);
+  };
 
-    return params.indicator.indicator(params.inputs, params.options, tulindCallback);
+  return params.indicator.indicator(params.inputs, params.options, tulindCallback);
 };
 
 // Helper that makes sure all required parameters
 // for a specific talib indicator are present.
-var verifyParams = (methodName, params) => {
-    var requiredParams = methods[methodName].requires;
+const verifyParams = (methodName, params) => {
+  const requiredParams = methods[methodName].requires;
 
-    _.each(requiredParams, paramName => {
-        if(!_.has(params, paramName)) {
-            throw new Error(tulindError + methodName + ' requires ' + paramName + '.');
-        }
+  _.each(requiredParams, paramName => {
+    if (!_.has(params, paramName)) {
+      throw new Error(tulindError + methodName + ' requires ' + paramName + '.');
+    }
 
-        var val = params[paramName];
+    const val = params[paramName];
 
-        if(!_.isNumber(val)) {
-            throw new Error(tulindError + paramName + ' needs to be a number');
-        }
-    });
+    if (!_.isNumber(val)) {
+      throw new Error(tulindError + paramName + ' needs to be a number');
+    }
+  });
 };
 
-var methods = {};
+const methods = {};
 
 methods.ad = {
     requires: [],

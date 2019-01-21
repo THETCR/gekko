@@ -1,7 +1,7 @@
-var util = require(__dirname + '/../../util');
+const util = require(__dirname + '/../../util');
 
-var dirs = util.dirs();
-var ipc = require('relieve').IPCEE(process);
+const dirs = util.dirs();
+const ipc = require('relieve').IPCEE(process);
 
 ipc.on('start', config => {
 
@@ -14,7 +14,7 @@ ipc.on('start', config => {
   // persist config
   util.setConfig(config);
 
-  var scan = require(dirs.tools + 'dateRangeScanner');
+  const scan = require(dirs.tools + 'dateRangeScanner');
   scan(
     (err, ranges, reader) => {
       reader.close();

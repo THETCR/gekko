@@ -8,9 +8,9 @@ const retry = require('../exchangeUtils').retry;
 
 const marketData = require('./bitfinex-markets.json');
 
-var Trader = function(config) {
+const Trader = function(config) {
   _.bindAll(this);
-  if(_.isObject(config)) {
+  if (_.isObject(config)) {
     this.key = config.key;
     this.secret = config.secret;
   }
@@ -20,7 +20,7 @@ var Trader = function(config) {
   this.asset = config.asset;
   this.currency = config.currency;
   this.pair = this.asset + this.currency;
-  this.bitfinex = new Bitfinex.RESTv1({apiKey: this.key, apiSecret: this.secret, transform: true});
+  this.bitfinex = new Bitfinex.RESTv1({ apiKey: this.key, apiSecret: this.secret, transform: true });
 
   this.interval = 4000;
 };
@@ -226,9 +226,9 @@ Trader.prototype.getOrder = function(order_id, callback) {
   const processResponse = (err, data) => {
     if (err) return callback(err);
 
-    var price = parseFloat(data.avg_execution_price);
-    var amount = parseFloat(data.executed_amount);
-    var date = moment.unix(data.timestamp);
+    const price = parseFloat(data.avg_execution_price);
+    const amount = parseFloat(data.executed_amount);
+    const date = moment.unix(data.timestamp);
 
     console.log('getOrder', data);
 
@@ -279,19 +279,19 @@ Trader.prototype.getTrades = function(since, callback, descending) {
   const processResponse = (err, data) => {
     if (err) return callback(err);
 
-    var trades = _.map(data, function(trade) {
+    const trades = _.map(data, function(trade) {
       return {
         tid: trade.tid,
-        date:  trade.timestamp,
+        date: trade.timestamp,
         price: +trade.price,
-        amount: +trade.amount
-      }
+        amount: +trade.amount,
+      };
     });
 
     callback(undefined, descending ? trades : trades.reverse());
   };
 
-  var path = this.pair;
+  let path = this.pair;
   if(since)
     path += '?limit_trades=2000';
 

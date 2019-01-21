@@ -32,7 +32,7 @@ const Fetcher = function(config) {
 
   this.exchange = exchangeChecker.settings(config.watch);
 
-  var requiredHistory = config.tradingAdvisor.candleSize * config.tradingAdvisor.historySize;
+  const requiredHistory = config.tradingAdvisor.candleSize * config.tradingAdvisor.historySize;
 
   // If the trading adviser is enabled we might need a very specific fetch since
   // to line up [local db, trading method, and fetching]
@@ -77,7 +77,7 @@ Fetcher.prototype._fetch = function(since) {
 };
 
 Fetcher.prototype.fetch = function() {
-  var since = false;
+  let since = false;
   if(this.firstFetch) {
     since = this.firstSince;
     this.firstFetch = false;

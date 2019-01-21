@@ -7,11 +7,11 @@
  */
 
 // helpers
-var _ = require('lodash');
-var log = require('../core/log');
+const _ = require('lodash');
+const log = require('../core/log');
 
 // let's create our own method
-var method = {};
+const method = {};
 
 // prepare everything our method needs
 method.init = function() {
@@ -38,14 +38,14 @@ method.update = function(candle) {
 // for debugging purposes log the last
 // calculated parameters.
 method.log = function() {
-  var digits = 8;
-  var ppo = this.indicators.ppo;
-  var long = ppo.result.longEMA;
-  var short = ppo.result.shortEMA;
-  var macd = ppo.result.macd;
-  var result = ppo.result.ppo;
-  var macdSignal = ppo.result.MACDsignal;
-  var ppoSignal = ppo.result.PPOsignal;
+  const digits = 8;
+  const ppo = this.indicators.ppo;
+  const long = ppo.result.longEMA;
+  const short = ppo.result.shortEMA;
+  const macd = ppo.result.macd;
+  const result = ppo.result.ppo;
+  const macdSignal = ppo.result.MACDsignal;
+  const ppoSignal = ppo.result.PPOsignal;
 
   log.debug('calculated MACD properties for candle:');
   log.debug('\t', 'short:', short.toFixed(digits));
@@ -59,19 +59,19 @@ method.log = function() {
 };
 
 method.check = function(candle) {
-  var price = candle.close;
+  const price = candle.close;
 
-  var ppo = this.indicators.ppo;
-  var long = ppo.result.longEMA;
-  var short = ppo.result.shortEMA;
-  var macd = ppo.result.macd;
-  var result = ppo.result.ppo;
-  var macdSignal = ppo.result.MACDsignal;
-  var ppoSignal = ppo.result.PPOsignal;
+  const ppo = this.indicators.ppo;
+  const long = ppo.result.longEMA;
+  const short = ppo.result.shortEMA;
+  const macd = ppo.result.macd;
+  const result = ppo.result.ppo;
+  const macdSignal = ppo.result.MACDsignal;
+  const ppoSignal = ppo.result.PPOsignal;
 
   // TODO: is this part of the indicator or not?
   // if it is it should move there
-  var ppoHist = result - ppoSignal;
+  const ppoHist = result - ppoSignal;
 
   if(ppoHist > this.settings.thresholds.up) {
 

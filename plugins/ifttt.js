@@ -14,21 +14,21 @@ const IFTTT = function(done) {
 };
 
 IFTTT.prototype.setup = function(done) {
-  var setupIFTTT = function () {
-    if(iftttConfig.sendMessageOnStart){
-      var exchange = config.watch.exchange;
-      var currency = config.watch.currency;
-      var asset = config.watch.asset;
-      var body = "Gekko has started, Ive started watching "
-        +exchange
-        +" "
-        +currency
-        +" "
-        +asset
-        +" I'll let you know when I got some advice";
+  const setupIFTTT = function() {
+    if (iftttConfig.sendMessageOnStart) {
+      const exchange = config.watch.exchange;
+      const currency = config.watch.currency;
+      const asset = config.watch.asset;
+      const body = 'Gekko has started, Ive started watching '
+        + exchange
+        + ' '
+        + currency
+        + ' '
+        + asset
+        + ' I\'ll let you know when I got some advice';
       this.send(body);
-    }else{
-      log.debug('Skipping Send message on startup')
+    } else {
+      log.debug('Skipping Send message on startup');
     }
   };
   setupIFTTT.call(this)
@@ -41,9 +41,9 @@ IFTTT.prototype.processCandle = function(candle, done) {
 };
 
 IFTTT.prototype.portfolioUpdate = function(portfolio) {
-  var message = "Gekko has detected a portfolio update. " +
-    "Your current " + config.watch.currency + " balance is " + portfolio.currency + '.' +
-    "Your current " + config.watch.exchange + " balance is " + portfolio.assert + '.';
+  const message = 'Gekko has detected a portfolio update. ' +
+    'Your current ' + config.watch.currency + ' balance is ' + portfolio.currency + '.' +
+    'Your current ' + config.watch.exchange + ' balance is ' + portfolio.assert + '.';
   this.send(message);
 };
 

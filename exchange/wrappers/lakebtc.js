@@ -1,12 +1,12 @@
-var Lakebtc = require("lakebtc_nodejs");
-var util = require('../core/util.js');
-var _ = require('lodash');
-var moment = require('moment');
-var log = require('../core/log');
+const Lakebtc = require('lakebtc_nodejs');
+const util = require('../core/util.js');
+const _ = require('lodash');
+const moment = require('moment');
+const log = require('../core/log');
 
-var Trader = function(config) {
+const Trader = function(config) {
   _.bindAll(this);
-  if(_.isObject(config)) {
+  if (_.isObject(config)) {
     this.key = config.key;
     this.secret = config.secret;
     this.clientID = config.username;
@@ -21,10 +21,10 @@ var Trader = function(config) {
 // if the exchange errors we try the same call again after
 // waiting 10 seconds
 Trader.prototype.retry = function(method, args) {
-  var wait = +moment.duration(10, 'seconds');
+  const wait = +moment.duration(10, 'seconds');
   log.debug(this.name, 'returned an error, retrying..');
 
-  var self = this;
+  const self = this;
 
   // make sure the callback (and any other fn)
   // is bound to Trader
@@ -42,10 +42,10 @@ Trader.prototype.retry = function(method, args) {
 };
 
 Trader.prototype.getPortfolio = function(callback) {
-  var set = function(err, data) {
-    var portfolio = [];
+  const set = function(err, data) {
+    const portfolio = [];
     _.map(data.balance, function(amount, asset) {
-	  portfolio.push({name: asset, amount: parseFloat(amount)});
+      portfolio.push({ name: asset, amount: parseFloat(amount) });
     });
     callback(err, portfolio);
   };
@@ -61,8 +61,8 @@ Trader.prototype.getFee = function(callback) {
 };
 
 Trader.prototype.buy = function(amount, price, callback) {
-  var set = function(err, result) {
-    if(err || result.error)
+  const set = function(err, result) {
+    if (err || result.error)
       return log.error('unable to buy:', err, result);
 
     callback(null, result.id);
@@ -78,8 +78,8 @@ Trader.prototype.buy = function(amount, price, callback) {
 };
 
 Trader.prototype.sell = function(amount, price, callback) {
-  var set = function(err, result) {
-    if(err || result.error)
+  const set = function(err, result) {
+    if (err || result.error)
       return log.error('unable to sell:', err, result);
 
     callback(null, result.id);
@@ -89,8 +89,10 @@ Trader.prototype.sell = function(amount, price, callback) {
 };
 
 Trader.prototype.checkOrder = function(order, callback) {
-  var check = function(err, result) {
-    var stillThere = _.find(result, function(o) { return o.id === order });
+  const check = function(err, result) {
+    const stillThere = _.find(result, function(o) {
+      return o.id === order;
+    });
     callback(err, !stillThere);
   };
 
@@ -98,8 +100,8 @@ Trader.prototype.checkOrder = function(order, callback) {
 };
 
 Trader.prototype.cancelOrder = function(order, callback) {
-  var cancel = function(err, result) {
-    if(err || !result.result)
+  const cancel = function(err, result) {
+    if (err || !result.result)
       log.error('unable to cancel order', order, '(', err, result, ')');
   };
 
@@ -107,9 +109,9 @@ Trader.prototype.cancelOrder = function(order, callback) {
 };
 
 Trader.prototype.getTrades = function(since, callback, descending) {
-  var args = _.toArray(arguments);
-  var process = function(err, result) {
-    if(err)
+  const args = _.toArray(arguments);
+  const process = function(err, result) {
+    if (err)
       return this.retry(this.getTrades, args);
     callback(null, descending ? result.reverse() : result);
   };

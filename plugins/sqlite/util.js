@@ -1,10 +1,10 @@
-var config = require('../../core/util.js').getConfig();
+const config = require('../../core/util.js').getConfig();
 
-var watch = config.watch;
-var settings = {
+const watch = config.watch;
+const settings = {
   exchange: watch.exchange,
   pair: [watch.currency, watch.asset],
-  historyPath: config.sqlite.dataDirectory
+  historyPath: config.sqlite.dataDirectory,
 };
 
 module.exports = {

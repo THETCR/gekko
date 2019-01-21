@@ -1,16 +1,16 @@
-var settings = {
+const settings = {
   wait: 0,
-  each: 6
+  each: 6,
 };
 
 // -------
 
-var _ = require('lodash');
-var log = require('../core/log.js');
+const _ = require('lodash');
+const log = require('../core/log.js');
 
-var i = 0;
+let i = 0;
 
-var method = {
+const method = {
   init: _.noop,
   update: _.noop,
   log: _.noop,
@@ -19,15 +19,15 @@ var method = {
   },
   check: function(candle) {
 
-    if(settings.wait > i)
+    if (settings.wait > i)
       return;
 
     log.info('iteration:', i);
 
-    if(i % settings.each === 0) {
+    if (i % settings.each === 0) {
       log.debug('trigger SHORT');
       this.advice('short');
-    } else if(i % settings.each === settings.each / 2) {
+    } else if (i % settings.each === settings.each / 2) {
       log.debug('trigger LONG');
       this.advice('long');
     }
@@ -39,7 +39,7 @@ var method = {
 
     i++;
 
-  }
+  },
 };
 
 module.exports = method;

@@ -1,14 +1,14 @@
-var _ = require('lodash');
-var util = require('../../core/util.js');
-var config = util.getConfig();
-var log = require(util.dirs().core + 'log');
+const _ = require('lodash');
+const util = require('../../core/util.js');
+const config = util.getConfig();
+const log = require(util.dirs().core + 'log');
 
-var handle = require('./handle');
-var postgresUtil = require('./util');
+const handle = require('./handle');
+const postgresUtil = require('./util');
 
 const { Query } = require('pg');
 
-var Reader = function() {
+const Reader = function() {
   _.bindAll(this);
   this.db = handle;
 };
@@ -18,14 +18,14 @@ Reader.prototype.mostRecentWindow = function(from, to, next) {
   to = to.unix();
   from = from.unix();
 
-  var maxAmount = to - from + 1;
+  const maxAmount = to - from + 1;
 
   this.db.connect((err,client,done) => {
-    var query = client.query(new Query(`
+    const query = client.query(new Query(`
     SELECT start from ${postgresUtil.table('candles')}
     WHERE start <= ${to} AND start >= ${from}
     ORDER BY start DESC
-    `), function (err, result) {
+    `), function(err, result) {
       if (err) {
         // bail out if the table does not exist
         if (err.message.indexOf(' does not exist') !== -1)
@@ -36,7 +36,7 @@ Reader.prototype.mostRecentWindow = function(from, to, next) {
       }
     });
 
-    var rows = [];
+    const rows = [];
     query.on('row', function(row) {
       rows.push(row);
     });
@@ -60,16 +60,16 @@ Reader.prototype.mostRecentWindow = function(from, to, next) {
       }
 
       // we have at least one gap, figure out where
-      var mostRecent = _.first(rows).start;
+      const mostRecent = _.first(rows).start;
 
-      var gapIndex = _.findIndex(rows, function(r, i) {
+      const gapIndex = _.findIndex(rows, function(r, i) {
         return r.start !== mostRecent - i * 60;
       });
 
       // if there was no gap in the records, but
       // there were not enough records.
       if(gapIndex === -1) {
-        var leastRecent = _.last(rows).start;
+        const leastRecent = _.last(rows).start;
         return next({
           from: leastRecent,
           to: mostRecent
@@ -110,13 +110,13 @@ Reader.prototype.get = function(from, to, what, next) {
   }
 
   this.db.connect((err,client,done) => {
-    var query = client.query(new Query(`
+    const query = client.query(new Query(`
     SELECT ${what} from ${postgresUtil.table('candles')}
     WHERE start <= ${to} AND start >= ${from}
     ORDER BY start ASC
     `));
 
-    var rows = [];
+    const rows = [];
     query.on('row', function(row) {
       rows.push(row);
     });
@@ -130,11 +130,11 @@ Reader.prototype.get = function(from, to, what, next) {
 
 Reader.prototype.count = function(from, to, next) {
   this.db.connect((err,client,done) => {
-    var query = client.query(new Query(`
+    const query = client.query(new Query(`
     SELECT COUNT(*) as count from ${postgresUtil.table('candles')}
     WHERE start <= ${to} AND start >= ${from}
     `));
-    var rows = [];
+    const rows = [];
     query.on('row', function(row) {
       rows.push(row);
     });
@@ -148,10 +148,10 @@ Reader.prototype.count = function(from, to, next) {
 
 Reader.prototype.countTotal = function(next) {
   this.db.connect((err,client,done) => {
-    var query = client.query(new Query(`
+    const query = client.query(new Query(`
     SELECT COUNT(*) as count from ${postgresUtil.table('candles')}
     `));
-    var rows = [];
+    const rows = [];
     query.on('row', function(row) {
       rows.push(row);
     });
@@ -165,7 +165,7 @@ Reader.prototype.countTotal = function(next) {
 
 Reader.prototype.getBoundry = function(next) {
   this.db.connect((err,client,done) => {
-    var query = client.query(new Query(`
+    const query = client.query(new Query(`
     SELECT (
       SELECT start
       FROM ${postgresUtil.table('candles')}
@@ -178,7 +178,7 @@ Reader.prototype.getBoundry = function(next) {
       LIMIT 1
     ) as last
     `));
-    var rows = [];
+    const rows = [];
     query.on('row', function(row) {
       rows.push(row);
     });

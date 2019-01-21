@@ -27,7 +27,7 @@ _.each(indicatorFiles, function(indicator) {
 
 const allowedIndicators = _.keys(Indicators);
 
-var Base = function(settings) {
+const Base = function(settings) {
   _.bindAll(this);
 
   // properties
@@ -52,33 +52,37 @@ var Base = function(settings) {
 
   // make sure we have all methods
   _.each(['init', 'check'], function(fn) {
-    if(!this[fn])
-      util.die('No ' + fn + ' function in this strategy found.')
+    if (!this[fn])
+      util.die('No ' + fn + ' function in this strategy found.');
   }, this);
 
-  if(!this.update)
-    this.update = function() {};
+  if (!this.update)
+    this.update = function() {
+    };
 
-  if(!this.end)
-    this.end = function() {};
+  if (!this.end)
+    this.end = function() {
+    };
 
-  if(!this.onTrade)
-    this.onTrade = function() {};
+  if (!this.onTrade)
+    this.onTrade = function() {
+    };
 
   // let's run the implemented starting point
   this.init();
 
   //if no requiredHistory was provided, set default from tradingAdvisor
-  if (!_.isNumber(this.requiredHistory)){
+  if (!_.isNumber(this.requiredHistory)) {
     this.requiredHistory = config.tradingAdvisor.historySize;
   }
 
-  if(!config.debug || !this.log)
-    this.log = function() {};
+  if (!config.debug || !this.log)
+    this.log = function() {
+    };
 
   this.setup = true;
 
-  if(_.size(this.asyncIndicatorRunner.talibIndicators) || _.size(this.asyncIndicatorRunner.tulipIndicators))
+  if (_.size(this.asyncIndicatorRunner.talibIndicators) || _.size(this.asyncIndicatorRunner.tulipIndicators))
     this.asyncTick = true;
   else
     delete this.asyncIndicatorRunner;
@@ -118,7 +122,7 @@ Base.prototype.isBusy = function() {
 
 Base.prototype.calculateSyncIndicators = function(candle, done) {
   // update all indicators
-  var price = candle[this.priceValue];
+  const price = candle[this.priceValue];
   _.each(this.indicators, function(i) {
     if(i.input === 'price')
       i.update(price);
@@ -136,14 +140,14 @@ Base.prototype.propogateTick = function(candle) {
   this.update(candle);
 
   this.processedTicks++;
-  var isAllowedToCheck = this.requiredHistory <= this.age;
+  const isAllowedToCheck = this.requiredHistory <= this.age;
 
   if(!this.completedWarmup) {
 
     // in live mode we might receive more candles
     // than minimally needed. In that case check
     // whether candle start time is > startTime
-    var isPremature = false;
+    let isPremature = false;
 
     if(mode === 'realtime') {
       const startTimeMinusCandleSize = startTime

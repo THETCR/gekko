@@ -1,13 +1,17 @@
-var log = require('../core/log');
-var moment = require('moment');
-var _ = require('lodash');
-var util = require('../core/util.js');
-var config = util.getConfig();
-var adviceLoggerConfig = config.adviceLogger;
+const log = require('../core/log');
+const moment = require('moment');
+const _ = require('lodash');
+const util = require('../core/util.js');
+const config = util.getConfig();
+const adviceLoggerConfig = config.adviceLogger;
 
-var Actor = function() {
+const Actor = function() {
   this.price = 'N/A';
-  this.marketTime = {format: function() {return 'N/A'}};
+  this.marketTime = {
+    format: function() {
+      return 'N/A';
+    },
+  };
   _.bindAll(this);
 };
 

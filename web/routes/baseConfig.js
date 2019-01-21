@@ -1,6 +1,6 @@
-var UIconfig = require('../vue/dist/UIconfig');
+const UIconfig = require('../vue/dist/UIconfig');
 
-var config = {};
+const config = {};
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                          GENERAL SETTINGS

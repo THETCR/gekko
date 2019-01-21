@@ -1,9 +1,9 @@
 // This method is a noop (it doesn't do anything)
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 // Let's create our own method
-var method = {};
+const method = {};
 
 method.init = _.noop;
 method.update = _.noop;

@@ -1,13 +1,13 @@
-var Coingi = require('coingi');
-var moment = require('moment');
-var _ = require('lodash');
+const Coingi = require('coingi');
+const moment = require('moment');
+const _ = require('lodash');
 
-var util = require('../core/util');
-var Errors = require('../core/error');
-var log = require('../core/log');
+const util = require('../core/util');
+const Errors = require('../core/error');
+const log = require('../core/log');
 
 
-var Trader = function (config) {
+const Trader = function(config) {
   _.bindAll(this);
 
   if (_.isObject(config)) {
@@ -17,32 +17,32 @@ var Trader = function (config) {
     this.asset = config.asset.toUpperCase();
   }
 
-  this.pair = this.asset + "-" + this.currency;
+  this.pair = this.asset + '-' + this.currency;
   this.name = 'coingi';
   this.since = null;
 
   this.coingi = new Coingi(
     this.key,
     this.secret,
-    {timeout: +moment.duration(60, 'seconds')}
+    { timeout: +moment.duration(60, 'seconds') },
   );
 };
 
-var retryCritical = {
+const retryCritical = {
   retries: 10,
   factor: 1.2,
   minTimeout: 1 * 1000,
-  maxTimeout: 30 * 1000
+  maxTimeout: 30 * 1000,
 };
 
-var retryForever = {
+const retryForever = {
   forever: true,
   factor: 1.2,
   minTimeout: 10,
-  maxTimeout: 30
+  maxTimeout: 30,
 };
 
-var recoverableErrors = new RegExp(/(SOCKETTIMEDOUT|TIMEDOUT|CONNRESET|CONNREFUSED|NOTFOUND|API:Invalid nonce|Service:Unavailable|Request timed out|Response code 520|Response code 504|Response code 502)/);
+const recoverableErrors = new RegExp(/(SOCKETTIMEDOUT|TIMEDOUT|CONNRESET|CONNREFUSED|NOTFOUND|API:Invalid nonce|Service:Unavailable|Request timed out|Response code 520|Response code 504|Response code 502)/);
 
 Trader.prototype.processError = function (funcName, error) {
   if (!error)
@@ -77,13 +77,13 @@ Trader.prototype.handleResponse = function (funcName, callback) {
 /* PORTFOLIO MANAGER */
 
 Trader.prototype.getTicker = function (callback) {
-  var setTicker = function (err, data) {
+  const setTicker = function(err, data) {
     if (err)
       return callback(err);
 
-    var ticker = {
+    const ticker = {
       ask: data.asks[0].price,
-      bid: data.bids[0].price
+      bid: data.bids[0].price,
     };
     callback(undefined, ticker);
   };
@@ -94,34 +94,34 @@ Trader.prototype.getTicker = function (callback) {
 
 
 Trader.prototype.getTrades = function (since, callback, ascending) {
-  var startTs = since ? moment(since).valueOf() : null;
+  const startTs = since ? moment(since).valueOf() : null;
 
-  var processResults = function (err, trades) {
+  const processResults = function(err, trades) {
     if (err) {
       return callback(err);
     }
 
-    var parsedTrades = [];
-    _.each(trades, function (trade) {
+    const parsedTrades = [];
+    _.each(trades, function(trade) {
       // Even when you supply 'since' you can still get more trades than you asked for, it needs to be filtered
       if (_.isNull(startTs) || startTs < moment(trade.timestamp).valueOf()) {
         parsedTrades.push({
-          type: trade.type === 0 ? "sell" : "buy",
+          type: trade.type === 0 ? 'sell' : 'buy',
           date: moment(trade.timestamp).unix(),
           amount: String(trade.amount),
           price: String(trade.price),
-          tid: trade.timestamp
+          tid: trade.timestamp,
         });
       }
     }, this);
 
-    if(ascending)
+    if (ascending)
       callback(undefined, parsedTrades);
     else
       callback(undefined, parsedTrades.reverse());
   };
 
-  var optionalSince = "";
+  let optionalSince = '';
   if (since) {
     optionalSince = "/" + startTs;
   }
@@ -131,17 +131,17 @@ Trader.prototype.getTrades = function (since, callback, ascending) {
 };
 
 Trader.prototype.getPortfolio = function (callback) {
-  var setBalance = function (err, data) {
+  const setBalance = function(err, data) {
     if (err)
       return callback(err);
 
     log.debug('[coingi.js] entering "setBalance" callback after coingi-api call, data:', data);
 
     const portfolio = [];
-    for (var i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       portfolio.push({
         name: data[i].currency.name.toUpperCase(),
-        amount: data[i].available
+        amount: data[i].available,
       });
     }
 
@@ -161,11 +161,11 @@ Trader.prototype.getFee = function (callback) {
 Trader.prototype.addOrder = function (tradeType, amount, price, callback) {
   log.debug('[coingi.js] (add-order)', tradeType.toUpperCase(), amount, this.asset, '@', price, this.currency);
 
-  var setOrder = function (err, data) {
+  const setOrder = function(err, data) {
     if (err)
       return callback(err);
 
-    var uuid = data.result;
+    const uuid = data.result;
     log.debug('[coingi.js] (addOrder) added order with uuid:', uuid);
 
     callback(undefined, uuid);
@@ -184,7 +184,7 @@ Trader.prototype.addOrder = function (tradeType, amount, price, callback) {
 
 
 Trader.prototype.getOrder = function (orderId, callback) {
-  var getOrder = function (err, order) {
+  const getOrder = function(err, order) {
     if (err)
       return callback(err);
 
@@ -192,9 +192,9 @@ Trader.prototype.getOrder = function (orderId, callback) {
       const price = parseFloat(order.price);
       const amount = parseFloat(order.baseAmount);
       const date = moment.unix(order.timestamp);
-      callback(undefined, {price, amount, date});
+      callback(undefined, { price, amount, date });
     } else {
-      log.error("Error! Order ID '" + orderId + "' couldn't be found in the result of get order!");
+      log.error('Error! Order ID \'' + orderId + '\' couldn\'t be found in the result of get order!');
     }
   };
 
@@ -212,12 +212,12 @@ Trader.prototype.sell = function (amount, price, callback) {
 };
 
 Trader.prototype.checkOrder = function (orderId, callback) {
-  var check = function (err, order) {
+  const check = function(err, order) {
     if (err)
       return callback(err);
 
     if (order === null) {
-      log.error("Error! Order ID '" + orderId + "' couldn't be found in the result of get order!");
+      log.error('Error! Order ID \'' + orderId + '\' couldn\'t be found in the result of get order!');
     }
     // returns true when the order has been filled (processed in full), false otherwise
     callback(undefined, order !== null && order.status === 2);

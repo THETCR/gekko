@@ -1,8 +1,8 @@
-var ForkTask = require('relieve').tasks.ForkTask;
-var fork = require('child_process').fork;
+const ForkTask = require('relieve').tasks.ForkTask;
+const fork = require('child_process').fork;
 
 module.exports = function(config, done) {
-  var debug = typeof v8debug === 'object';
+  const debug = typeof v8debug === 'object';
   if (debug) {
     process.execArgv = [];
   }

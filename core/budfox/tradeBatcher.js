@@ -30,13 +30,13 @@
 //   ]
 // }
 
-var _ = require('lodash');
-var moment = require('moment');
-var util = require('../util');
-var log = require('../log');
+const _ = require('lodash');
+const moment = require('moment');
+const util = require('../util');
+const log = require('../log');
 
-var TradeBatcher = function(tid) {
-  if(!_.isString(tid))
+const TradeBatcher = function(tid) {
+  if (!_.isString(tid))
     throw new Error('tid is not a string');
 
   _.bindAll(this);
@@ -54,16 +54,16 @@ TradeBatcher.prototype.write = function(batch) {
   if(_.isEmpty(batch))
     return log.debug('Trade fetch came back empty.');
 
-  var filterBatch = this.filter(batch);
+  const filterBatch = this.filter(batch);
 
-  var amount = _.size(filterBatch);
+  const amount = _.size(filterBatch);
   if(!amount)
     return log.debug('No new trades.');
 
-  var momentBatch = this.convertDates(filterBatch);
+  const momentBatch = this.convertDates(filterBatch);
 
-  var last = _.last(momentBatch);
-  var first = _.first(momentBatch);
+  const last = _.last(momentBatch);
+  const first = _.first(momentBatch);
 
   log.debug(
     'Processing', amount, 'new trades.',
@@ -95,7 +95,7 @@ TradeBatcher.prototype.write = function(batch) {
 TradeBatcher.prototype.filter = function(batch) {
   // make sure we're not trying to count
   // beyond infinity
-  var lastTid = _.last(batch)[this.tid];
+  const lastTid = _.last(batch)[this.tid];
   if(lastTid === lastTid + 1)
     util.die('trade tid is max int, Gekko can\'t process..');
 

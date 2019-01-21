@@ -7,20 +7,20 @@
 // > As much as I wanted to be Gordon Gekko, I'll *always* be Bud Fox.
 // > [tosses back the handkerchief and walks away]
 
-var _ = require('lodash');
-var async = require('async');
+const _ = require('lodash');
+const async = require('async');
 
-var util = require(__dirname + '/../util');
-var dirs = util.dirs();
+const util = require(__dirname + '/../util');
+const dirs = util.dirs();
 
-var Heart = require(dirs.budfox + 'heart');
-var MarketDataProvider =  require(dirs.budfox + 'marketDataProvider');
-var CandleManager = require(dirs.budfox + 'candleManager');
+const Heart = require(dirs.budfox + 'heart');
+const MarketDataProvider = require(dirs.budfox + 'marketDataProvider');
+const CandleManager = require(dirs.budfox + 'candleManager');
 
-var BudFox = function(config) {
+const BudFox = function(config) {
   _.bindAll(this);
 
-  Readable.call(this, {objectMode: true});
+  Readable.call(this, { objectMode: true });
 
   // BudFox internal modules:
 
@@ -33,37 +33,37 @@ var BudFox = function(config) {
   // relay a marketUpdate event
   this.marketDataProvider.on(
     'marketUpdate',
-    e => this.emit('marketUpdate', e)
+    e => this.emit('marketUpdate', e),
   );
 
   // relay a marketStart event
   this.marketDataProvider.on(
     'marketStart',
-    e => this.emit('marketStart', e)
+    e => this.emit('marketStart', e),
   );
 
   // Output the candles
   this.candleManager.on(
     'candles',
-    this.pushCandles
+    this.pushCandles,
   );
 
   // on every `tick` retrieve trade data
   this.heart.on(
     'tick',
-    this.marketDataProvider.retrieve
+    this.marketDataProvider.retrieve,
   );
 
   // on new trade data create candles
   this.marketDataProvider.on(
     'trades',
-    this.candleManager.processTrades
+    this.candleManager.processTrades,
   );
 
   this.heart.pump();
 };
 
-var Readable = require('stream').Readable;
+const Readable = require('stream').Readable;
 
 BudFox.prototype = Object.create(Readable.prototype, {
   constructor: { value: BudFox }

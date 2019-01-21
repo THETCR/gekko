@@ -184,7 +184,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
   const handle = (err, trades) => {
     if (err) return callback(err);
 
-    var parsedTrades = [];
+    const parsedTrades = [];
     _.each(trades.result[this.pair], function(trade) {
       // Even when you supply 'since' you can still get more trades than you asked for, it needs to be filtered
       if (_.isNull(startTs) || startTs < moment.unix(trade[2]).valueOf()) {

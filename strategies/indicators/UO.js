@@ -1,7 +1,7 @@
 // required indicators
-var SMA = require('./SMA.js');
+const SMA = require('./SMA.js');
 
-var Indicator = function(settings) {
+const Indicator = function(settings) {
   this.input = 'candle';
   this.lastClose = 0;
   this.uo = 0;
@@ -17,13 +17,13 @@ var Indicator = function(settings) {
 };
 
 Indicator.prototype.update = function(candle) {
-  var close = candle.close;
-  var prevClose = this.lastClose;
-  var low = candle.low;
-  var high = candle.high;
+  const close = candle.close;
+  const prevClose = this.lastClose;
+  const low = candle.low;
+  const high = candle.high;
 
-  var bp = close - Math.min(low, prevClose);
-  var tr = Math.max(high, prevClose) - Math.min(low, prevClose);
+  const bp = close - Math.min(low, prevClose);
+  const tr = Math.max(high, prevClose) - Math.min(low, prevClose);
 
   this.firstLow.update(tr);
   this.secondLow.update(tr);
@@ -33,9 +33,9 @@ Indicator.prototype.update = function(candle) {
   this.secondHigh.update(bp);
   this.thirdHigh.update(bp);
 
-  var first = this.firstHigh.result / this.firstLow.result;
-  var second = this.secondHigh.result / this.secondLow.result;
-  var third = this.thirdHigh.result / this.thirdLow.result;
+  const first = this.firstHigh.result / this.firstLow.result;
+  const second = this.secondHigh.result / this.secondLow.result;
+  const third = this.thirdHigh.result / this.thirdLow.result;
 
   this.uo = 100 * (this.firstWeight * first + this.secondWeight * second + this.thirdWeight * third) / (this.firstWeight + this.secondWeight + this.thirdWeight);
 

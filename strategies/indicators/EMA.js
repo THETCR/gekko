@@ -1,6 +1,6 @@
 ﻿// @link http://en.wikipedia.org/wiki/Exponential_moving_average#Exponential_moving_average
 
-var Indicator = function(weight) {
+const Indicator = function(weight) {
   this.input = 'price';
   this.weight = weight;
   this.result = false;
@@ -24,10 +24,10 @@ Indicator.prototype.update = function(price) {
 //  t = today, y = yesterday, N = number of days in EMA, k = 2 / (N+1)
 Indicator.prototype.calculate = function(price) {
   // weight factor
-  var k = 2 / (this.weight + 1);
+  const k = 2 / (this.weight + 1);
 
   // yesterday
-  var y = this.result;
+  const y = this.result;
 
   // calculation
   this.result = price * k + y * (1 - k);

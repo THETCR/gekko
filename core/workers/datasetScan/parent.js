@@ -1,19 +1,19 @@
-var _ = require('lodash');
-var moment = require('moment');
-var async = require('async');
-var os = require('os');
+const _ = require('lodash');
+const moment = require('moment');
+const async = require('async');
+const os = require('os');
 
-var util = require('../../util');
-var dirs = util.dirs();
+const util = require('../../util');
+const dirs = util.dirs();
 
-var dateRangeScan = require('../dateRangeScan/parent');
+const dateRangeScan = require('../dateRangeScan/parent');
 
 module.exports = function(config, done) {
 
   util.setConfig(config);
 
-  var adapter = config[config.adapter];
-  var scan = require(dirs.gekko + adapter.path + '/scanner');
+  const adapter = config[config.adapter];
+  const scan = require(dirs.gekko + adapter.path + '/scanner');
 
   scan((err, markets) => {
 

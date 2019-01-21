@@ -32,22 +32,22 @@ else
   var fromTs = moment().startOf('minute').unix();
 
 
-var Market = function() {
+const Market = function() {
 
   _.bindAll(this);
 
-  Readable.call(this, {objectMode: true});
+  Readable.call(this, { objectMode: true });
 
   this.reader = new Reader();
   this.latestTs = fromTs;
 
   setInterval(
     this.get,
-    TICKINTERVAL
+    TICKINTERVAL,
   );
 };
 
-var Readable = require('stream').Readable;
+const Readable = require('stream').Readable;
 Market.prototype = Object.create(Readable.prototype, {
   constructor: { value: Market }
 });
@@ -57,7 +57,7 @@ Market.prototype._read = _.once(function() {
 });
 
 Market.prototype.get = function() {
-  var future = moment().add(1, 'minute').unix();
+  const future = moment().add(1, 'minute').unix();
 
   this.reader.get(
     this.latestTs,
@@ -68,7 +68,7 @@ Market.prototype.get = function() {
 };
 
 Market.prototype.processCandles = function(err, candles) {
-  var amount = _.size(candles);
+  const amount = _.size(candles);
   if(amount === 0) {
     // no new candles!
     return;

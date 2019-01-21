@@ -55,13 +55,13 @@ Fetcher.prototype.getTrades = function(range, callback) {
 
 util.makeEventEmitter(Fetcher);
 
-var iterator = false;
-var end = false;
-var done = false;
+let iterator = false;
+let end = false;
+const done = false;
 
-var fetcher = new Fetcher(config.watch);
+const fetcher = new Fetcher(config.watch);
 
-var fetch = () => {
+const fetch = () => {
   log.info(
     config.watch.currency,
     config.watch.asset,
@@ -81,7 +81,7 @@ var fetch = () => {
   fetcher.getTrades(iterator, handleFetch);
 };
 
-var handleFetch = trades => {
+const handleFetch = trades => {
   iterator.from.add(batchSize, 'minutes').subtract(overlapSize, 'minutes');
   iterator.to.add(batchSize, 'minutes').subtract(overlapSize, 'minutes');
 
@@ -94,12 +94,12 @@ var handleFetch = trades => {
     return fetcher.emit('trades', []);
   }
 
-  var last = moment.unix(_.last(trades).date);
+  const last = moment.unix(_.last(trades).date);
 
   if(last > end) {
     fetcher.emit('done');
 
-    var endUnix = end.unix();
+    const endUnix = end.unix();
     trades = _.filter(
       trades,
       t => t.date <= endUnix

@@ -1,7 +1,7 @@
 // required indicators
-var EMA = require('./EMA.js');
+const EMA = require('./EMA.js');
 
-var Indicator = function(config) {
+const Indicator = function(config) {
   this.input = 'price';
   this.diff = false;
   this.short = new EMA(config.short);
@@ -18,8 +18,8 @@ Indicator.prototype.update = function(price) {
 };
 
 Indicator.prototype.calculateEMAdiff = function() {
-  var shortEMA = this.short.result;
-  var longEMA = this.long.result;
+  const shortEMA = this.short.result;
+  const longEMA = this.long.result;
 
   this.diff = shortEMA - longEMA;
 };

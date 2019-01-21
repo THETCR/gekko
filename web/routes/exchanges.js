@@ -2,9 +2,9 @@ const _ = require('lodash');
 const fs = require('co-fs');
 
 const gekkoRoot = __dirname + '/../../';
-var util = require(__dirname + '/../../core/util');
+const util = require(__dirname + '/../../core/util');
 
-var config = {};
+const config = {};
 
 config.debug = false;
 config.silent = false;

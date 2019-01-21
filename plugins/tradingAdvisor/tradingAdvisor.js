@@ -1,17 +1,17 @@
-var util = require('../../core/util');
-var _ = require('lodash');
-var fs = require('fs');
-var toml = require('toml');
+const util = require('../../core/util');
+const _ = require('lodash');
+const fs = require('fs');
+const toml = require('toml');
 
-var config = util.getConfig();
-var dirs = util.dirs();
-var log = require(dirs.core + 'log');
-var CandleBatcher = require(dirs.core + 'candleBatcher');
+const config = util.getConfig();
+const dirs = util.dirs();
+const log = require(dirs.core + 'log');
+const CandleBatcher = require(dirs.core + 'candleBatcher');
 
-var moment = require('moment');
-var isLeecher = config.market && config.market.type === 'leech';
+const moment = require('moment');
+const isLeecher = config.market && config.market.type === 'leech';
 
-var Actor = function(done) {
+const Actor = function(done) {
   _.bindAll(this);
 
   this.done = done;
@@ -22,15 +22,15 @@ var Actor = function(done) {
 
   this.setupStrategy();
 
-  var mode = util.gekkoMode();
+  const mode = util.gekkoMode();
 
   // the stitcher will try to pump in historical data
   // so that the strat can use this data as a "warmup period"
   //
   // the realtime "leech" market won't use the stitcher
-  if(mode === 'realtime' && !isLeecher) {
-    var Stitcher = require(dirs.tools + 'dataStitcher');
-    var stitcher = new Stitcher(this.batcher);
+  if (mode === 'realtime' && !isLeecher) {
+    const Stitcher = require(dirs.tools + 'dataStitcher');
+    const stitcher = new Stitcher(this.batcher);
     stitcher.prepareHistoricalData(done);
   } else
     done();

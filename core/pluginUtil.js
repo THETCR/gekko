@@ -1,17 +1,17 @@
-var _ = require('lodash');
-var async = require('async');
-var Emitter = require('./emitter');
+const _ = require('lodash');
+const async = require('async');
+const Emitter = require('./emitter');
 
-var util = require(__dirname + '/util');
+const util = require(__dirname + '/util');
 
-var log = require(util.dirs().core + 'log');
+const log = require(util.dirs().core + 'log');
 
-var config = util.getConfig();
-var pluginDir = util.dirs().plugins;
-var gekkoMode = util.gekkoMode();
-var inherits = require('util').inherits;
+const config = util.getConfig();
+const pluginDir = util.dirs().plugins;
+const gekkoMode = util.gekkoMode();
+const inherits = require('util').inherits;
 
-var pluginHelper = {
+const pluginHelper = {
   // Checks whether we can load a module
 
   // @param Object plugin
@@ -22,37 +22,36 @@ var pluginHelper = {
   cannotLoad: function(plugin) {
 
     // verify plugin dependencies are installed
-    if(_.has(plugin, 'dependencies'))
-      var error = false;
+    if (_.has(plugin, 'dependencies'))
+      let error = false;
 
-      _.each(plugin.dependencies, function(dep) {
-        try {
-          var a = require(dep.module);
+    _.each(plugin.dependencies, function(dep) {
+      try {
+        const a = require(dep.module);
+      } catch (e) {
+        log.error('ERROR LOADING DEPENDENCY', dep.module);
+
+        if (!e.message) {
+          log.error(e);
+          util.die();
         }
-        catch(e) {
-          log.error('ERROR LOADING DEPENDENCY', dep.module);
 
-          if(!e.message) {
-            log.error(e);
-            util.die();
-          }
+        if (!e.message.startsWith('Cannot find module'))
+          return util.die(e);
 
-          if(!e.message.startsWith('Cannot find module'))
-            return util.die(e);
-
-          error = [
-            'The plugin',
-            plugin.slug,
-            'expects the module',
-            dep.module,
-            'to be installed.',
-            'However it is not, install',
-            'it by running: \n\n',
-            '\tnpm install',
-            dep.module + '@' + dep.version
-          ].join(' ');
-        }
-      });
+        error = [
+          'The plugin',
+          plugin.slug,
+          'expects the module',
+          dep.module,
+          'to be installed.',
+          'However it is not, install',
+          'it by running: \n\n',
+          '\tnpm install',
+          dep.module + '@' + dep.version,
+        ].join(' ');
+      }
+    });
 
     return error;
   },
@@ -66,16 +65,16 @@ var pluginHelper = {
 
     plugin.config = config[plugin.slug];
 
-    if(!plugin.config || !plugin.config.enabled)
+    if (!plugin.config || !plugin.config.enabled)
       return next();
 
-    if(!_.contains(plugin.modes, gekkoMode)) {
+    if (!_.contains(plugin.modes, gekkoMode)) {
       log.warn(
         'The plugin',
         plugin.name,
         'does not support the mode',
         gekkoMode + '.',
-        'It has been disabled.'
+        'It has been disabled.',
       );
       return next();
     }
@@ -84,16 +83,16 @@ var pluginHelper = {
     log.info('\t', plugin.name);
     log.info('\t', plugin.description);
 
-    var cannotLoad = pluginHelper.cannotLoad(plugin);
-    if(cannotLoad)
+    const cannotLoad = pluginHelper.cannotLoad(plugin);
+    if (cannotLoad)
       return next(cannotLoad);
 
-    if(plugin.path)
+    if (plugin.path)
       var Constructor = require(pluginDir + plugin.path(config));
     else
       var Constructor = require(pluginDir + plugin.slug);
 
-    if(plugin.async) {
+    if (plugin.async) {
       inherits(Constructor, Emitter);
       var instance = new Constructor(util.defer(function(err) {
         next(err, instance);
@@ -112,9 +111,9 @@ var pluginHelper = {
       });
     }
 
-    if(!plugin.silent)
+    if (!plugin.silent)
       log.info('\n');
-  }
+  },
 };
 
 module.exports = pluginHelper;

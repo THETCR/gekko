@@ -1,28 +1,28 @@
-var _ = require('lodash');
-var Moment = require('moment');
-var Ranger = require('ranger');
+const _ = require('lodash');
+const Moment = require('moment');
+const Ranger = require('ranger');
 
-var config = require('../core/util').getConfig().campfire;
+const config = require('../core/util').getConfig().campfire;
 
-var Actor = function() {
+const Actor = function() {
   _.bindAll(this);
 
   this.commands = [{
     'handler': 'advice',
     'callback': this.sayAdvice,
-    'description': "Advice on what position to take, depending on the current trend"
+    'description': 'Advice on what position to take, depending on the current trend',
   }, {
     'handler': 'price',
     'callback': this.sayPrice,
-    'description': "The current price of the asset in the configured currency"
+    'description': 'The current price of the asset in the configured currency',
   }, {
     'handler': 'donate',
     'callback': this.sayDonate,
-    'description': "Where to send all of that extra coin that's weighing you down"
+    'description': 'Where to send all of that extra coin that\'s weighing you down',
   }, {
     'handler': 'help',
     'callback': this.sayHelp,
-    'description': "You are here"
+    'description': 'You are here',
   }];
 
   this.advice = null;
@@ -54,7 +54,7 @@ Actor.prototype = {
   },
 
   sayAdvice: function() {
-    var message;
+    let message;
 
     if (this.advice !== null) {
       message = ["We think you should", this.advice + ".", "(" + this.adviceTime.fromNow() + ")"];
@@ -66,7 +66,7 @@ Actor.prototype = {
   },
 
   sayPrice: function() {
-    var message;
+    let message;
 
     if (this.price !== null) {
       message = ["The price at the moment is", this.price + ".", "(" + this.priceTime.fromNow() + ")"];
@@ -86,7 +86,7 @@ Actor.prototype = {
   },
 
   pasteDescriptions: function() {
-    var descriptions = _.map(this.commands, function(command) {
+    const descriptions = _.map(this.commands, function(command) {
       return [command.handler + ':', command.description].join(' ');
     }, this).join('\n');
 
@@ -114,12 +114,12 @@ Actor.prototype = {
   },
 
   textHasCommandForBot: function(text, nickname, handler) {
-    var normalizedText = text.toLowerCase(),
-        normalizedNickname = nickname.toLowerCase(),
-        normalizedHandler = handler.toLowerCase();
+    const normalizedText = text.toLowerCase(),
+      normalizedNickname = nickname.toLowerCase(),
+      normalizedHandler = handler.toLowerCase();
 
-    var nicknameWasMentioned = normalizedText.indexOf(normalizedNickname) >= 0,
-        handlerWasMentioned = normalizedText.indexOf(normalizedHandler) >= 0;
+    const nicknameWasMentioned = normalizedText.indexOf(normalizedNickname) >= 0,
+      handlerWasMentioned = normalizedText.indexOf(normalizedHandler) >= 0;
 
     return nicknameWasMentioned && handlerWasMentioned;
   },

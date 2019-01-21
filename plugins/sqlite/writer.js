@@ -1,12 +1,12 @@
-var _ = require('lodash');
-var config = require('../../core/util.js').getConfig();
+const _ = require('lodash');
+const config = require('../../core/util.js').getConfig();
 
-var sqlite = require('./handle');
-var sqliteUtil = require('./util');
-var util = require('../../core/util');
-var log = require('../../core/log');
+const sqlite = require('./handle');
+const sqliteUtil = require('./util');
+const util = require('../../core/util');
+const log = require('../../core/log');
 
-var Store = function(done, pluginMeta) {
+const Store = function(done, pluginMeta) {
   _.bindAll(this);
   this.done = done;
 
@@ -14,11 +14,11 @@ var Store = function(done, pluginMeta) {
   this.db.serialize(this.upsertTables);
 
   this.cache = [];
-  this.buffered = util.gekkoMode() === "importer";
+  this.buffered = util.gekkoMode() === 'importer';
 };
 
 Store.prototype.upsertTables = function() {
-  var createQueries = [
+  const createQueries = [
     `
       CREATE TABLE IF NOT EXISTS
       ${sqliteUtil.table('candles')} (
@@ -41,7 +41,7 @@ Store.prototype.upsertTables = function() {
     // ``
   ];
 
-  var next = _.after(_.size(createQueries), this.done);
+  const next = _.after(_.size(createQueries), this.done);
 
   _.each(createQueries, function(q) {
     this.db.run(q, next);
@@ -55,15 +55,15 @@ Store.prototype.writeCandles = function() {
   const transaction = () => {
     this.db.run("BEGIN TRANSACTION");
 
-    var stmt = this.db.prepare(`
+    const stmt = this.db.prepare(`
       INSERT OR IGNORE INTO ${sqliteUtil.table('candles')}
       VALUES (?,?,?,?,?,?,?,?,?)
     `, function(err, rows) {
-        if(err) {
-          log.error(err);
-          return util.die('DB error at INSERT: '+ err);
-        }
-      });
+      if (err) {
+        log.error(err);
+        return util.die('DB error at INSERT: ' + err);
+      }
+    });
 
     _.each(this.cache, candle => {
       stmt.run(
@@ -90,7 +90,7 @@ Store.prototype.writeCandles = function() {
   this.db.serialize(transaction);
 };
 
-var processCandle = function(candle, done) {
+const processCandle = function(candle, done) {
   this.cache.push(candle);
   if (!this.buffered || this.cache.length > 1000)
     this.writeCandles();
@@ -98,9 +98,11 @@ var processCandle = function(candle, done) {
   done();
 };
 
-var finalize = function(done) {
+const finalize = function(done) {
   this.writeCandles();
-  this.db.close(() => { done(); });
+  this.db.close(() => {
+    done();
+  });
   this.db = null;
 };
 

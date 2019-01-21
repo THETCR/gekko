@@ -1,7 +1,7 @@
 // Everything is explained here:
 // @link https://gekko.wizb.it/docs/commandline/plugins.html
 
-var config = {};
+const config = {};
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                          GENERAL SETTINGS

@@ -7,11 +7,11 @@
  */
 
 // helpers
-var _ = require('lodash');
-var log = require('../core/log.js');
+const _ = require('lodash');
+const log = require('../core/log.js');
 
 // let's create our own method
-var method = {};
+const method = {};
 
 // prepare everything our method needs
 method.init = function() {
@@ -42,11 +42,11 @@ method.update = function(candle) {
 // for debugging purposes: log the last calculated
 // EMAs and diff.
 method.log = function() {
-  var digits = 8;
-  var macd = this.indicators.macd;
+  const digits = 8;
+  const macd = this.indicators.macd;
 
-  var diff = macd.diff;
-  var signal = macd.signal.result;
+  const diff = macd.diff;
+  const signal = macd.signal.result;
 
   log.debug('calculated MACD properties for candle:');
   log.debug('\t', 'short:', macd.short.result.toFixed(digits));
@@ -57,7 +57,7 @@ method.log = function() {
 };
 
 method.check = function() {
-  var macddiff = this.indicators.macd.result;
+  const macddiff = this.indicators.macd.result;
 
   if(macddiff > this.settings.thresholds.up) {
 

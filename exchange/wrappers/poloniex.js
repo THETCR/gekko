@@ -252,8 +252,8 @@ Trader.prototype.getPortfolio = function(callback) {
       return callback(err);
     }
 
-    var assetAmount = parseFloat( data[this.asset] );
-    var currencyAmount = parseFloat( data[this.currency] );
+    let assetAmount = parseFloat(data[this.asset]);
+    let currencyAmount = parseFloat(data[this.currency]);
 
     if(
       !_.isNumber(assetAmount) || _.isNaN(assetAmount) ||
@@ -263,9 +263,9 @@ Trader.prototype.getPortfolio = function(callback) {
       currencyAmount = 0;
     }
 
-    var portfolio = [
+    const portfolio = [
       { name: this.asset, amount: assetAmount },
-      { name: this.currency, amount: currencyAmount }
+      { name: this.currency, amount: currencyAmount },
     ];
 
     callback(undefined, portfolio);
@@ -280,7 +280,7 @@ Trader.prototype.getTicker = function(callback) {
     if(err)
       return callback(err);
 
-    var tick = data[this.pair];
+    const tick = data[this.pair];
 
     callback(null, {
       bid: parseFloat(tick.highestBid),
@@ -458,8 +458,8 @@ Trader.prototype.getTrades = function(since, callback, descending) {
     callback(null, result.reverse());
   };
 
-  var params = {
-    currencyPair: this.pair
+  const params = {
+    currencyPair: this.pair,
   };
 
   if(since)

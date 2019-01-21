@@ -1,7 +1,7 @@
 // required indicators
-var EMA = require('./EMA.js');
+const EMA = require('./EMA.js');
 
-var Indicator = function(config) {
+const Indicator = function(config) {
   this.input = 'price';
   this.result = false;
   this.inner = new EMA(config.weight);

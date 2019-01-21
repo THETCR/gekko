@@ -1,37 +1,37 @@
-var chai = require('chai');
-var expect = chai.expect;
-var should = chai.should;
-var sinon = require('sinon');
+const chai = require('chai');
+const expect = chai.expect;
+const should = chai.should;
+const sinon = require('sinon');
 
-var _ = require('lodash');
-var moment = require('moment');
+const _ = require('lodash');
+const moment = require('moment');
 
-var utils = require(__dirname + '/../core/util');
-var dirs = utils.dirs();
-var TradeBatcher = require(dirs.budfox + 'tradeBatcher');
+const utils = require(__dirname + '/../core/util');
+const dirs = utils.dirs();
+const TradeBatcher = require(dirs.budfox + 'tradeBatcher');
 
-var trades_tid_1 = [
-  {tid: 1, price: 10, amount: 1, date: 1466115793},
-  {tid: 2, price: 10, amount: 1, date: 1466115794},
-  {tid: 3, price: 10, amount: 1, date: 1466115795}
+const trades_tid_1 = [
+  { tid: 1, price: 10, amount: 1, date: 1466115793 },
+  { tid: 2, price: 10, amount: 1, date: 1466115794 },
+  { tid: 3, price: 10, amount: 1, date: 1466115795 },
 ];
 
-var trades_tid_2 = [
-  {tid: 2, price: 10, amount: 1, date: 1466115794},
-  {tid: 3, price: 10, amount: 1, date: 1466115795},
-  {tid: 4, price: 10, amount: 1, date: 1466115796},
-  {tid: 5, price: 10, amount: 1, date: 1466115797}
+const trades_tid_2 = [
+  { tid: 2, price: 10, amount: 1, date: 1466115794 },
+  { tid: 3, price: 10, amount: 1, date: 1466115795 },
+  { tid: 4, price: 10, amount: 1, date: 1466115796 },
+  { tid: 5, price: 10, amount: 1, date: 1466115797 },
 ];
 
-var empty_trades = [
-  {tid: 2, price: 10, amount: 0, date: 1466115794},
-  {tid: 3, price: 10, amount: 0, date: 1466115795},
-  {tid: 4, price: 10, amount: 0, date: 1466115796},
-  {tid: 5, price: 10, amount: 0, date: 1466115797}
+const empty_trades = [
+  { tid: 2, price: 10, amount: 0, date: 1466115794 },
+  { tid: 3, price: 10, amount: 0, date: 1466115795 },
+  { tid: 4, price: 10, amount: 0, date: 1466115796 },
+  { tid: 5, price: 10, amount: 0, date: 1466115797 },
 ];
 
 describe('budfox/tradeBatcher', function() {
-  var tb;
+  let tb;
 
   it('should throw when not passed a number', function() {
     expect(function() {
@@ -44,7 +44,7 @@ describe('budfox/tradeBatcher', function() {
   });
 
   it('should throw when not fed an array', function() {
-    var trade = _.first(trades_tid_1);
+    const trade = _.first(trades_tid_1);
     expect(
       tb.write.bind(tb, trade)
     ).to.throw('batch is not an array');
@@ -53,7 +53,7 @@ describe('budfox/tradeBatcher', function() {
   it('should emit an event when fed trades', function() {
     tb = new TradeBatcher('tid');
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     tb.on('new batch', spy);
     tb.write( trades_tid_1 );
     expect(spy.callCount).to.equal(1);
@@ -62,7 +62,7 @@ describe('budfox/tradeBatcher', function() {
   it('should only emit once when fed the same trades twice', function() {
     tb = new TradeBatcher('tid');
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     tb.on('new batch', spy);
     tb.write( trades_tid_1 );
     tb.write( trades_tid_1 );
@@ -72,26 +72,26 @@ describe('budfox/tradeBatcher', function() {
   it('should correctly set meta data', function() {
     tb = new TradeBatcher('tid');
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     tb.on('new batch', spy);
 
     tb.write( trades_tid_1 );
 
-    var transformedTrades = _.map(_.cloneDeep(trades_tid_1), function(trade) {
+    const transformedTrades = _.map(_.cloneDeep(trades_tid_1), function(trade) {
       trade.date = moment.unix(trade.date).utc();
       return trade;
     });
 
-    var result = {
+    const result = {
       data: transformedTrades,
       amount: _.size(transformedTrades),
       start: _.first(transformedTrades).date,
       end: _.last(transformedTrades).date,
       first: _.first(transformedTrades),
-      last: _.last(transformedTrades)
+      last: _.last(transformedTrades),
     };
 
-    var tbResult = _.first(_.first(spy.args));
+    const tbResult = _.first(_.first(spy.args));
     expect(tbResult.amount).to.equal(result.amount);
     expect(tbResult.start.unix()).to.equal(result.start.unix());
     expect(tbResult.end.unix()).to.equal(result.end.unix());
@@ -107,7 +107,7 @@ describe('budfox/tradeBatcher', function() {
   it('should correctly filter trades', function() {
     tb = new TradeBatcher('tid');
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     tb.on('new batch', spy);
 
     tb.write( trades_tid_1 );
@@ -115,7 +115,7 @@ describe('budfox/tradeBatcher', function() {
 
     expect(spy.callCount).to.equal(2);
 
-    var tbResult = _.first(_.last(spy.args));
+    const tbResult = _.first(_.last(spy.args));
 
     expect(tbResult.amount).to.equal(2);
     expect(tbResult.start.unix()).to.equal(1466115796);
@@ -128,7 +128,7 @@ describe('budfox/tradeBatcher', function() {
   it('should filter out empty trades', function() {
     tb = new TradeBatcher('tid');
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     tb.on('new batch', spy);
 
     tb.write(empty_trades);

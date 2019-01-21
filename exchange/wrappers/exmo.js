@@ -49,15 +49,15 @@ const includes = (str, list) => {
 
 Trader.prototype.api_query = function(method, params, callback){
 	params.nonce = this.nonce++;
-	var post_data = querystring.stringify(params);
+  const post_data = querystring.stringify(params);
 
-	var options = {
-	  url: API_URL + method,
-	  headers: {'Key': this.key,'Sign': CryptoJS.HmacSHA512(post_data, this.secret).toString(CryptoJS.enc.hex) },
-	  form: params
-	};
+  const options = {
+    url: API_URL + method,
+    headers: { 'Key': this.key, 'Sign': CryptoJS.HmacSHA512(post_data, this.secret).toString(CryptoJS.enc.hex) },
+    form: params,
+  };
 
- 	request.post(options, function (error, response, body) {
+  request.post(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             data=JSON.parse(body);
             if(data.error) error = { message: data.error };
@@ -84,14 +84,14 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 
     data=data[this.pair];
 
-    var parsedTrades =  _.map(data, function(trade) {
-        return {
-          tid: trade.trade_id,
-          date: trade.date,
-          price: +trade.price,
-          amount: +trade.quantity
-        };
-     });
+    const parsedTrades = _.map(data, function(trade) {
+      return {
+        tid: trade.trade_id,
+        date: trade.date,
+        price: +trade.price,
+        amount: +trade.quantity,
+      };
+    });
 
     if (descending) callback(undefined, parsedTrades);
     else callback(undefined, parsedTrades.reverse());

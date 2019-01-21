@@ -17,13 +17,13 @@ const pipelineRunner = promisify(require('../../core/workers/pipeline/parent'));
 //   }
 // }
 module.exports = function *() {
-  var mode = 'backtest';
+  const mode = 'backtest';
 
-  var config = {};
+  const config = {};
 
-  var base = require('./baseConfig');
+  const base = require('./baseConfig');
 
-  var req = this.request.body;
+  const req = this.request.body;
 
   _.merge(config, base, req);
 

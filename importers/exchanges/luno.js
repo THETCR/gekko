@@ -9,8 +9,8 @@ const Fetcher = require(dirs.exchanges + 'luno');
 
 util.makeEventEmitter(Fetcher);
 
-var end = false;
-var from = false;
+let end = false;
+let from = false;
 const REQUEST_INTERVAL = 5 * 1000;
 
 Fetcher.prototype.getTrades = function(since, callback, descending) {

@@ -1,20 +1,20 @@
-var BTCChina = require('btc-china-fork');
-var util = require('../../core/util.js');
-var _ = require('lodash');
-var moment = require('moment');
-var log = require('../../core/log');
+const BTCChina = require('btc-china-fork');
+const util = require('../../core/util.js');
+const _ = require('lodash');
+const moment = require('moment');
+const log = require('../../core/log');
 
-var config = util.getConfig();
+const config = util.getConfig();
 
-var dirs = util.dirs();
+const dirs = util.dirs();
 
-var Fetcher = require(dirs.exchanges + 'btcc');
+const Fetcher = require(dirs.exchanges + 'btcc');
 
 // patch getTrades..
 Fetcher.prototype.getTrades = function(fromTid, sinceTime, callback) {
-  var args = _.toArray(arguments);
-  var process = function(err, result) {
-    if(err)
+  const args = _.toArray(arguments);
+  const process = function(err, result) {
+    if (err)
       return this.retry(this.getTrades, args);
 
     callback(result);
@@ -38,15 +38,15 @@ Fetcher.prototype.getTrades = function(fromTid, sinceTime, callback) {
 
 util.makeEventEmitter(Fetcher);
 
-var iterator = false;
-var end = false;
-var done = false;
-var from = false;
+let iterator = false;
+let end = false;
+const done = false;
+let from = false;
 
-var fetcher = new Fetcher(config.watch);
+const fetcher = new Fetcher(config.watch);
 
-var fetch = () => {
-  if(!iterator)
+const fetch = () => {
+  if (!iterator)
     fetcher.getTrades(false, from, handleFirstFetch);
   else
     fetcher.getTrades(iterator, false, handleFetch);
@@ -54,20 +54,20 @@ var fetch = () => {
 
 // we use the first fetch to figure out
 // the tid of the moment we want data from
-var handleFirstFetch = trades => {
+const handleFirstFetch = trades => {
   iterator = _.first(trades).tid;
   fetch();
 };
 
-var handleFetch = trades => {
+const handleFetch = trades => {
 
   iterator = _.last(trades).tid;
-  var last = moment.unix(_.last(trades).date);
+  const last = moment.unix(_.last(trades).date);
 
   if(last > end) {
     fetcher.emit('done');
 
-    var endUnix = end.unix();
+    const endUnix = end.unix();
     trades = _.filter(
       trades,
       t => t.date <= endUnix

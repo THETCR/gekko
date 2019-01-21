@@ -26,8 +26,8 @@ Logger.prototype.round = function(amount) {
 Logger.prototype.logReport = function(trade, report) {
   // ignore the trade
 
-  var start = this.round(report.startBalance);
-  var current = this.round(report.balance);
+  const start = this.round(report.startBalance);
+  const current = this.round(report.balance);
 
   log.info(`(PROFIT REPORT) original balance:\t\t ${start} ${this.currency}`);
   log.info(`(PROFIT REPORT) current balance:\t\t ${current} ${this.currency}`);
@@ -60,7 +60,7 @@ if(mode === 'backtest') {
     if(trade.action !== 'sell' && trade.action !== 'buy')
       return;
 
-    var at = trade.date.format('YYYY-MM-DD HH:mm:ss');
+    const at = trade.date.format('YYYY-MM-DD HH:mm:ss');
 
 
     if(trade.action === 'sell')

@@ -1,14 +1,14 @@
-var _ = require('lodash');
-var config = require('../../core/util.js').getConfig();
+const _ = require('lodash');
+const config = require('../../core/util.js').getConfig();
 
-var moment = require('moment');
-var util = require('../../core/util.js');
-var log = require(`${util.dirs().core}log`);
+const moment = require('moment');
+const util = require('../../core/util.js');
+const log = require(`${util.dirs().core}log`);
 
-var handle = require('./handle');
-var mongoUtil = require('./util');
+const handle = require('./handle');
+const mongoUtil = require('./util');
 
-var Store = function Store (done) {
+const Store = function Store(done) {
   _.bindAll(this);
   this.done = done;
   this.db = handle;
@@ -30,9 +30,9 @@ Store.prototype.writeCandles = function writeCandles () {
     return;
   }
 
-  var candles = [];
+  const candles = [];
   _.each(this.candleCache, candle => {
-    var mCandle = {
+    const mCandle = {
       time: moment().unix(),
       start: candle.start.unix(),
       open: candle.open,
@@ -42,7 +42,7 @@ Store.prototype.writeCandles = function writeCandles () {
       vwp: candle.vwp,
       volume: candle.volume,
       trades: candle.trades,
-      pair: this.pair
+      pair: this.pair,
     };
     candles.push(mCandle);
   });
@@ -61,7 +61,7 @@ Store.prototype.writeCandles = function writeCandles () {
   this.candleCache = [];
 };
 
-var processCandle = function processCandle (candle, done) {
+const processCandle = function processCandle(candle, done) {
   // because we might get a lot of candles
   // in the same tick, we rather batch them
   // up and insert them at once at next tick.
@@ -74,28 +74,28 @@ var processCandle = function processCandle (candle, done) {
   done();
 };
 
-var finalize = function(done) {
+const finalize = function(done) {
   this.writeCandles();
   // Fix connection closed before all candles was written to db
-  setTimeout( () => {
+  setTimeout(() => {
     this.db = null;
     done();
   }, 1000);
 };
 
-var processAdvice = function processAdvice (advice) {
+const processAdvice = function processAdvice(advice) {
   if (config.candleWriter.muteSoft && advice.recommendation === 'soft') {
     return;
   }
 
   log.debug(`Writing advice '${advice.recommendation}' to database.`);
-  var mAdvice = {
+  const mAdvice = {
     time: moment().unix(),
     marketTime: this.marketTime,
     pair: this.pair,
     recommendation: advice.recommendation,
     price: this.price,
-    portfolio: advice.portfolio
+    portfolio: advice.portfolio,
   };
 
   this.adviceCollection.insert(mAdvice);

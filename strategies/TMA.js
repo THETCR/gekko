@@ -1,4 +1,4 @@
-var method = {};
+const method = {};
 
 method.init = function() {
   this.name = 'Triple Moving Average';

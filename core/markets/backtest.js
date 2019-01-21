@@ -1,16 +1,16 @@
-var _ = require('lodash');
-var util = require('../util');
-var config = util.getConfig();
-var dirs = util.dirs();
-var log = require(dirs.core + 'log');
-var moment = require('moment');
+const _ = require('lodash');
+const util = require('../util');
+const config = util.getConfig();
+const dirs = util.dirs();
+const log = require(dirs.core + 'log');
+const moment = require('moment');
 
-var adapter = config[config.adapter];
-var Reader = require(dirs.gekko + adapter.path + '/reader');
-var daterange = config.backtest.daterange;
+const adapter = config[config.adapter];
+const Reader = require(dirs.gekko + adapter.path + '/reader');
+const daterange = config.backtest.daterange;
 
-var to = moment.utc(daterange.to);
-var from = moment.utc(daterange.from);
+const to = moment.utc(daterange.to);
+const from = moment.utc(daterange.from);
 
 if(to <= from)
   util.die('This daterange does not make sense.');
@@ -21,14 +21,14 @@ if(!from.isValid())
 if(!to.isValid())
   util.die('invalid `to`');
 
-var Market = function() {
+const Market = function() {
 
   _.bindAll(this);
   this.pushing = false;
   this.ended = false;
   this.closed = false;
 
-  Readable.call(this, {objectMode: true});
+  Readable.call(this, { objectMode: true });
 
   log.write('');
   log.info('\tWARNING: BACKTESTING FEATURE NEEDS PROPER TESTING');
@@ -39,11 +39,11 @@ var Market = function() {
   this.batchSize = config.backtest.batchSize;
   this.iterator = {
     from: from.clone(),
-    to: from.clone().add(this.batchSize, 'm').subtract(1, 's')
-  }
+    to: from.clone().add(this.batchSize, 'm').subtract(1, 's'),
+  };
 };
 
-var Readable = require('stream').Readable;
+const Readable = require('stream').Readable;
 Market.prototype = Object.create(Readable.prototype, {
   constructor: { value: Market }
 });
@@ -68,7 +68,7 @@ Market.prototype.get = function() {
 
 Market.prototype.processCandles = function(err, candles) {
   this.pushing = true;
-  var amount = _.size(candles);
+  const amount = _.size(candles);
 
   if(amount === 0) {
     if(this.ended) {
@@ -81,11 +81,11 @@ Market.prototype.processCandles = function(err, candles) {
   }
 
   if(!this.ended && amount < this.batchSize) {
-    var d = function(ts) {
+    const d = function(ts) {
       return moment.unix(ts).utc().format('YYYY-MM-DD HH:mm:ss');
     };
-    var from = d(_.first(candles).start);
-    var to = d(_.last(candles).start);
+    const from = d(_.first(candles).start);
+    const to = d(_.last(candles).start);
     log.warn(`Simulation based on incomplete market data (${this.batchSize - amount} missing between ${from} and ${to}).`);
   }
 

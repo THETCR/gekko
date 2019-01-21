@@ -1,12 +1,12 @@
-var _ = require('lodash');
+const _ = require('lodash');
 const log = require('../../core/log');
 const util = require('../../core/util');
 const config = util.getConfig();
 
-var handle = require('./handle');
-var postgresUtil = require('./util');
+const handle = require('./handle');
+const postgresUtil = require('./util');
 
-var Store = function(done, pluginMeta) {
+const Store = function(done, pluginMeta) {
   _.bindAll(this);
   this.done = done;
   this.db = handle;
@@ -21,7 +21,7 @@ Store.prototype.writeCandles = function() {
 
   //log.debug('Writing candles to DB!');
   _.each(this.cache, candle => {
-    var stmt =  `
+    const stmt = `
     BEGIN; 
     LOCK TABLE ${postgresUtil.table('candles')} IN SHARE ROW EXCLUSIVE MODE; 
     INSERT INTO ${postgresUtil.table('candles')} 
@@ -51,7 +51,7 @@ Store.prototype.writeCandles = function() {
   this.cache = [];
 };
 
-var processCandle = function(candle, done) {
+const processCandle = function(candle, done) {
   this.cache.push(candle);
   if (this.cache.length > 1)
     this.writeCandles();
@@ -59,7 +59,7 @@ var processCandle = function(candle, done) {
   done();
 };
 
-var finalize = function(done) {
+const finalize = function(done) {
   this.writeCandles();
   this.db = null;
   done();

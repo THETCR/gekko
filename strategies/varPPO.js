@@ -1,16 +1,16 @@
 // helpers
-var _ = require('lodash');
-var log = require('../core/log');
+const _ = require('lodash');
+const log = require('../core/log');
 
 // configuration
-var config = require('../core/util').getConfig();
-var settings = config.varPPO;
-var momentum = settings.momentum;
-var momentumName = momentum.toLowerCase();
-var momentumSettings = config[momentum];
+const config = require('../core/util').getConfig();
+const settings = config.varPPO;
+const momentum = settings.momentum;
+const momentumName = momentum.toLowerCase();
+const momentumSettings = config[momentum];
 
 // let's create our own method
-var method = {};
+const method = {};
 
 // prepare everything our method needs
 method.init = function() {
@@ -36,12 +36,12 @@ method.update = function(candle) {
 // for debugging purposes log the last
 // calculated parameters.
 method.log = function(candle) {
-  var digits = 8;
-  var ppo = this.indicators.ppo.result;
-  var result = ppo.ppo;
-  var signal = ppo.PPOsignal;
-  var hist = ppo.PPOhist;
-  var momentumResult = this.indicators[momentumName][momentumName];
+  const digits = 8;
+  const ppo = this.indicators.ppo.result;
+  const result = ppo.ppo;
+  const signal = ppo.PPOsignal;
+  const hist = ppo.PPOhist;
+  const momentumResult = this.indicators[momentumName][momentumName];
 
   log.debug('\t', 'PPO:', result.toFixed(digits));
   log.debug('\t', 'PPOsignal:', signal.toFixed(digits));
@@ -51,14 +51,14 @@ method.log = function(candle) {
 };
 
 method.check = function() {
-  var ppo = this.indicators.ppo.result;
-  var hist = ppo.PPOhist;
+  const ppo = this.indicators.ppo.result;
+  const hist = ppo.PPOhist;
 
-  var value = this.indicators[momentumName][momentumName];
+  const value = this.indicators[momentumName][momentumName];
 
-  var thresholds = {
+  const thresholds = {
     low: momentumSettings.thresholds.low + hist * settings.thresholds.weightLow,
-    high: momentumSettings.thresholds.high + hist * settings.thresholds.weightHigh
+    high: momentumSettings.thresholds.high + hist * settings.thresholds.weightHigh,
   };
 
   if(value < thresholds.low) {

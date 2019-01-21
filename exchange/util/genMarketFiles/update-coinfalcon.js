@@ -21,8 +21,8 @@ request(options)
     let assets = _.uniq(_.map(body.data, market => market.name.split('-')[0]));
     let currencies = _.uniq(_.map(body.data, market => market.name.split('-')[1]));
     let pairs = _.map(body.data, market => {
-      var currency = market.name.split('-')[1];
-      var asset = market.name.split('-')[0];
+      const currency = market.name.split('-')[1];
+      const asset = market.name.split('-')[0];
       return {
         pair: [currency, asset],
         minimalOrder: {

@@ -1,15 +1,15 @@
-var _ = require('lodash');
-var util = require('../util');
-var config = util.getConfig();
-var dirs = util.dirs();
-var log = require(dirs.core + 'log');
-var moment = require('moment');
-var gekkoEnv = util.gekkoEnv();
+const _ = require('lodash');
+const util = require('../util');
+const config = util.getConfig();
+const dirs = util.dirs();
+const log = require(dirs.core + 'log');
+const moment = require('moment');
+const gekkoEnv = util.gekkoEnv();
 
-var adapter = config[config.adapter];
-var daterange = config.importer.daterange;
+const adapter = config[config.adapter];
+const daterange = config.importer.daterange;
 
-var from = moment.utc(daterange.from);
+const from = moment.utc(daterange.from);
 
 if(daterange.to) {
   var to = moment.utc(daterange.to);
@@ -28,20 +28,20 @@ if(!from.isValid())
 if(!to.isValid())
   util.die('invalid `to`');
 
-var TradeBatcher = require(dirs.budfox + 'tradeBatcher');
-var CandleManager = require(dirs.budfox + 'candleManager');
-var exchangeChecker = require(dirs.gekko + 'exchange/exchangeChecker');
+const TradeBatcher = require(dirs.budfox + 'tradeBatcher');
+const CandleManager = require(dirs.budfox + 'candleManager');
+const exchangeChecker = require(dirs.gekko + 'exchange/exchangeChecker');
 
-var error = exchangeChecker.cantFetchFullHistory(config.watch);
+const error = exchangeChecker.cantFetchFullHistory(config.watch);
 if(error)
   util.die(error, true);
 
-var fetcher = require(dirs.importers + config.watch.exchange);
+const fetcher = require(dirs.importers + config.watch.exchange);
 
 if(to <= from)
   util.die('This daterange does not make sense.');
 
-var Market = function() {
+const Market = function() {
   _.bindAll(this);
   this.exchangeSettings = exchangeChecker.settings(config.watch);
 
@@ -49,39 +49,39 @@ var Market = function() {
   this.candleManager = new CandleManager;
   this.fetcher = fetcher({
     to: to,
-    from: from
+    from: from,
   });
 
   this.done = false;
 
   this.fetcher.bus.on(
     'trades',
-    this.processTrades
+    this.processTrades,
   );
 
   this.fetcher.bus.on(
     'done',
     function() {
       this.done = true;
-    }.bind(this)
+    }.bind(this),
   );
 
   this.tradeBatcher.on(
     'new batch',
-    this.candleManager.processTrades
+    this.candleManager.processTrades,
   );
 
   this.candleManager.on(
     'candles',
-    this.pushCandles
+    this.pushCandles,
   );
 
-  Readable.call(this, {objectMode: true});
+  Readable.call(this, { objectMode: true });
 
   this.get();
 };
 
-var Readable = require('stream').Readable;
+const Readable = require('stream').Readable;
 Market.prototype = Object.create(Readable.prototype, {
   constructor: { value: Market }
 });

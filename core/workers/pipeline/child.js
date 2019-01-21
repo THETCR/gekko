@@ -20,22 +20,22 @@
 
 */
 
-var start = (mode, config) => {
-  var util = require(__dirname + '/../../util');
+const start = (mode, config) => {
+  const util = require(__dirname + '/../../util');
 
   // force correct gekko env
   util.setGekkoEnv('child-process');
 
-  var dirs = util.dirs();
+  const dirs = util.dirs();
 
   // force correct gekko mode & config
   util.setGekkoMode(mode);
   util.setConfig(config);
 
-  var pipeline = require(dirs.core + 'pipeline');
+  const pipeline = require(dirs.core + 'pipeline');
   pipeline({
     config: config,
-    mode: mode
+    mode: mode,
   });
 };
 

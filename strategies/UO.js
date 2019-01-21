@@ -1,11 +1,11 @@
 // helpers
-var _ = require('lodash');
-var log = require('../core/log.js');
+const _ = require('lodash');
+const log = require('../core/log.js');
 
-var UO = require('./indicators/UO.js');
+const UO = require('./indicators/UO.js');
 
 // let's create our own method
-var method = {};
+const method = {};
 
 // prepare everything our method needs
 method.init = function() {
@@ -27,8 +27,8 @@ method.init = function() {
 // for debugging purposes log the last
 // calculated parameters.
 method.log = function(candle) {
-  var digits = 8;
-  var uo = this.indicators.uo;
+  const digits = 8;
+  const uo = this.indicators.uo;
 
   log.debug('calculated Ultimate Oscillator properties for candle:');
   log.debug('\t', 'UO:', uo.uo.toFixed(digits));
@@ -36,8 +36,8 @@ method.log = function(candle) {
 };
 
 method.check = function() {
-  var uo = this.indicators.uo;
-  var uoVal = uo.uo;
+  const uo = this.indicators.uo;
+  const uoVal = uo.uo;
 
   if(uoVal > this.settings.thresholds.high) {
 

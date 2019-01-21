@@ -1,54 +1,54 @@
-var semver = require("semver");
-var _ = require('lodash');
+const semver = require('semver');
+const _ = require('lodash');
 
 // validate that talib is installed, if not we'll throw an exception which will
 // prevent further loading or out outside this module
 try {
-    var talib = require("talib");
+  const talib = require('talib');
 } catch (e) {
     module.exports = null;
     return;
 }
 
-var talibError = 'Gekko was unable to configure talib indicator:\n\t';
-var talibGTEv103 = semver.gte(talib.version, '1.0.3');
+const talibError = 'Gekko was unable to configure talib indicator:\n\t';
+const talibGTEv103 = semver.gte(talib.version, '1.0.3');
 
 // Wrapper that executes a talib indicator
-var execute = function(callback, params) {
-    // talib callback style since talib-v1.0.3
-    var talibCallback = function(err, result) {
-        if(err) return callback(err);
-        callback(null, result.result);
-    };
+const execute = function(callback, params) {
+  // talib callback style since talib-v1.0.3
+  const talibCallback = function(err, result) {
+    if (err) return callback(err);
+    callback(null, result.result);
+  };
 
-    // talib legacy callback style before talib-v1.0.3
-    var talibLegacyCallback = function(result) {
-        var error = result.error;
-        talibCallback.apply(this, [error, result]);
-    };
+  // talib legacy callback style before talib-v1.0.3
+  const talibLegacyCallback = function(result) {
+    const error = result.error;
+    talibCallback.apply(this, [error, result]);
+  };
 
-    return talib.execute(params, talibGTEv103 ? talibCallback : talibLegacyCallback);
+  return talib.execute(params, talibGTEv103 ? talibCallback : talibLegacyCallback);
 };
 
 // Helper that makes sure all required parameters
 // for a specific talib indicator are present.
-var verifyParams = (methodName, params) => {
-    var requiredParams = methods[methodName].requires;
+const verifyParams = (methodName, params) => {
+  const requiredParams = methods[methodName].requires;
 
-    _.each(requiredParams, paramName => {
-        if(!_.has(params, paramName)) {
-            throw new Error(talibError + methodName + ' requires ' + paramName + '.');
-        }
+  _.each(requiredParams, paramName => {
+    if (!_.has(params, paramName)) {
+      throw new Error(talibError + methodName + ' requires ' + paramName + '.');
+    }
 
-        var val = params[paramName];
+    const val = params[paramName];
 
-        if(!_.isNumber(val)) {
-            throw new Error(talibError + paramName + ' needs to be a number');
-        }
-    });
+    if (!_.isNumber(val)) {
+      throw new Error(talibError + paramName + ' needs to be a number');
+    }
+  });
 };
 
-var methods = {};
+const methods = {};
 
 
 //////////////////////////////Pattern Recognition//////////////////////////////

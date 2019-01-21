@@ -5,9 +5,9 @@
 
 
 /**
-Required Config:
+ Required Config:
 
-config.pushbullet = {
+ config.pushbullet = {
   // sends pushbullets if true
   enabled: true,
   // Send 'Gekko starting' message if true
@@ -28,17 +28,16 @@ config.pushbullet = {
 
 
  **/
-
-var pushbullet = require("pushbullet");
-var _ = require('lodash');
+const pushbullet = require('pushbullet');
+const _ = require('lodash');
 const moment = require('moment');
 const request = require('request');
-var log = require('../core/log.js');
-var util = require('../core/util.js');
-var config = util.getConfig();
-var pbConf = config.pushbullet;
+const log = require('../core/log.js');
+const util = require('../core/util.js');
+const config = util.getConfig();
+const pbConf = config.pushbullet;
 
-var Pushbullet = function(done) {
+const Pushbullet = function(done) {
   _.bindAll(this);
 
   this.pusher;
@@ -56,30 +55,30 @@ var Pushbullet = function(done) {
 
 Pushbullet.prototype.setup = function(done) {
 
-  var setupPushBullet = function(err, result) {
+  const setupPushBullet = function(err, result) {
     if (pbConf.sendMessageOnStart) {
-      var title = pbConf.tag;
-      var exchange = config.watch.exchange;
-      var currency = config.watch.currency;
-      var asset = config.watch.asset;
+      const title = pbConf.tag;
+      const exchange = config.watch.exchange;
+      const currency = config.watch.currency;
+      const asset = config.watch.asset;
       let tradeType = 'watching';
       if (config.trader.enabled) {
-        tradeType = "Live Trading";
+        tradeType = 'Live Trading';
       }
       if (config.paperTrader.enabled) {
-        tradeType = "Paper Trading";
+        tradeType = 'Paper Trading';
       }
 
-      var body = `Gekko has started ${tradeType} ${asset}/${currency} on ${exchange}.`;
+      let body = `Gekko has started ${tradeType} ${asset}/${currency} on ${exchange}.`;
 
       //If trading Advisor is enabled, add strategy and candle size information
       if (config.tradingAdvisor.enabled) {
-        body += `\n\nUsing ${config.tradingAdvisor.method} strategy on M${config.tradingAdvisor.candleSize} candles.`
+        body += `\n\nUsing ${config.tradingAdvisor.method} strategy on M${config.tradingAdvisor.candleSize} candles.`;
       }
 
       this.mail(title, body);
     } else {
-      log.debug('Skipping Send message on startup')
+      log.debug('Skipping Send message on startup');
     }
   };
   setupPushBullet.call(this)
@@ -99,7 +98,7 @@ Pushbullet.prototype.processAdvice = function(advice) {
 
   if (pbConf.sendOnAdvice) {
 
-    var text = [
+    const text = [
       'Gekko has new advice for ',
       capF(config.watch.exchange),
       ', advice is to go ',
@@ -107,10 +106,10 @@ Pushbullet.prototype.processAdvice = function(advice) {
       '.\n\nThe current ',
       config.watch.asset,
       ' price is ',
-      this.advicePrice
+      this.advicePrice,
     ].join('');
 
-    var subject = pbConf.tag + ' New advice: go ' + advice.recommendation;
+    const subject = pbConf.tag + ' New advice: go ' + advice.recommendation;
 
     this.mail(subject, text);
   }
@@ -178,7 +177,7 @@ Pushbullet.prototype.processTradeCompleted = function(trade) {
       let timeToComplete = moment.duration(trade.date.diff(this.adviceTime)).humanize();
       orderFillTimeStr = `\nOrder fill Time: ${timeToComplete}`;
 
-      var slip;
+      let slip;
       //Slip direction is opposite for buy and sell
       if (trade.price === this.advicePrice) {
         slip = 0;
@@ -192,7 +191,7 @@ Pushbullet.prototype.processTradeCompleted = function(trade) {
 
     }
 
-    var text = [
+    const text = [
       capF(config.watch.exchange), ' ', config.watch.asset, '/', config.watch.currency,
       `\n\n${config.watch.asset} Trade Price: ${getNumStr(trade.price)}`,
       `\n${getPastTense(trade.action)} ${getNumStr(trade.amount)} ${config.watch.asset}`,
@@ -291,7 +290,7 @@ function getPastTense(action) {
 }
 
 Pushbullet.prototype.mail = function(subject, content, done) {
-  var pusher = new pushbullet(pbConf.key);
+  const pusher = new pushbullet(pbConf.key);
   pusher.note(pbConf.email, subject, content, function(error, response) {
     if (error || !response) {
       log.error('Pushbullet ERROR:', error)

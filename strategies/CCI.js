@@ -1,9 +1,9 @@
 // helpers
-var _ = require('lodash');
-var log = require('../core/log.js');
+const _ = require('lodash');
+const log = require('../core/log.js');
 
 // let's create our own method
-var method = {};
+const method = {};
 
 // prepare everything our method needs
 method.init = function() {
@@ -35,8 +35,8 @@ method.update = function(candle) {
 // for debugging purposes: log the last calculated
 // EMAs and diff.
 method.log = function(candle) {
-    var cci = this.indicators.cci;
-    if (typeof(cci.result) == 'boolean') {
+  const cci = this.indicators.cci;
+  if (typeof(cci.result) == 'boolean') {
         log.debug('Insufficient data available. Age: ', cci.size, ' of ', cci.maxSize);
         return;
     }
@@ -57,12 +57,12 @@ method.log = function(candle) {
  */
 method.check = function(candle) {
 
-    var lastPrice = candle.close;
+  const lastPrice = candle.close;
 
-    this.age++;
-    var cci = this.indicators.cci;
+  this.age++;
+  const cci = this.indicators.cci;
 
-    if (typeof(cci.result) == 'number') {
+  if (typeof(cci.result) == 'number') {
 
         // overbought?
         if (cci.result >= this.uplevel && (this.trend.persisted || this.persisted == 0) && !this.trend.adviced && this.trend.direction == 'overbought' ) {

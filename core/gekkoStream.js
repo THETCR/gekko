@@ -12,11 +12,11 @@ const mode = util.gekkoMode();
 const config = util.getConfig();
 const log = require(util.dirs().core + 'log');
 
-var Gekko = function(plugins) {
+const Gekko = function(plugins) {
   this.plugins = plugins;
   this.candleConsumers = plugins
     .filter(plugin => plugin.processCandle);
-  Writable.call(this, {objectMode: true});
+  Writable.call(this, { objectMode: true });
 
   this.producers = this.plugins
     .filter(p => p.meta.emits);
@@ -37,8 +37,8 @@ if(config.debug && mode !== 'importer') {
     }
 
     const start = moment();
-    var relayed = false;
-    var at = null;
+    let relayed = false;
+    let at = null;
 
     const timer = setTimeout(() => {
       if(!relayed)
@@ -90,9 +90,9 @@ Gekko.prototype.flushDefferedEvents = function() {
 };
 
 Gekko.prototype.finalize = function() {
-  var tradingMethod = _.find(
+  const tradingMethod = _.find(
     this.candleConsumers,
-    c => c.meta.name === 'Trading Advisor'
+    c => c.meta.name === 'Trading Advisor',
   );
 
   if(!tradingMethod)

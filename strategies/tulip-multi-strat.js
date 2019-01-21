@@ -1,7 +1,7 @@
-var _ = require('lodash');
-var log = require('../core/log.js');
+const _ = require('lodash');
+const log = require('../core/log.js');
 
-var method = {};
+const method = {};
 method.init = function() {
     // strat name
     this.name = 'tulip-multi-strat';

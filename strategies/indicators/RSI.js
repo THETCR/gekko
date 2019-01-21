@@ -1,7 +1,7 @@
 // required indicators
-var SMMA = require('./SMMA.js');
+const SMMA = require('./SMMA.js');
 
-var Indicator = function (settings) {
+const Indicator = function(settings) {
   this.input = 'candle';
   this.lastClose = null;
   this.weight = settings.interval;
@@ -15,7 +15,7 @@ var Indicator = function (settings) {
 };
 
 Indicator.prototype.update = function (candle) {
-  var currentClose = candle.close;
+  const currentClose = candle.close;
 
   if (this.lastClose === null) {
     // Set initial price to prevent invalid change calculation

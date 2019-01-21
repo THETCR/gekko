@@ -1,6 +1,6 @@
-var config = require('../../core/util.js').getConfig();
+const config = require('../../core/util.js').getConfig();
 
-var watch = config.watch;
+const watch = config.watch;
 if(watch) {
   var settings = {
     exchange: watch.exchange,
@@ -47,7 +47,7 @@ module.exports = {
     if (useSingleDatabase()) {
       name = watch.exchange.replace(/\-/g,'') + '_' + name;
     }
-    var fullName = [name, settings.pair.join('_')].join('_');
+    const fullName = [name, settings.pair.join('_')].join('_');
     return useLowerCaseTableNames() ? fullName.toLowerCase() : fullName;
   },
 
@@ -55,7 +55,7 @@ module.exports = {
     if (useSingleDatabase()) {
       name = watch.exchange.replace(/\-/g,'') + '_' + name;
     }
-    var fullName = [name, settings.pair.join('_')].join('_');
+    const fullName = [name, settings.pair.join('_')].join('_');
     return useLowerCaseTableNames() ? fullName.toLowerCase() + '_start_key' : fullName + '_start_key';
   },
 

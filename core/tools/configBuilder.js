@@ -6,7 +6,7 @@ const util = require('../util');
 const dirs = util.dirs();
 
 const getTOML = function(fileName) {
-  var raw = fs.readFileSync(fileName);
+  const raw = fs.readFileSync(fileName);
   return toml.parse(raw);
 };
 

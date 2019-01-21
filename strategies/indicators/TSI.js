@@ -1,7 +1,7 @@
 // required indicators
-var EMA = require('./EMA.js');
+const EMA = require('./EMA.js');
 
-var Indicator = function(settings) {
+const Indicator = function(settings) {
   this.input = 'candle';
   this.lastClose = null;
   this.tsi = 0;
@@ -12,8 +12,8 @@ var Indicator = function(settings) {
 };
 
 Indicator.prototype.update = function(candle) {
-  var close = candle.close;
-  var prevClose = this.lastClose;
+  const close = candle.close;
+  const prevClose = this.lastClose;
 
   if (prevClose === null) {
     // Set initial price to prevent invalid change calculation
@@ -22,7 +22,7 @@ Indicator.prototype.update = function(candle) {
     return;
   }
 
-  var momentum = close - prevClose;
+  const momentum = close - prevClose;
 
   this.inner.update(momentum);
   this.outer.update(this.inner.result);

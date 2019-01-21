@@ -1,17 +1,17 @@
-var _ = require('lodash');
-var prompt = require('prompt-lite');
-var moment = require('moment');
+const _ = require('lodash');
+const prompt = require('prompt-lite');
+const moment = require('moment');
 
-var util = require('./util');
-var config = util.getConfig();
-var dirs = util.dirs();
-var log = require(dirs.core + 'log');
+const util = require('./util');
+const config = util.getConfig();
+const dirs = util.dirs();
+const log = require(dirs.core + 'log');
 
-var scan = require(dirs.tools + 'dateRangeScanner');
+const scan = require(dirs.tools + 'dateRangeScanner');
 
 // helper to store the evenutally detected
 // daterange.
-var setDateRange = function(from, to) {
+const setDateRange = function(from, to) {
   config.backtest.daterange = {
     from: moment.unix(from).utc().format(),
     to: moment.unix(to).utc().format(),
@@ -27,7 +27,7 @@ module.exports = function(done) {
       util.die('No history found for this market', true);
 
     if(_.size(ranges) === 1) {
-      var r = _.first(ranges);
+      const r = _.first(ranges);
       log.info('Gekko was able to find a single daterange in the locally stored history:');
       log.info('\t', 'from:', moment.unix(r.from).utc().format('YYYY-MM-DD HH:mm:ss'));
       log.info('\t', 'to:', moment.unix(r.to).utc().format('YYYY-MM-DD HH:mm:ss'));
@@ -50,11 +50,11 @@ module.exports = function(done) {
 
     prompt.get({name: 'option'}, (err, result) => {
 
-      var option = parseInt(result.option);
+      const option = parseInt(result.option);
       if(option === NaN)
         util.die('Not an option..', true);
 
-      var range = ranges[option - 1];
+      const range = ranges[option - 1];
 
       if(!range)
         util.die('Not an option..', true);

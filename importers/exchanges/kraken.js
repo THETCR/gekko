@@ -1,40 +1,39 @@
-var _ = require('lodash');
-var moment = require('moment');
+const _ = require('lodash');
+const moment = require('moment');
 
-var util = require('../../core/util.js');
-var log = require('../../core/log');
+const util = require('../../core/util.js');
+const log = require('../../core/log');
 
-var config = util.getConfig();
+const config = util.getConfig();
 
-var dirs = util.dirs();
+const dirs = util.dirs();
 
-var Fetcher = require(dirs.exchanges + 'kraken');
+const Fetcher = require(dirs.exchanges + 'kraken');
 
 util.makeEventEmitter(Fetcher);
 
-var end = false;
-var done = false;
-var from = false;
+let end = false;
+const done = false;
+let from = false;
 
-var lastId = false;
-var prevLastId = false;
+let lastId = false;
+let prevLastId = false;
 
-var fetcher = new Fetcher(config.watch);
+const fetcher = new Fetcher(config.watch);
 
-var fetch = () => {
-    fetcher.import = true;
+const fetch = () => {
+  fetcher.import = true;
 
-    if (lastId) {
-        var tidAsTimestamp = lastId / 1000000;
-        setTimeout(() => {
-            fetcher.getTrades(tidAsTimestamp, handleFetch)
-        }, 500);
-    }
-    else
-        fetcher.getTrades(from, handleFetch);
+  if (lastId) {
+    const tidAsTimestamp = lastId / 1000000;
+    setTimeout(() => {
+      fetcher.getTrades(tidAsTimestamp, handleFetch);
+    }, 500);
+  } else
+    fetcher.getTrades(from, handleFetch);
 };
 
-var handleFetch = (err, trades) => {
+const handleFetch = (err, trades) => {
     if(!err && !trades.length) {
         console.log('no trades');
         err = 'No trades';
@@ -46,8 +45,8 @@ var handleFetch = (err, trades) => {
         return fetcher.emit('trades', []);
     }
 
-    var last = moment.unix(_.last(trades).date).utc();
-    lastId = _.last(trades).tid;
+  const last = moment.unix(_.last(trades).date).utc();
+  lastId = _.last(trades).tid;
     if(last < from) {
         log.debug('Skipping data, they are before from date', last.format());
         return fetch();
@@ -56,8 +55,8 @@ var handleFetch = (err, trades) => {
     if  (last > end || lastId === prevLastId) {
         fetcher.emit('done');
 
-        var endUnix = end.unix();
-        trades = _.filter(
+      const endUnix = end.unix();
+      trades = _.filter(
             trades,
             t => t.date <= endUnix
         )

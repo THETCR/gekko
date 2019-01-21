@@ -14,24 +14,25 @@
 // });
 // return;
 
-var chai = require('chai');
-var expect = chai.expect;
-var should = chai.should;
-var sinon = require('sinon');
-var proxyquire = require('proxyquire');
+const chai = require('chai');
+const expect = chai.expect;
+const should = chai.should;
+const sinon = require('sinon');
+const proxyquire = require('proxyquire');
 
-var _ = require('lodash');
-var moment = require('moment');
+const _ = require('lodash');
+const moment = require('moment');
 
-var util = require(__dirname + '/../../core/util');
-var config = util.getConfig();
-var dirs = util.dirs();
+const util = require(__dirname + '/../../core/util');
+const config = util.getConfig();
+const dirs = util.dirs();
 
-var TRADES = require('./data/bitstamp_trades.json');
+const TRADES = require('./data/bitstamp_trades.json');
 
 return; // TEMP
 
-var FakeExchange = function() {};
+const FakeExchange = function() {
+};
 FakeExchange.prototype = {
   transactions: function(since, handler, descending) {
     handler(
@@ -40,14 +41,14 @@ FakeExchange.prototype = {
     );
   }
 };
-var transactionsSpy = sinon.spy(FakeExchange.prototype, 'transactions');
+const transactionsSpy = sinon.spy(FakeExchange.prototype, 'transactions');
 spoofer = {
   bitstamp: FakeExchange
 };
 
 describe('exchanges/bitstamp', function() {
-  var Bitstamp = proxyquire(dirs.gekko + 'exchange/wrappers/bitstamp', spoofer);
-  var bs;
+  const Bitstamp = proxyquire(dirs.gekko + 'exchange/wrappers/bitstamp', spoofer);
+  let bs;
 
   it('should instantiate', function() {
     bs = new Bitstamp(config.watch);
@@ -58,14 +59,15 @@ describe('exchanges/bitstamp', function() {
 
     expect(transactionsSpy.callCount).to.equal(1);
 
-    var args = transactionsSpy.lastCall.args;
+    const args = transactionsSpy.lastCall.args;
     expect(args.length).to.equal(2);
 
     expect(args[0]).to.equal('btcusd');
   });
 
   it('should retry on exchange error', function() {
-    var ErrorFakeExchange = function() {};
+    const ErrorFakeExchange = function() {
+    };
     ErrorFakeExchange.prototype = {
       transactions: function(since, handler, descending) {
         handler('Auth error');
@@ -75,30 +77,30 @@ describe('exchanges/bitstamp', function() {
       bitstamp: ErrorFakeExchange
     };
 
-    var ErroringBitstamp = proxyquire(dirs.exchanges + 'bitstamp', spoofer);
-    var ebs = new ErroringBitstamp(config.watch);
+    const ErroringBitstamp = proxyquire(dirs.exchanges + 'bitstamp', spoofer);
+    const ebs = new ErroringBitstamp(config.watch);
 
     ebs.retry = _.noop;
-    var retrySpy = sinon.spy(ebs, 'retry');
+    const retrySpy = sinon.spy(ebs, 'retry');
 
     ebs.getTrades(null, _.noop);
 
     expect(retrySpy.callCount).to.equal(1);
 
-    var args = retrySpy.lastCall.args;
+    const args = retrySpy.lastCall.args;
     expect(args[1].length).to.equal(2);
     expect(args[1][0]).to.equal(null);
   });
 
   it('should correctly parse historical trades', function(done) {
-    var check = function(err, trades) {
+    const check = function(err, trades) {
 
       expect(err).to.equal(null);
 
       expect(trades.length).to.equal(TRADES.length);
 
-      var oldest = _.first(trades);
-      var OLDEST = _.last(TRADES);
+      const oldest = _.first(trades);
+      const OLDEST = _.last(TRADES);
 
       expect(oldest.tid).to.equal(+OLDEST.tid);
       expect(oldest.price).to.equal(+OLDEST.price);

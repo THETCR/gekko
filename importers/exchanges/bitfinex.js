@@ -15,7 +15,7 @@ Fetcher.prototype.getTrades = function(upto, callback, descending) {
   const handle = (err, data) => {
     if (err) return callback(err);
 
-    var trades = [];
+    let trades = [];
     if (_.isArray(data)) {
       trades = _.map(data, function(trade) {
         return {
@@ -44,33 +44,33 @@ Fetcher.prototype.getTrades = function(upto, callback, descending) {
 
 util.makeEventEmitter(Fetcher);
 
-var end = false;
-var done = false;
-var from = false;
+let end = false;
+const done = false;
+let from = false;
 
-var lastTimestamp = false;
-var lastId = false;
+let lastTimestamp = false;
+let lastId = false;
 
-var batch = [];
-var batch_start = false;
-var batch_end = false;
-var batch_last = false;
+let batch = [];
+let batch_start = false;
+let batch_end = false;
+const batch_last = false;
 
 const SCANNING_STRIDE = 24;
 const ITERATING_STRIDE = 2;
-var stride = ITERATING_STRIDE;
+let stride = ITERATING_STRIDE;
 
-var fetcher = new Fetcher(config.watch);
+const fetcher = new Fetcher(config.watch);
 fetcher.bitfinex = new Bitfinex(null, null, { version: 2, transform: true }).rest;
 
-var retryCritical = {
+const retryCritical = {
   retries: 10,
   factor: 1.2,
   minTimeout: 70 * 1000,
   maxTimeout: 120 * 1000,
 };
 
-var fetch = () => {
+const fetch = () => {
   fetcher.import = true;
 
   if (lastTimestamp) {
@@ -90,7 +90,7 @@ var fetch = () => {
   }
 };
 
-var handleFetch = (err, trades) => {
+const handleFetch = (err, trades) => {
   if (err) {
     log.error(`There was an error importing from Bitfinex ${err}`);
     fetcher.emit('done');
@@ -102,7 +102,7 @@ var handleFetch = (err, trades) => {
   if (trades.length) {
     stride = ITERATING_STRIDE;
     batch = trades.concat(batch);
-    var last = moment.unix(_.first(trades).date);
+    const last = moment.unix(_.first(trades).date);
     lastTimestamp = last.valueOf();
     lastId = _.first(trades).tid;
   } else {
@@ -117,7 +117,7 @@ var handleFetch = (err, trades) => {
     return fetch();
   }
 
-  var lastBatch = batch;
+  const lastBatch = batch;
 
   // in this case we've finished the last batch and are complete
   if (batch_end.isSame(end)) {

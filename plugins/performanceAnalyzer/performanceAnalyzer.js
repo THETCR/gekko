@@ -148,7 +148,7 @@ PerformanceAnalyzer.prototype.registerRoundtripPart = function(trade) {
 };
 
 PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
-  var roundtrip = {
+  const roundtrip = {
     id: this.roundTrip.id,
 
     entryAt: this.roundTrip.entry.date,
@@ -159,7 +159,7 @@ PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
     exitPrice: this.roundTrip.exit.price,
     exitBalance: this.roundTrip.exit.total,
 
-    duration: this.roundTrip.exit.date.diff(this.roundTrip.entry.date)
+    duration: this.roundTrip.exit.date.diff(this.roundTrip.entry.date),
   };
 
   roundtrip.pnl = roundtrip.exitBalance - roundtrip.entryBalance;
