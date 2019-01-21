@@ -68,7 +68,7 @@ Slack.prototype.checkResults = function(error) {
 };
 
 Slack.prototype.createResponse = function(color, message) {
-  const template = {
+  return {
     "username": this.createUserName(),
     "icon_url": this.createIconUrl(),
     "attachments": [
@@ -80,8 +80,6 @@ Slack.prototype.createResponse = function(color, message) {
       }
     ]
   };
-
-  return template;
 };
 
 Slack.prototype.createUserName = function() {

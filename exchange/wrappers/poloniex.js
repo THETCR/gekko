@@ -389,11 +389,9 @@ Trader.prototype.getOrder = function(order, callback) {
     const feePercent = _.first(result).fee * 100;
 
     if(_.first(result).type === 'sell') {
-      const fee = price * amount * _.first(result).fee;
-      fees[this.currency] = fee;
+      fees[this.currency] = price * amount * _.first(result).fee;
     } else {
-      const fee = amount * _.first(result).fee;
-      fees[this.asset] = fee;
+      fees[this.asset] = amount * _.first(result).fee;
     }
 
     callback(err, {price, amount, date, fees, feePercent});

@@ -55,8 +55,7 @@ const round = (value, decimals = 14) => {
 const includes = (str, list) => {
   if (!_.isString(str))
     return false;
-  let result = _.some(list, item => str.includes(item));
-  return result;
+  return _.some(list, item => str.includes(item));
 };
 
 const recoverableErrors = [

@@ -45,7 +45,7 @@ class Portfolio {
       }
 
       // only include the currency/asset of this market
-      const balances = [ this.config.currency, this.config.asset ]
+      this.balances = [ this.config.currency, this.config.asset ]
         .map(name => {
           let item = _.find(fullPortfolio, {name});
 
@@ -56,8 +56,6 @@ class Portfolio {
 
           return item;
         });
-
-      this.balances = balances;
 
       if(_.isFunction(callback))
         callback();

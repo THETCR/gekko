@@ -282,14 +282,13 @@ Trader.prototype.getTrades = function(since, callback, descending) {
       );
 
       result = _.map(result, function(trade) {
-        const mr = {
+        return {
           tid: trade.Id,
           amount: +trade.Quantity,
           date: moment.utc(trade.TimeStamp).unix(),
           timeStamp: trade.TimeStamp,
           price: +trade.Price,
         };
-        return mr;
     });
 
     callback(null, result.reverse());
