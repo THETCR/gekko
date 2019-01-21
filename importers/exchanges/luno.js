@@ -60,7 +60,7 @@ Fetcher.prototype.getTrades = function(since, callback, descending) {
       };
     });
     callback(null, trades.reverse());
-  }
+  };
 
   if (moment.isMoment(since)) since = since.valueOf();
   (_.isNumber(since) && since > 0) ? since: since = 0;
@@ -69,7 +69,7 @@ Fetcher.prototype.getTrades = function(since, callback, descending) {
 
   const handler = cb => this.luno.getTrades({ since: since, pair: this.pair }, processResponse('getTrades', cb));
   retry(null, handler, process);
-}
+};
 
 const fetcher = new Fetcher(config.watch);
 

@@ -226,7 +226,7 @@ class StickyOrder extends BaseOrder {
     this.orders[id] = {
       price: this.price,
       filled: 0
-    }
+    };
 
     this.emit('new order', this.id);
 
@@ -577,7 +577,7 @@ class StickyOrder extends BaseOrder {
       // note this is a standalone function after the order is
       // completed, as such we do not use the handleError flow.
       if(err) {
-        console.log(new Date, 'error createSummary (checkOrder)')
+        console.log(new Date, 'error createSummary (checkOrder)');
         return next(err);
       }
 
@@ -602,7 +602,7 @@ class StickyOrder extends BaseOrder {
         date,
         side: this.side,
         orders: trades.length
-      }
+      };
 
       const first = _.first(trades);
 
@@ -646,7 +646,7 @@ class StickyOrder extends BaseOrder {
       next(undefined, summary);
     });
   }
- 
+
 }
 
 module.exports = StickyOrder;

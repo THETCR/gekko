@@ -10,7 +10,7 @@ const sqlite3 = require('sqlite3');
 
 // todo: rewrite with generators or async/await..
 module.exports = done => {
-  const dbDirectory = dirs.gekko + config.sqlite.dataDirectory
+  const dbDirectory = dirs.gekko + config.sqlite.dataDirectory;
 
   if(!fs.existsSync(dbDirectory))
     return done(null, []);
@@ -22,7 +22,7 @@ module.exports = done => {
       let parts = f.split('.');
       if(_.last(parts) === 'db')
         return true;
-    })
+    });
 
   if(!_.size(dbs))
     return done(null, []);
@@ -39,11 +39,11 @@ module.exports = done => {
       handle.all(`SELECT name FROM sqlite_master WHERE type='table'`, (err, tables) => {
         if(err)
           return next(err);
-        
+
         _.each(tables, table => {
           let parts = table.name.split('_');
           let first = parts.shift();
-          if(first === 'candles') 
+          if(first === 'candles')
             markets.push({
               exchange: exchange,
               currency: _.first(parts),
@@ -61,4 +61,4 @@ module.exports = done => {
   err => {
     done(err, markets);
   });
-}
+};

@@ -12,7 +12,7 @@ var Indicator = function (settings) {
   this.rs = 0;
   this.result = 0;
   this.age = 0;
-}
+};
 
 Indicator.prototype.update = function (candle) {
   var currentClose = candle.close;
@@ -48,6 +48,6 @@ Indicator.prototype.update = function (candle) {
 
   this.lastClose = currentClose;
   this.age++;
-}
+};
 
 module.exports = Indicator;

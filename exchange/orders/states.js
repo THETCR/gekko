@@ -25,6 +25,6 @@ const states = {
   REJECTED: 'REJECTED',
 
   ERROR: 'ERROR'
-}
+};
 
 module.exports = states;

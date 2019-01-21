@@ -5,4 +5,4 @@ module.exports = function *() {
   this.body = {
     version: p.version
   }
-}
+};

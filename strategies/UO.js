@@ -22,7 +22,7 @@ method.init = function() {
 
   // define the indicators we need
   this.addIndicator('uo', 'UO', this.settings);
-}
+};
 
 // for debugging purposes log the last
 // calculated parameters.
@@ -33,7 +33,7 @@ method.log = function(candle) {
   log.debug('calculated Ultimate Oscillator properties for candle:');
   log.debug('\t', 'UO:', uo.uo.toFixed(digits));
   log.debug('\t', 'price:', candle.close.toFixed(digits));
-}
+};
 
 method.check = function() {
   var uo = this.indicators.uo;
@@ -93,6 +93,6 @@ method.check = function() {
 
     this.advice();
   }
-}
+};
 
 module.exports = method;

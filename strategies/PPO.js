@@ -28,12 +28,12 @@ method.init = function() {
 
   // define the indicators we need
   this.addIndicator('ppo', 'PPO', this.settings);
-}
+};
 
 // what happens on every new candle?
 method.update = function(candle) {
   // nothing!
-}
+};
 
 // for debugging purposes log the last
 // calculated parameters.
@@ -56,7 +56,7 @@ method.log = function() {
   log.debug('\t', 'ppo:', result.toFixed(digits));
   log.debug('\t', 'pposignal:', ppoSignal.toFixed(digits));
   log.debug('\t', 'ppohist:', (result - ppoSignal).toFixed(digits));
-}
+};
 
 method.check = function(candle) {
   var price = candle.close;
@@ -143,6 +143,6 @@ method.check = function(candle) {
     this.advice();
   }
 
-}
+};
 
 module.exports = method;

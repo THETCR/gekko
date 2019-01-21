@@ -23,7 +23,7 @@ var BudFox = function(config) {
   Readable.call(this, {objectMode: true});
 
   // BudFox internal modules:
-  
+
   this.heart = new Heart;
   this.marketDataProvider = new MarketDataProvider(config);
   this.candleManager = new CandleManager;
@@ -61,7 +61,7 @@ var BudFox = function(config) {
   );
 
   this.heart.pump();
-}
+};
 
 var Readable = require('stream').Readable;
 
@@ -69,10 +69,10 @@ BudFox.prototype = Object.create(Readable.prototype, {
   constructor: { value: BudFox }
 });
 
-BudFox.prototype._read = function noop() {}
+BudFox.prototype._read = function noop() {};
 
 BudFox.prototype.pushCandles = function(candles) {
   _.each(candles, this.push);
-}
+};
 
 module.exports = BudFox;

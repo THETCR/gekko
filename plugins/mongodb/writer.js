@@ -3,7 +3,7 @@ var config = require('../../core/util.js').getConfig();
 
 var moment = require('moment');
 var util = require('../../core/util.js');
-var log = require(`${util.dirs().core}log`)
+var log = require(`${util.dirs().core}log`);
 
 var handle = require('./handle');
 var mongoUtil = require('./util');
@@ -23,7 +23,7 @@ var Store = function Store (done) {
   this.marketTime = 'N/A';
 
   done();
-}
+};
 
 Store.prototype.writeCandles = function writeCandles () {
   if (_.isEmpty(this.candleCache)) { // nothing to do
@@ -59,7 +59,7 @@ Store.prototype.writeCandles = function writeCandles () {
   });
 
   this.candleCache = [];
-}
+};
 
 var processCandle = function processCandle (candle, done) {
   // because we might get a lot of candles
@@ -72,7 +72,7 @@ var processCandle = function processCandle (candle, done) {
   if (this.candleCache.length >= 100)
     this.writeCandles();
   done();
-}
+};
 
 var finalize = function(done) {
   this.writeCandles();
@@ -81,7 +81,7 @@ var finalize = function(done) {
     this.db = null;
     done();
   }, 1000);
-}
+};
 
 var processAdvice = function processAdvice (advice) {
   if (config.candleWriter.muteSoft && advice.recommendation === 'soft') {
@@ -99,7 +99,7 @@ var processAdvice = function processAdvice (advice) {
   };
 
   this.adviceCollection.insert(mAdvice);
-}
+};
 
 if (config.adviceWriter.enabled) {
   log.debug('Enabling adviceWriter.');

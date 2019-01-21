@@ -10,7 +10,7 @@ var Reader = function Reader () {
   this.db = handle;
   this.collection = this.db.collection(mongoUtil.settings.historyCollection);
   this.pair = mongoUtil.settings.pair.join('_');
-}
+};
 
 // returns the furtherst point (up to `from`) in time we have valid data from
 Reader.prototype.mostRecentWindow = function mostRecentWindow (from, to, next) {
@@ -61,7 +61,7 @@ Reader.prototype.mostRecentWindow = function mostRecentWindow (from, to, next) {
       to: mostRecent
     });
   })
-}
+};
 
 Reader.prototype.get = function get (from, to, what, next) { // returns all fields in general
   // Find some documents
@@ -71,7 +71,7 @@ Reader.prototype.get = function get (from, to, what, next) { // returns all fiel
     }
     return next(null, docs);
   });
-}
+};
 
 Reader.prototype.count = function fCount (from, to, next) {
   this.collection.count({ pair: this.pair, start: { $gte: from, $lte: to } }, (err, count) => {
@@ -80,7 +80,7 @@ Reader.prototype.count = function fCount (from, to, next) {
     }
     return next(null, count);
   })
-}
+};
 
 Reader.prototype.countTotal = function countTotal (next) {
   this.collection.count({ pair: this.pair }, (err, count) => {
@@ -89,7 +89,7 @@ Reader.prototype.countTotal = function countTotal (next) {
     }
     return next(null, count);
   })
-}
+};
 
 Reader.prototype.getBoundry = function getBoundry (next) {
   this.collection.find({ pair: this.pair }, { start: 1 }).sort({ start: 1 }).limit(1, (err, docs) => {
@@ -107,14 +107,14 @@ Reader.prototype.getBoundry = function getBoundry (next) {
     });
     return null;
   });
-}
+};
 
 Reader.prototype.tableExists = function(name, next) {
   return next(null, true); // Return true for backtest
-}
+};
 
 Reader.prototype.close = function close () {
   this.db = null;
-}
+};
 
 module.exports = Reader;

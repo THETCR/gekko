@@ -36,7 +36,7 @@ const includes = (str, list) => {
     return false;
 
   return _.some(list, item => str.includes(item));
-}
+};
 
 const recoverableErrors = [
   'SOCKETTIMEDOUT',
@@ -74,7 +74,7 @@ Trader.prototype.processResponse = function(method, args, next) {
       console.log(new Date,  '[CF] API CALL TOOK', diff, 'SECONDS!');
       console.log(new Date,  '[CF]', {method, args, next});
     }
-  }
+  };
 
   const catcher = err => {
     if(!err || !err.message)
@@ -86,7 +86,7 @@ Trader.prototype.processResponse = function(method, args, next) {
     console.log(new Date, '[cf] big error!', err.message, method);
 
     return next(err);
-  }
+  };
 
   return {
     failure: catcher,
@@ -106,7 +106,7 @@ Trader.prototype.processResponse = function(method, args, next) {
       next(undefined, data);
     }
   }
-}
+};
 
 Trader.prototype.retry = function(method, args) {
   var wait = +moment.duration(1, 'seconds');
@@ -125,7 +125,7 @@ Trader.prototype.getTicker = function(callback) {
     callback(null, {bid: +res.data.bids[0].price, ask: +res.data.asks[0].price})
   });
 
-  var url = "markets/" + this.pair + "/orders?level=1"
+  var url = "markets/" + this.pair + "/orders?level=1";
 
   this.coinfalcon.get(url).then(handle.success).catch(handle.failure);
 };
@@ -183,7 +183,7 @@ Trader.prototype.addOrder = function(type, amount, price, callback) {
     market: this.pair,
     size: amount + '',
     price: price + ''
-  }
+  };
 
   this.coinfalcon.post('user/orders', payload).then(handle.success).catch(handle.failure);
 };
@@ -216,11 +216,11 @@ Trader.prototype.getPrecision = function(tickSize) {
 
 Trader.prototype.roundAmount = function(amount) {
   return round(amount, this.getPrecision(this.market.minimalOrder.amount));
-}
+};
 
 Trader.prototype.roundPrice = function(price) {
   return round(price, this.getPrecision(this.market.minimalOrder.price));
-}
+};
 
 Trader.prototype.outbidPrice = function(price, isUp) {
   let newPrice;
@@ -232,7 +232,7 @@ Trader.prototype.outbidPrice = function(price, isUp) {
   }
 
   return this.roundPrice(newPrice);
-}
+};
 
 Trader.prototype.getOrder = function(order, callback) {
   const args = _.toArray(arguments);
@@ -348,7 +348,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
     return this.retry(this.getTrades, args, err);
   }.bind(this);
 
-  var url = "markets/" + this.pair + "/trades"
+  var url = "markets/" + this.pair + "/trades";
 
   if (since) {
     url += '?since_time=' + (_.isString(since) ? since : since.format());
@@ -372,6 +372,6 @@ Trader.getCapabilities = function () {
     forceReorderDelay: false,
     gekkoBroker: 0.6
   };
-}
+};
 
 module.exports = Trader;

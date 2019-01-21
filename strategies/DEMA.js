@@ -15,26 +15,26 @@ method.init = function() {
   // define the indicators we need
   this.addIndicator('dema', 'DEMA', this.settings);
   this.addIndicator('sma', 'SMA', this.settings.weight);
-}
+};
 
 // what happens on every new candle?
 method.update = function(candle) {
   // nothing!
-}
+};
 
 // for debugging purposes: log the last calculated
 // EMAs and diff.
 method.log = function() {
   let dema = this.indicators.dema;
   let sma = this.indicators.sma;
-  
+
   log.debug('Calculated DEMA and SMA properties for candle:');
   log.debug('\t Inner EMA:', dema.inner.result.toFixed(8));
   log.debug('\t Outer EMA:', dema.outer.result.toFixed(8));
   log.debug('\t DEMA:', dema.result.toFixed(5));
   log.debug('\t SMA:', sma.result.toFixed(5));
   log.debug('\t DEMA age:', dema.inner.age, 'candles');
-}
+};
 
 method.check = function(candle) {
   let dema = this.indicators.dema;
@@ -68,6 +68,6 @@ method.check = function(candle) {
     log.debug('we are currently not in an up or down trend', message);
     this.advice();
   }
-}
+};
 
 module.exports = method;

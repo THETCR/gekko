@@ -18,7 +18,7 @@ const CONFIG = {
     path: '/'
   },
   adapter: 'sqlite'
-}
+};
 
 if(typeof window === 'undefined')
   module.exports = CONFIG;

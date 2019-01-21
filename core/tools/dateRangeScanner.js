@@ -54,11 +54,11 @@ var scan = function(done) {
       var missing = optimal - res.available + 1;
 
       log.info(`The database has ${missing} candles missing, Figuring out which ones...`);
-      
+
       var iterator = {
         from: last - (BATCH_SIZE * 60),
         to: last
-      }
+      };
 
       var batches = [];
 
@@ -107,7 +107,7 @@ var scan = function(done) {
                 curRange.from = batch.from;
               else
                 ranges.push( batch );
-            })
+            });
 
             // we have been counting chronologically reversed
             // (backwards, from now into the past), flip definitions
@@ -133,6 +133,6 @@ var scan = function(done) {
     });
 
   });
-}
+};
 
 module.exports = scan;

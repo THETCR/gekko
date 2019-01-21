@@ -33,10 +33,10 @@ var getTrades = function(since, handler, descending) {
     null,
     TRADES
   );
-}
+};
 FakeProvider.prototype = {
   getTrades: getTrades
-}
+};
 
 spoofer[providerPath] = FakeProvider;
 var getTradesSpy = sinon.spy(FakeProvider.prototype, 'getTrades');
@@ -66,9 +66,9 @@ describe('budfox/marketFetcher', function() {
 
     mf.fetch();
     expect(getTradesSpy.callCount).to.equal(1);
-    
+
     var args = getTradesSpy.firstCall.args;
-    
+
     // test-config uses NO `tradingAdvisor`
     var since = args[0];
     expect(since).to.equal(undefined);

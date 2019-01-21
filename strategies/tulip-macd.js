@@ -9,7 +9,7 @@ var method = {};
 
 // Prepare everything our method needs
 method.init = function() {
-  this.name = 'tulip-macd'
+  this.name = 'tulip-macd';
   // keep state about the current trend
   // here, on every new candle we use this
   // state object to check if we need to
@@ -24,17 +24,17 @@ method.init = function() {
 
   // define the indicators we need
   this.addTulipIndicator('mymacd', 'macd', customMACDSettings);
-}
+};
 
 // What happens on every new candle?
 method.update = function(candle) {
   // nothing!
-}
+};
 
 
 method.log = function() {
   // nothing!
-}
+};
 
 // Based on the newly calculated
 // information, check if we should
@@ -53,6 +53,6 @@ method.check = function(candle) {
     this.advice('long');
 
   }
-}
+};
 
 module.exports = method;

@@ -22,7 +22,7 @@ describe('exchange/triggers/trailingStop', () => {
         onTrigger: () => {}
       })
     }).to.not.throw()
-  })
+  });
 
   it('should call onTrigger when the stop hits', () => {
     const spy = sinon.spy();

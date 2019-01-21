@@ -1,6 +1,6 @@
-// 
+//
 // Small wrapper that only propagates new trades.
-// 
+//
 // Expects trade batches to be written like:
 // [
 //  {
@@ -16,7 +16,7 @@
 //    amount: x
 //  }
 // ]
-// 
+//
 // Emits 'new trades' event with:
 // {
 //   amount: x,
@@ -25,7 +25,7 @@
 //   first: (trade),
 //   last: (trade)
 //   data: [
-//      // batch of new trades with 
+//      // batch of new trades with
 //      // moments instead of timestamps
 //   ]
 // }
@@ -42,7 +42,7 @@ var TradeBatcher = function(tid) {
   _.bindAll(this);
   this.tid = tid;
   this.last = -1;
-}
+};
 
 util.makeEventEmitter(TradeBatcher);
 
@@ -90,7 +90,7 @@ TradeBatcher.prototype.write = function(batch) {
   if(this.tid === 'date')
     this.last = this.last.unix();
 
-}
+};
 
 TradeBatcher.prototype.filter = function(batch) {
   // make sure we're not trying to count
@@ -112,13 +112,13 @@ TradeBatcher.prototype.filter = function(batch) {
   return _.filter(batch, function(trade) {
     return this.last < trade[this.tid];
   }, this);
-}
+};
 
 TradeBatcher.prototype.convertDates = function(batch) {
   return _.map(_.cloneDeep(batch), function(trade) {
     trade.date = moment.unix(trade.date).utc();
     return trade;
   });
-}
+};
 
 module.exports = TradeBatcher;

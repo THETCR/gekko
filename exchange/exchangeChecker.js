@@ -5,14 +5,14 @@ const errors = require('./exchangeErrors');
 
 const Checker = function() {
   _.bindAll(this);
-}
+};
 
 Checker.prototype.getExchangeCapabilities = function(slug) {
   if(!fs.existsSync(__dirname + '/wrappers/' + slug + '.js'))
     throw new errors.ExchangeError(`Gekko does not know the exchange "${slug}"`);
 
   return require('./wrappers/' + slug).getCapabilities();
-}
+};
 
 // check if the exchange is configured correctly for monitoring
 Checker.prototype.cantMonitor = function(conf) {
@@ -44,7 +44,7 @@ Checker.prototype.cantMonitor = function(conf) {
 
   // everything is okay
   return false;
-}
+};
 
 // check if the exchange is configured correctly for fetching
 // full history
@@ -65,7 +65,7 @@ Checker.prototype.cantFetchFullHistory = function(conf) {
       return 'Unsupported date from! ' + exchange.name + ' supports history of max ' + exchange.exchangeMaxHistoryAge + ' days..';
     }
   }
-}
+};
 
 // check if the exchange if configured correctly for real trading
 Checker.prototype.cantTrade = function(conf) {
@@ -93,12 +93,12 @@ Checker.prototype.cantTrade = function(conf) {
   }, this);
 
   return error;
-}
+};
 
 Checker.prototype.settings = function(conf) {
   var slug = conf.exchange.toLowerCase();
   return this.getExchangeCapabilities(slug);
 
-}
+};
 
 module.exports = new Checker();

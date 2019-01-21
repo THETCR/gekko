@@ -25,10 +25,10 @@ var Manager = function() {
 util.makeEventEmitter(Manager);
 Manager.prototype.processTrades = function(tradeBatch) {
   this.candleCreator.write(tradeBatch);
-}
+};
 
 Manager.prototype.relayCandles = function(candles) {
   this.emit('candles', candles);
-}
+};
 
 module.exports = Manager;

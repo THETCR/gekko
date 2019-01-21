@@ -25,16 +25,16 @@ Fetcher.prototype.getTrades = function(fromTid, sinceTime, callback) {
       limit: 1,
       sincetype: 'time',
       since: sinceTime
-    }
+    };
 
   else if(fromTid)
     var params = {
       limit: 5000,
       since: fromTid
-    }
+    };
 
   this.btcc.getHistoryData(process, params);
-}
+};
 
 util.makeEventEmitter(Fetcher);
 
@@ -50,14 +50,14 @@ var fetch = () => {
     fetcher.getTrades(false, from, handleFirstFetch);
   else
     fetcher.getTrades(iterator, false, handleFetch);
-}
+};
 
-// we use the first fetch to figure out 
+// we use the first fetch to figure out
 // the tid of the moment we want data from
 var handleFirstFetch = trades => {
   iterator = _.first(trades).tid;
   fetch();
-}
+};
 
 var handleFetch = trades => {
 
@@ -75,7 +75,7 @@ var handleFetch = trades => {
   }
 
   fetcher.emit('trades', trades);
-}
+};
 
 module.exports = function (daterange) {
   from = daterange.from.unix();
@@ -85,5 +85,5 @@ module.exports = function (daterange) {
     bus: fetcher,
     fetch: fetch
   }
-}
+};
 

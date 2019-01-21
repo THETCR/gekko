@@ -63,4 +63,4 @@ module.exports = {
   schema: function () {
     return config.postgresql.schema ? config.postgresql.schema : 'public';
   }
-}
+};

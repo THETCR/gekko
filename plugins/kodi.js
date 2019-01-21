@@ -12,7 +12,7 @@ var kodiConfig = config.kodi;
 var Kodi = function(done) {
     _.bindAll(this);
 
-    this.exchange = config.watch.exchange.charAt().toUpperCase() + config.watch.exchange.slice(1)
+    this.exchange = config.watch.exchange.charAt().toUpperCase() + config.watch.exchange.slice(1);
 
     this.price = 'N/A';
     this.done = done;
@@ -30,7 +30,7 @@ Kodi.prototype.setup = function(done) {
         } else {
             log.debug('Skipping Send message on startup')
         }
-    }
+    };
     setupKodi.call(this)
 };
 
@@ -41,7 +41,7 @@ Kodi.prototype.processCandle = function(candle, done) {
 };
 
 Kodi.prototype.processAdvice = function(advice) {
-    var title = `Gekko: Going ${advice.recommendation} @ ${this.price}`
+    var title = `Gekko: Going ${advice.recommendation} @ ${this.price}`;
     var message = `${this.exchange} ${config.watch.currency}/${config.watch.asset}`;
     this.mail(title, message);
 };
@@ -54,7 +54,7 @@ Kodi.prototype.mail = function(title, message, done) {
       },
       method: 'POST',
       url: kodiConfig.host
-    }
+    };
 
     request(options, (error, response, body) => {
         if (!error) {
@@ -63,6 +63,6 @@ Kodi.prototype.mail = function(title, message, done) {
             log.debug(`Kodi ${error}`)
         }
     })
-}
+};
 
 module.exports = Kodi;

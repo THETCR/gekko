@@ -17,7 +17,7 @@ var setDateRange = function(from, to) {
     to: moment.unix(to).utc().format(),
   };
   util.setConfig(config);
-}
+};
 
 
 module.exports = function(done) {
@@ -32,7 +32,7 @@ module.exports = function(done) {
       log.info('\t', 'from:', moment.unix(r.from).utc().format('YYYY-MM-DD HH:mm:ss'));
       log.info('\t', 'to:', moment.unix(r.to).utc().format('YYYY-MM-DD HH:mm:ss'));
 
-      
+
       setDateRange(r.from, r.to);
       return done();
     }
@@ -64,4 +64,4 @@ module.exports = function(done) {
     });
 
   });
-}
+};

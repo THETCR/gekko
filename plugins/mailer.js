@@ -126,7 +126,7 @@ Mailer.prototype.processStratNotification = function({ content }) {
   ].join('');
 
   this.mail(subject, text);
-}
+};
 
 Mailer.prototype.checkResults = function(err) {
   if(err)

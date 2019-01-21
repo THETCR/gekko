@@ -13,7 +13,7 @@ const GekkoManager = function() {
   this.loggers = {};
 
   this.archivedGekkos = {};
-}
+};
 
 GekkoManager.prototype.add = function({mode, config}) {
   // set type
@@ -57,7 +57,7 @@ GekkoManager.prototype.add = function({mode, config}) {
       latest: {}
     },
     start: moment()
-  }
+  };
 
   this.gekkos[id] = state;
 
@@ -81,7 +81,7 @@ GekkoManager.prototype.add = function({mode, config}) {
   });
 
   return state;
-}
+};
 
 GekkoManager.prototype.handleRawEvent = function(id) {
   const logger = this.loggers[id];
@@ -103,7 +103,7 @@ GekkoManager.prototype.handleRawEvent = function(id) {
       this.handleGekkoEvent(id, event);
     }
   }
-}
+};
 
 GekkoManager.prototype.handleGekkoEvent = function(id, event) {
   this.gekkos[id] = reduceState(this.gekkos[id], event);
@@ -112,7 +112,7 @@ GekkoManager.prototype.handleGekkoEvent = function(id, event) {
     id,
     event
   });
-}
+};
 
 GekkoManager.prototype.handleFatalError = function(id, err) {
   const state = this.gekkos[id];
@@ -135,7 +135,7 @@ GekkoManager.prototype.handleFatalError = function(id, err) {
   if(state.logType === 'watcher') {
     this.handleWatcherError(state, id);
   }
-}
+};
 
 // There might be leechers depending on this watcher, if so
 // figure out it we can safely start a new watcher without
@@ -177,7 +177,7 @@ GekkoManager.prototype.handleWatcherError = function(state, id) {
     }
 
   }
-}
+};
 
 GekkoManager.prototype.stop = function(id) {
   if(!this.gekkos[id])
@@ -200,7 +200,7 @@ GekkoManager.prototype.stop = function(id) {
   this.archive(id);
 
   return true;
-}
+};
 
 GekkoManager.prototype.archive = function(id) {
   this.archivedGekkos[id] = this.gekkos[id];
@@ -212,7 +212,7 @@ GekkoManager.prototype.archive = function(id) {
     type: 'gekko_archived',
     id
   });
-}
+};
 
 GekkoManager.prototype.delete = function(id) {
   if(this.gekkos[id]) {
@@ -233,7 +233,7 @@ GekkoManager.prototype.delete = function(id) {
   delete this.archivedGekkos[id];
 
   return true;
-}
+};
 
 GekkoManager.prototype.archive = function(id) {
   this.archivedGekkos[id] = this.gekkos[id];
@@ -245,10 +245,10 @@ GekkoManager.prototype.archive = function(id) {
     type: 'gekko_archived',
     id
   });
-}
+};
 
 GekkoManager.prototype.list = function() {
   return { live: this.gekkos, archive: this.archivedGekkos };
-}
+};
 
 module.exports = GekkoManager;

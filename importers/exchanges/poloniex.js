@@ -44,14 +44,14 @@ Fetcher.prototype.getTrades = function(range, callback) {
 
   const params = {
     currencyPair: joinCurrencies(this.currency, this.asset)
-  }
+  };
 
   params.start = range.from.unix();
   params.end = range.to.unix();
 
   const fetch = next => this.poloniex._public('returnTradeHistory', params, this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 util.makeEventEmitter(Fetcher);
 
@@ -79,7 +79,7 @@ var fetch = () => {
     process.send({type: 'log', log: msg});
   }
   fetcher.getTrades(iterator, handleFetch);
-}
+};
 
 var handleFetch = trades => {
   iterator.from.add(batchSize, 'minutes').subtract(overlapSize, 'minutes');
@@ -107,20 +107,20 @@ var handleFetch = trades => {
   }
 
   fetcher.emit('trades', trades);
-}
+};
 
 module.exports = function (daterange) {
   iterator = {
     from: daterange.from.clone(),
     to: daterange.from.clone().add(batchSize, 'minutes')
-  }
+  };
   end = daterange.to.clone();
 
   return {
     bus: fetcher,
     fetch: fetch
   }
-}
+};
 
 
 

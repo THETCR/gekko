@@ -56,7 +56,7 @@ var CandleCreator = function() {
 
   // This also holds the leftover between fetches
   this.buckets = {};
-}
+};
 
 util.makeEventEmitter(CandleCreator);
 
@@ -73,13 +73,13 @@ CandleCreator.prototype.write = function(batch) {
   candles = this.addEmptyCandles(candles);
 
   if(_.isEmpty(candles))
-    return;  
+    return;
 
   // the last candle is not complete
   this.threshold = candles.pop().start;
 
   this.emit('candles', candles);
-}
+};
 
 CandleCreator.prototype.filter = function(trades) {
   // make sure we only include trades more recent
@@ -87,7 +87,7 @@ CandleCreator.prototype.filter = function(trades) {
   return _.filter(trades, function(trade) {
     return trade.date > this.threshold;
   }, this);
-}
+};
 
 // put each trade in a per minute bucket
 CandleCreator.prototype.fillBuckets = function(trades) {
@@ -101,7 +101,7 @@ CandleCreator.prototype.fillBuckets = function(trades) {
   }, this);
 
   this.lastTrade = _.last(trades);
-}
+};
 
 // convert each bucket into a candle
 CandleCreator.prototype.calculateCandles = function() {
@@ -124,7 +124,7 @@ CandleCreator.prototype.calculateCandles = function() {
   }, this);
 
   return candles;
-}
+};
 
 CandleCreator.prototype.calculateCandle = function(trades) {
   var first = _.first(trades);
@@ -152,7 +152,7 @@ CandleCreator.prototype.calculateCandle = function(trades) {
   candle.vwp /= candle.volume;
 
   return candle;
-}
+};
 
 // Gekko expects a candle every minute, if nothing happened
 // during a particilar minute Gekko will add empty candles with:
@@ -195,6 +195,6 @@ CandleCreator.prototype.addEmptyCandles = function(candles) {
     });
   }
   return candles;
-}
+};
 
 module.exports = CandleCreator;

@@ -39,11 +39,11 @@ FakeExchange.prototype = {
       TRADES
     );
   }
-}
+};
 var transactionsSpy = sinon.spy(FakeExchange.prototype, 'transactions');
 spoofer = {
   bitstamp: FakeExchange
-}
+};
 
 describe('exchanges/bitstamp', function() {
   var Bitstamp = proxyquire(dirs.gekko + 'exchange/wrappers/bitstamp', spoofer);
@@ -70,10 +70,10 @@ describe('exchanges/bitstamp', function() {
       transactions: function(since, handler, descending) {
         handler('Auth error');
       }
-    }
+    };
     spoofer = {
       bitstamp: ErrorFakeExchange
-    }
+    };
 
     var ErroringBitstamp = proxyquire(dirs.exchanges + 'bitstamp', spoofer);
     var ebs = new ErroringBitstamp(config.watch);
@@ -81,14 +81,14 @@ describe('exchanges/bitstamp', function() {
     ebs.retry = _.noop;
     var retrySpy = sinon.spy(ebs, 'retry');
 
-    ebs.getTrades(null, _.noop)
+    ebs.getTrades(null, _.noop);
 
     expect(retrySpy.callCount).to.equal(1);
 
     var args = retrySpy.lastCall.args;
     expect(args[1].length).to.equal(2);
     expect(args[1][0]).to.equal(null);
-  })
+  });
 
   it('should correctly parse historical trades', function(done) {
     var check = function(err, trades) {
@@ -106,7 +106,7 @@ describe('exchanges/bitstamp', function() {
       expect(oldest.date).to.equal(OLDEST.date);
 
       done();
-    }
+    };
 
     bs.getTrades(null, check, false);
 

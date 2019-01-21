@@ -9,9 +9,9 @@ const lodash = require('lodash');
 //
 // @param returns (array - list of returns)
 // @param rfreturn (number - risk free return)
-// 
+//
 stats.sharpe = (returns, rfreturn) => {
   return (stats.mean(returns) - rfreturn) / stats.stdev(returns);
-}
+};
 
 module.exports = stats;

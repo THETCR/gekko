@@ -23,7 +23,7 @@ const Trader = function(config) {
     secret: this.secret,
     userAgent: 'Gekko Broker v' + require('../package.json').version
   });
-}
+};
 
 const recoverableErrors = [
   'SOCKETTIMEDOUT',
@@ -53,14 +53,14 @@ const recoverableErrors = [
 // the API call succeeded.
 const unknownResultErrors = [
   'ETIMEDOUT',
-]
+];
 
 const includes = (str, list) => {
   if(!_.isString(str))
     return false;
 
   return _.some(list, item => str.includes(item));
-}
+};
 
 Trader.prototype.outbidPrice = function(price, isUp) {
   let newPrice;
@@ -74,7 +74,7 @@ Trader.prototype.outbidPrice = function(price, isUp) {
   }
 
   return this.roundPrice(newPrice);
-}
+};
 
 Trader.prototype.processResponse = function(next, fn, payload) {
   // TODO: in very rare cases the callback is
@@ -159,7 +159,7 @@ Trader.prototype.processResponse = function(next, fn, payload) {
 
               // it was cancelled, we need to check filled amount..
               console.log(new Date, '[CANCELFIX] process cancel response');
-              console.log('[CANCELFIX] rechecking fill')
+              console.log('[CANCELFIX] rechecking fill');
               setTimeout(() => {
                 this.getOrder(payload, (error, order) => {
                   if(error) {
@@ -201,7 +201,7 @@ Trader.prototype.processResponse = function(next, fn, payload) {
 
     return next(error, data);
   }
-}
+};
 
 Trader.prototype.findLastOrder = function(since, side, callback) {
   const handle = (err, result) => {
@@ -227,12 +227,12 @@ Trader.prototype.findLastOrder = function(since, side, callback) {
   };
 
   this.getRawOpenOrders(handle);
-}
+};
 
 Trader.prototype.getRawOpenOrders = function(callback) {
   const fetch = next => this.poloniex.returnOpenOrders(this.currency, this.asset, this.processResponse(next));
   retry(null, fetch, callback);
-}
+};
 
 Trader.prototype.getOpenOrders = function(callback) {
   this.getRawOpenOrders((err, orders) => {
@@ -244,7 +244,7 @@ Trader.prototype.getOpenOrders = function(callback) {
 
     return callback(undefined, ids);
   })
-}
+};
 
 Trader.prototype.getPortfolio = function(callback) {
   const handle = (err, data) => {
@@ -269,11 +269,11 @@ Trader.prototype.getPortfolio = function(callback) {
     ];
 
     callback(undefined, portfolio);
-  }
+  };
 
   const fetch = next => this.poloniex.myBalances(this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.getTicker = function(callback) {
   const handle = (err, data) => {
@@ -291,7 +291,7 @@ Trader.prototype.getTicker = function(callback) {
 
   const fetch = next => this.poloniex.getTicker(this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.getFee = function(callback) {
   const handle = (err, data) => {
@@ -299,24 +299,24 @@ Trader.prototype.getFee = function(callback) {
       return callback(err);
 
     callback(undefined, parseFloat(data.makerFee));
-  }
+  };
 
   const fetch = next => this.poloniex._private('returnFeeInfo', this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.roundAmount = function(amount) {
   return _.floor(amount, 8);
-}
+};
 
 Trader.prototype.roundPrice = function(price) {
   return +price;
-}
+};
 
 Trader.prototype.isValidLot = function(price, amount) {
   // Error: Total must be at least 0.0001.
   return amount * price >= 0.0001;
-}
+};
 
 Trader.prototype.createOrder = function(side, amount, price, callback) {
   const handle = (err, result) => {
@@ -326,21 +326,21 @@ Trader.prototype.createOrder = function(side, amount, price, callback) {
     }
 
     callback(undefined, result.orderNumber);
-  }
+  };
 
   const fetch = next => {
     this.poloniex[side](this.currency, this.asset, price, amount, this.processResponse(next, 'order', side))
   };
-  retry(null, fetch, handle);  
-}
+  retry(null, fetch, handle);
+};
 
 Trader.prototype.buy = function(amount, price, callback) {
   this.createOrder('buy', amount, price, callback);
-}
+};
 
 Trader.prototype.sell = function(amount, price, callback) {
   this.createOrder('sell', amount, price, callback);
-}
+};
 
 Trader.prototype.checkOrder = function(id, callback) {
   const handle = (err, result) => {
@@ -360,11 +360,11 @@ Trader.prototype.checkOrder = function(id, callback) {
     }
 
     callback(undefined, { executed: false, open: true, filledAmount: order.startingAmount - order.amount });
-  }
+  };
 
   const fetch = next => this.poloniex.myOpenOrders(this.currency, this.asset, this.processResponse(next, 'checkOrder'));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.getOrder = function(order, callback) {
   const handle = (err, result) => {
@@ -401,7 +401,7 @@ Trader.prototype.getOrder = function(order, callback) {
 
   const fetch = next => this.poloniex.returnOrderTrades(order, this.processResponse(next, 'getOrder', order));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.cancelOrder = function(order, callback) {
   const handle = (err, result) => {
@@ -422,10 +422,10 @@ Trader.prototype.cancelOrder = function(order, callback) {
 
     callback(undefined, false, data);
   };
-  
+
   const fetch = next => this.poloniex.cancelOrder(this.currency, this.asset, order, this.processResponse(next, 'cancelOrder', order));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.getTrades = function(since, callback, descending) {
 
@@ -460,14 +460,14 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 
   var params = {
     currencyPair: this.pair
-  }
+  };
 
   if(since)
     params.start = since.unix();
 
   const fetch = next => this.poloniex._public('returnTradeHistory', params, this.processResponse(next, 'getTrades', since));
   retry(null, fetch, handle);
-}
+};
 
 Trader.getCapabilities = function () {
 	return {
@@ -484,6 +484,6 @@ Trader.getCapabilities = function () {
 		tradable: true,
     gekkoBroker: 0.6
 	};
-}
+};
 
 module.exports = Trader;

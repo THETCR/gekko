@@ -47,7 +47,7 @@ Slack.prototype.processAdvice = function(advice) {
 Slack.prototype.processStratNotification = function({ content }) {
   const body = this.createResponse('#909399', content);
   this.send(body);
-}
+};
 
 Slack.prototype.send = function(content, done) {
     this.slack.chat.postMessage(slackConfig.channel, "", content, (error, response) => {

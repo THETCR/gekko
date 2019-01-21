@@ -34,7 +34,7 @@ var Actor = function(done) {
     stitcher.prepareHistoricalData(done);
   } else
     done();
-}
+};
 
 Actor.prototype.setupStrategy = function() {
 
@@ -70,7 +70,7 @@ Actor.prototype.setupStrategy = function() {
       e => this.deferredEmit('stratUpdate', e)
     ).on('stratNotification',
       e => this.deferredEmit('stratNotification', e)
-    )
+    );
 
   this.strategy
     .on('tradeCompleted', this.processTradeCompleted);
@@ -81,7 +81,7 @@ Actor.prototype.setupStrategy = function() {
       this.deferredEmit('stratCandle', candle);
       this.emitStratCandle(candle);
     });
-}
+};
 
 // HANDLERS
 // process the 1m candles
@@ -95,28 +95,28 @@ Actor.prototype.processCandle = function(candle, done) {
     this.next = false;
   }
   this.batcher.flush();
-}
+};
 
 // propogate a custom sized candle to the trading strategy
 Actor.prototype.emitStratCandle = function(candle) {
   const next = this.next || _.noop;
   this.strategy.tick(candle, next);
-}
+};
 
 Actor.prototype.processTradeCompleted = function(trade) {
   this.strategy.processTrade(trade);
-}
+};
 
 // pass through shutdown handler
 Actor.prototype.finish = function(done) {
   this.strategy.finish(done);
-}
+};
 
 // EMITTERS
 Actor.prototype.relayAdvice = function(advice) {
   advice.date = this.candle.start.clone().add(1, 'minute');
   this.deferredEmit('advice', advice);
-}
+};
 
 
 module.exports = Actor;

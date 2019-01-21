@@ -60,7 +60,7 @@ const broadcast = data => {
     });
   }
   );
-}
+};
 cache.set('broadcast', broadcast);
 
 

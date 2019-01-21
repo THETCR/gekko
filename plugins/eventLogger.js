@@ -3,7 +3,7 @@ const _ = require('lodash');
 const subscriptions = require('../subscriptions');
 const config = require('../core/util').getConfig().eventLogger;
 
-const EventLogger = function() {}
+const EventLogger = function() {};
 
 _.each(subscriptions, sub => {
   if(config.whitelist && !config.whitelist.includes(sub.event)) {

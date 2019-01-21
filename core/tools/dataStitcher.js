@@ -9,13 +9,13 @@ var log = require(dirs.core + '/log');
 
 var Stitcher = function(batcher) {
   this.batcher = batcher;
-}
+};
 
 Stitcher.prototype.ago = function(ts) {
   var now = moment().utc();
   var then = moment.unix(ts).utc();
   return now.diff(then, 'minutes') + ' minutes ago';
-}
+};
 
 Stitcher.prototype.verifyExchange = function() {
   require(dirs.gekko + 'exchange/dependencyCheck');
@@ -34,7 +34,7 @@ Stitcher.prototype.verifyExchange = function() {
   var error = exchangeChecker.cantMonitor(config.watch);
   if(error)
     util.die(error, true);
-}
+};
 
 Stitcher.prototype.prepareHistoricalData = function(done) {
   this.verifyExchange();
@@ -49,7 +49,7 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
 
   var requiredHistory = config.tradingAdvisor.candleSize * config.tradingAdvisor.historySize;
   var Reader = require(dirs.plugins + config.adapter + '/reader');
-  
+
   this.reader = new Reader;
 
   log.info(
@@ -60,11 +60,11 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
 
   var endTime = moment().utc().startOf('minute');
   var idealStartTime = endTime.clone().subtract(requiredHistory, 'm');
-  
+
   this.reader.mostRecentWindow(idealStartTime, endTime, function(localData) {
     // now we know what data is locally available, what
     // data would we need from the exchange?
-    
+
     if(!localData) {
       log.info('\tNo usable local data available, trying to get as much as possible from the exchange..');
       var idealExchangeStartTime = idealStartTime.clone();
@@ -80,7 +80,7 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
       log.debug('\t\tfrom:', this.ago(localData.from));
       log.debug('\t\tto:', this.ago(localData.to));
 
-      log.info('\tUsable local data available, trying to match with exchange data..')
+      log.info('\tUsable local data available, trying to match with exchange data..');
       // local data is available, we need the next minute
 
 
@@ -104,9 +104,9 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
       log.info('\tPreventing Gekko from requesting', minutesAgo, 'minutes of history.');
       idealExchangeStartTime = endTime.clone().subtract(maxMinutesAgo, 'minutes');
       idealExchangeStartTimeTS = idealExchangeStartTime.unix();
-    } 
+    }
 
-    log.debug('\tFetching exchange data since', this.ago(idealExchangeStartTimeTS))
+    log.debug('\tFetching exchange data since', this.ago(idealExchangeStartTimeTS));
     this.checkExchangeTrades(idealExchangeStartTime, function(err, exchangeData) {
       log.debug('\tAvailable exchange data:');
       log.debug('\t\tfrom:', this.ago(exchangeData.from));
@@ -142,7 +142,7 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
           log.info(
             '\tPartial history locally available, but',
             Math.round((localData.from - idealStartTime.unix()) / 60),
-            'minutes are missing.')
+            'minutes are missing.');
           log.info('\tSeeding the trading method with',
             'partial historical data (Gekko needs more time before',
             'it can give advice).'
@@ -162,7 +162,7 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
         return this.seedLocalData(from, to, done);
 
       } else if(!stitchable) {
-        log.debug('\tUnable to stitch datasets.')
+        log.debug('\tUnable to stitch datasets.');
         // we cannot use any local data..
         log.info(
           '\tNot seeding locally available data to the trading method.'
@@ -183,7 +183,7 @@ Stitcher.prototype.prepareHistoricalData = function(done) {
 
     }.bind(this));
   }.bind(this));
-}
+};
 
 Stitcher.prototype.checkExchangeTrades = function(since, next) {
   var provider = config.watch.exchange.toLowerCase();
@@ -213,7 +213,7 @@ Stitcher.prototype.checkExchangeTrades = function(since, next) {
       to: _.last(d).date
     })
   });
-}
+};
 
 Stitcher.prototype.seedLocalData = function(from, to, next) {
   this.reader.get(from, to, 'full', function(err, rows) {
@@ -228,6 +228,6 @@ Stitcher.prototype.seedLocalData = function(from, to, next) {
     next();
 
   }.bind(this));
-}
+};
 
 module.exports = Stitcher;

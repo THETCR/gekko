@@ -28,7 +28,7 @@ const PaperTrader = function() {
   this.portfolio = {
     asset: calcConfig.simulationBalance.asset,
     currency: calcConfig.simulationBalance.currency,
-  }
+  };
 
   this.balance = false;
 
@@ -42,20 +42,20 @@ const PaperTrader = function() {
   this.warmupCompleted = false;
 
   this.warmupCandle;
-}
+};
 
 PaperTrader.prototype.relayPortfolioChange = function() {
   this.deferredEmit('portfolioChange', {
     asset: this.portfolio.asset,
     currency: this.portfolio.currency
   });
-}
+};
 
 PaperTrader.prototype.relayPortfolioValueChange = function() {
   this.deferredEmit('portfolioValueChange', {
     balance: this.getBalance()
   });
-}
+};
 
 PaperTrader.prototype.extractFee = function(amount) {
   amount *= 1e8;
@@ -63,11 +63,11 @@ PaperTrader.prototype.extractFee = function(amount) {
   amount = Math.floor(amount);
   amount /= 1e8;
   return amount;
-}
+};
 
 PaperTrader.prototype.setStartBalance = function() {
   this.balance = this.getBalance();
-}
+};
 
 // after every succesfull trend ride we hopefully end up
 // with more BTC than we started with, this function
@@ -104,15 +104,15 @@ PaperTrader.prototype.updatePosition = function(what) {
   const effectivePrice = this.price * this.fee;
 
   return { cost, amount, effectivePrice };
-}
+};
 
 PaperTrader.prototype.getBalance = function() {
   return this.portfolio.currency + this.price * this.portfolio.asset;
-}
+};
 
 PaperTrader.prototype.now = function() {
   return this.candle.start.clone().add(1, 'minute');
-}
+};
 
 PaperTrader.prototype.processAdvice = function(advice) {
   let action;
@@ -181,7 +181,7 @@ PaperTrader.prototype.processAdvice = function(advice) {
     effectivePrice,
     feePercent: this.rawFee
   });
-}
+};
 
 PaperTrader.prototype.createTrigger = function(advice) {
   const trigger = advice.trigger;
@@ -216,7 +216,7 @@ PaperTrader.prototype.createTrigger = function(advice) {
   } else {
     log.warn(`[Papertrader] Gekko does not know trigger with type "${trigger.type}".. Ignoring stop.`);
   }
-}
+};
 
 PaperTrader.prototype.onStopTrigger = function() {
 
@@ -247,12 +247,12 @@ PaperTrader.prototype.onStopTrigger = function() {
   });
 
   delete this.activeStopTrigger;
-}
+};
 
 PaperTrader.prototype.processStratWarmupCompleted = function() {
   this.warmupCompleted = true;
   this.processCandle(this.warmupCandle, _.noop);
-}
+};
 
 PaperTrader.prototype.processCandle = function(candle, done) {
   if(!this.warmupCompleted) {
@@ -278,6 +278,6 @@ PaperTrader.prototype.processCandle = function(candle, done) {
   }
 
   done();
-}
+};
 
 module.exports = PaperTrader;

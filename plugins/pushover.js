@@ -12,7 +12,7 @@ var Pushover = function() {
   this.price = 'N/A';
 
   this.setup();
-}
+};
 
 Pushover.prototype.setup = function() {
   var setupPushover = function() {
@@ -36,9 +36,9 @@ Pushover.prototype.setup = function() {
       );
     } else
     log.debug('Setup pushover adviser.');
-  }
+  };
     setupPushover.call(this);
-}
+};
 
 Pushover.prototype.send = function(subject, content) {
   var msg = {
@@ -58,12 +58,12 @@ Pushover.prototype.send = function(subject, content) {
       console.log( result );
   });
 
-}
+};
 
 Pushover.prototype.processCandle = function(candle, callback) {
   this.price = candle.close;
   callback();
-}
+};
 
 Pushover.prototype.processAdvice = function(advice) {
   if (advice.recommendation == 'soft' && pushoverConfig.muteSoft) return;
@@ -73,13 +73,13 @@ Pushover.prototype.processAdvice = function(advice) {
   ].join(' ');
   var subject = text;
   this.send(subject, text);
-}
+};
 
 Pushover.prototype.checkResults = function(err) {
   if(err)
     log.warn('error sending pushover', err);
   else
     log.info('Send advice via pushover.');
-}
+};
 
 module.exports = Pushover;

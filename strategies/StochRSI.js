@@ -31,7 +31,7 @@ method.init = function() {
   this.addIndicator('rsi', 'RSI', { interval: this.interval });
 
 	this.RSIhistory = [];
-}
+};
 
 // what happens on every new candle?
 method.update = function(candle) {
@@ -46,7 +46,7 @@ method.update = function(candle) {
 	this.lowestRSI = _.min(this.RSIhistory);
 	this.highestRSI = _.max(this.RSIhistory);
 	this.stochRSI = ((this.rsi - this.lowestRSI) / (this.highestRSI - this.lowestRSI)) * 100;
-}
+};
 
 // for debugging purposes log the last
 // calculated parameters.
@@ -58,7 +58,7 @@ method.log = function() {
 	log.debug("StochRSI min:\t\t" + this.lowestRSI.toFixed(digits));
 	log.debug("StochRSI max:\t\t" + this.highestRSI.toFixed(digits));
 	log.debug("StochRSI Value:\t\t" + this.stochRSI.toFixed(2));
-}
+};
 
 method.check = function() {
 	if(this.stochRSI > this.settings.thresholds.high) {
@@ -116,6 +116,6 @@ method.check = function() {
 		this.advice();
 	}
 
-}
+};
 
 module.exports = method;

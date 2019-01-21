@@ -93,7 +93,7 @@ const includes = (str, list) => {
     return false;
 
   return _.some(list, item => str.includes(item));
-}
+};
 
 Trader.prototype.handleResponse = function(funcName, callback) {
   return (error, body) => {
@@ -228,7 +228,7 @@ Trader.prototype.getFee = function(callback) {
     this.fee = basepoints / 10000;
 
     callback(undefined, this.fee);
-  }
+  };
 
   const fetch = cb => this.binance.account({}, this.handleResponse('getFee', cb));
   retry(undefined, fetch, handle);
@@ -283,19 +283,19 @@ Trader.prototype.round = function(amount, tickSize) {
 
 Trader.prototype.roundAmount = function(amount) {
   return this.round(amount, this.market.minimalOrder.amount);
-}
+};
 
 Trader.prototype.roundPrice = function(price) {
   return this.round(price, this.market.minimalOrder.price);
-}
+};
 
 Trader.prototype.isValidPrice = function(price) {
   return price >= this.market.minimalOrder.price;
-}
+};
 
 Trader.prototype.isValidLot = function(price, amount) {
   return amount * price >= this.market.minimalOrder.order;
-}
+};
 
 Trader.prototype.outbidPrice = function(price, isUp) {
   let newPrice;
@@ -307,7 +307,7 @@ Trader.prototype.outbidPrice = function(price, isUp) {
   }
 
   return this.roundPrice(newPrice);
-}
+};
 
 Trader.prototype.addOrder = function(tradeType, amount, price, callback) {
   const setOrder = (err, data) => {
@@ -402,7 +402,7 @@ Trader.prototype.getOrder = function(order, callback) {
     }
 
     callback(undefined, { price, amount, date, fees, feePercent });
-  }
+  };
 
   const reqData = {
     symbol: this.pair,

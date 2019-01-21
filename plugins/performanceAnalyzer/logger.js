@@ -14,11 +14,11 @@ const Logger = function(watchConfig) {
   this.asset = watchConfig.asset;
 
   this.roundtrips = [];
-}
+};
 
 Logger.prototype.round = function(amount) {
   return amount.toFixed(8);
-}
+};
 
 // used for:
 // - realtime logging (per advice)
@@ -35,11 +35,11 @@ Logger.prototype.logReport = function(trade, report) {
     `(PROFIT REPORT) profit:\t\t\t\t ${this.round(report.profit)} ${this.currency}`,
     `(${this.round(report.relativeProfit)}%)`
   );
-}
+};
 
 Logger.prototype.logRoundtripHeading = function() {
   log.info('(ROUNDTRIP)', 'entry date (UTC)  \texit date (UTC)  \texposed duration\tP&L \tprofit');
-}
+};
 
 Logger.prototype.logRoundtrip = function(rt) {
   const display = [
@@ -51,7 +51,7 @@ Logger.prototype.logRoundtrip = function(rt) {
   ];
 
   log.info('(ROUNDTRIP)', display.join('\t'));
-}
+};
 
 if(mode === 'backtest') {
   // we only want to log a summarized one line report, like:
@@ -80,7 +80,7 @@ if(mode === 'backtest') {
         `${this.currency}\t=> ${this.round(trade.portfolio.asset)}`,
         `${this.asset}`
       );
-  }
+  };
 
   Logger.prototype.finalize = function(report) {
 
@@ -90,7 +90,7 @@ if(mode === 'backtest') {
     this.logRoundtripHeading();
     _.each(this.roundtrips, this.logRoundtrip, this);
 
-    log.info()
+    log.info();
     log.info(`(PROFIT REPORT) start time:\t\t\t ${report.startTime}`);
     log.info(`(PROFIT REPORT) end time:\t\t\t ${report.endTime}`);
     log.info(`(PROFIT REPORT) timespan:\t\t\t ${report.timespan}`);
@@ -112,7 +112,7 @@ if(mode === 'backtest') {
     log.info(`(PROFIT REPORT) sharpe ratio:\t\t\t ${report.sharpe}`);
     log.info(`(PROFIT REPORT) expected downside:\t\t ${report.downside}`);
     log.info(`(PROFIT REPORT) ratio roundtrips:\t\t ${report.ratioRoundTrips}%`);
-  }
+  };
 
   Logger.prototype.handleRoundtrip = function(rt) {
     this.roundtrips.push(rt);

@@ -22,7 +22,7 @@ const from = moment.utc(daterange.from).startOf('minute');
 const toUnix = to.unix();
 
 if(to <= from)
-  util.die('This daterange does not make sense.')
+  util.die('This daterange does not make sense.');
 
 if(!from.isValid())
   util.die('invalid `from`');
@@ -33,7 +33,7 @@ if(!to.isValid())
 let iterator = {
   from: from.clone(),
   to: from.clone().add(batchSize, 'm').subtract(1, 's')
-}
+};
 
 var DONE = false;
 
@@ -54,7 +54,7 @@ module.exports = function(candleSize, _next) {
     .on('candle', handleBatchedCandles);
 
   getBatch();
-}
+};
 
 const getBatch = () => {
   reader.get(
@@ -63,14 +63,14 @@ const getBatch = () => {
     'full',
     handleCandles
   )
-}
+};
 
 const shiftIterator = () => {
   iterator = {
     from: iterator.from.clone().add(batchSize, 'm'),
     to: iterator.from.clone().add(batchSize * 2, 'm').subtract(1, 's')
   }
-}
+};
 
 const handleCandles = (err, data) => {
   if(err) {
@@ -93,8 +93,8 @@ const handleCandles = (err, data) => {
     shiftIterator();
     getBatch();
   }
-}
+};
 
 const handleBatchedCandles = candle => {
   result.push(candle);
-}
+};

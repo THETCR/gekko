@@ -15,7 +15,7 @@ const pluginHelper = require(dirs.core + 'pluginUtil');
 const pluginMock = {
   slug: 'postgresql adapter',
   dependencies: config.postgresql.dependencies
-}
+};
 
 const cannotLoad = pluginHelper.cannotLoad(pluginMock);
 if(cannotLoad) {
@@ -86,7 +86,7 @@ const createDatabase = (client, done) => {
     done();
     upsertTables();
   });
-}
+};
 
 const upsertTables = () => {
   const upsertQuery =
@@ -108,7 +108,7 @@ const upsertTables = () => {
       util.die(err);
     }
   });
-}
+};
 
 
 module.exports = pool;

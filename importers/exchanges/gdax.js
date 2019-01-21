@@ -67,11 +67,11 @@ Fetcher.prototype.findFirstTrade = function(sinceTs, callback) {
       const fetch = cb => this.gdax_public.getProductTrades(this.pair, { after: nextScanId, limit: 1 }, this.processResponse('getTrades', cb));
       retry(null, fetch, handle);
     }, QUERY_DELAY);
-  }
+  };
 
   const fetch = cb => this.gdax_public.getProductTrades(this.pair, { limit: 1 }, this.processResponse('getTrades', cb));
   retry(null, fetch, handle);
-}
+};
 
 util.makeEventEmitter(Fetcher);
 
@@ -112,10 +112,10 @@ let fetch = () => {
 
       batchId = firstBatchId;
       fetcher.getTrades(batchId + 1, handleFetch);
-    }
+    };
     fetcher.findFirstTrade(from.valueOf(), process);
   }
-}
+};
 
 let handleFetch = (err, trades) => {
   if (err) {
@@ -128,7 +128,7 @@ let handleFetch = (err, trades) => {
     batch = trades.concat(batch);
 
     let last = moment.unix(_.first(trades).date).utc();
-    lastId = _.first(trades).tid
+    lastId = _.first(trades).tid;
 
     let latestTrade = _.last(trades);
     if (!latestId || latestTrade.tid > latestId) {
@@ -154,7 +154,7 @@ let handleFetch = (err, trades) => {
 
   fetcher.emit('trades', batch);
   batch = [];
-}
+};
 
 module.exports = function (daterange) {
 
@@ -165,4 +165,4 @@ module.exports = function (daterange) {
     bus: fetcher,
     fetch: fetch
   }
-}
+};

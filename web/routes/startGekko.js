@@ -35,4 +35,4 @@ module.exports = function *() {
   const state = gekkoManager.add({config, mode});
 
   this.body = state;
-}
+};

@@ -40,7 +40,7 @@ class Broker {
       open: [],
       // contains all closed orders
       closed: []
-    }
+    };
 
     const slug = config.exchange.toLowerCase();
 

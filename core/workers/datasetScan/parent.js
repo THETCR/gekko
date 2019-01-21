@@ -41,14 +41,14 @@ module.exports = function(config, done) {
       let resp = {
         datasets: [],
         errors: []
-      }
+      };
       markets.forEach(market => {
         if(market.ranges)
           resp.datasets.push(market);
         else
           resp.errors.push(market);
-      })
+      });
       done(err, resp);
     })
   });
-}
+};

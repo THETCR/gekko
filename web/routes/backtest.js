@@ -28,4 +28,4 @@ module.exports = function *() {
   _.merge(config, base, req);
 
   this.body = yield pipelineRunner(mode, config);
-}
+};

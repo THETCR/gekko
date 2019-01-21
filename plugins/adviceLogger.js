@@ -9,7 +9,7 @@ var Actor = function() {
   this.price = 'N/A';
   this.marketTime = {format: function() {return 'N/A'}};
   _.bindAll(this);
-}
+};
 
 Actor.prototype.processCandle = function(candle, done) {
   this.price = candle.close;
@@ -20,7 +20,7 @@ Actor.prototype.processCandle = function(candle, done) {
 
 Actor.prototype.processAdvice = function(advice) {
   if (adviceLoggerConfig.muteSoft && advice.recommendation == 'soft') return;
-  console.log()
+  console.log();
   log.info('We have new trading advice!');
   log.info('\t Position:', advice.recommendation);
   log.info('\t Market price:', this.price);

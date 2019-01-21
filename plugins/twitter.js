@@ -5,7 +5,7 @@ var config = util.getConfig();
 var twitterConfig = config.twitter;
 var TwitterApi = require('twitter');
 
-require('dotenv').config()
+require('dotenv').config();
 
 var Twitter = function(done) {
     _.bindAll(this);
@@ -25,7 +25,7 @@ Twitter.prototype.setup = function(done){
           access_token_key: twitterConfig.access_token_key,
           access_token_secret: twitterConfig.access_token_secret
         });
-      
+
         if(twitterConfig.sendMessageOnStart){
             var exchange = config.watch.exchange;
             var currency = config.watch.currency;
@@ -35,7 +35,7 @@ Twitter.prototype.setup = function(done){
                 +" "
                 +currency
                 +" "
-                +asset
+                +asset;
             this.mail(body);
         }else{
             log.debug('Skipping Send message on startup')
@@ -70,7 +70,7 @@ Twitter.prototype.mail = function(content, done) {
       } else if(response && response.active){
           log.info('Twitter Message Sent')
       }
-    }); 
+    });
 };
 
 Twitter.prototype.checkResults = function(err) {

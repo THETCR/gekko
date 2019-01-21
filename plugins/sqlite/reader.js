@@ -9,7 +9,7 @@ var sqliteUtil = require('./util');
 var Reader = function() {
   _.bindAll(this);
   this.db = sqlite.initDB(true);
-}
+};
 
 
 // returns the most recent window complete candle
@@ -75,7 +75,7 @@ Reader.prototype.mostRecentWindow = function(from, to, next) {
     });
 
   })
-}
+};
 
 Reader.prototype.tableExists = function(name, next) {
 
@@ -89,7 +89,7 @@ Reader.prototype.tableExists = function(name, next) {
 
     next(null, rows.length === 1);
   });
-}
+};
 
 Reader.prototype.get = function(from, to, what, next) {
   if(what === 'full')
@@ -107,7 +107,7 @@ Reader.prototype.get = function(from, to, what, next) {
 
     next(null, rows);
   });
-}
+};
 
 Reader.prototype.count = function(from, to, next) {
   this.db.all(`
@@ -121,7 +121,7 @@ Reader.prototype.count = function(from, to, next) {
 
     next(null, _.first(res).count);
   });
-}
+};
 
 Reader.prototype.countTotal = function(next) {
   this.db.all(`
@@ -134,7 +134,7 @@ Reader.prototype.countTotal = function(next) {
 
     next(null, _.first(res).count);
   });
-}
+};
 
 Reader.prototype.getBoundry = function(next) {
 
@@ -159,11 +159,11 @@ Reader.prototype.getBoundry = function(next) {
 
     next(null, _.first(rows));
   });
-}
+};
 
 Reader.prototype.close = function() {
   this.db.close();
   this.db = null;
-}
+};
 
 module.exports = Reader;

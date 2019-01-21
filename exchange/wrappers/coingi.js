@@ -13,7 +13,7 @@ var Trader = function (config) {
   if (_.isObject(config)) {
     this.key = config.key;
     this.secret = config.secret;
-    this.currency = config.currency.toUpperCase()
+    this.currency = config.currency.toUpperCase();
     this.asset = config.asset.toUpperCase();
   }
 
@@ -26,7 +26,7 @@ var Trader = function (config) {
     this.secret,
     {timeout: +moment.duration(60, 'seconds')}
   );
-}
+};
 
 var retryCritical = {
   retries: 10,
@@ -42,7 +42,7 @@ var retryForever = {
   maxTimeout: 30
 };
 
-var recoverableErrors = new RegExp(/(SOCKETTIMEDOUT|TIMEDOUT|CONNRESET|CONNREFUSED|NOTFOUND|API:Invalid nonce|Service:Unavailable|Request timed out|Response code 520|Response code 504|Response code 502)/)
+var recoverableErrors = new RegExp(/(SOCKETTIMEDOUT|TIMEDOUT|CONNRESET|CONNREFUSED|NOTFOUND|API:Invalid nonce|Service:Unavailable|Request timed out|Response code 520|Response code 504|Response code 502)/);
 
 Trader.prototype.processError = function (funcName, error) {
   if (!error)
@@ -201,7 +201,7 @@ Trader.prototype.getOrder = function (orderId, callback) {
   let reqData = {ordeId: orderId};
   let handler = (cb) => this.coingi.api('get-order', reqData, this.handleResponse('getOrder', cb));
   util.retryCustom(retryCritical, _.bind(handler, this), _.bind(getOrder, this));
-}
+};
 
 Trader.prototype.buy = function (amount, price, callback) {
   this.addOrder('buy', amount, price, callback);
@@ -278,6 +278,6 @@ Trader.getCapabilities = function () {
     tid: 'date',
     tradable: true
   };
-}
+};
 
 module.exports = Trader;

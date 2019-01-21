@@ -22,7 +22,7 @@ var Gekko = function(plugins) {
     .filter(p => p.meta.emits);
 
   this.finalize = _.bind(this.finalize, this);
-}
+};
 
 Gekko.prototype = Object.create(Writable.prototype, {
   constructor: { value: Gekko }
@@ -87,7 +87,7 @@ Gekko.prototype.flushDefferedEvents = function() {
   // have fully broadcasted everything.
   if(broadcasted)
     this.flushDefferedEvents();
-}
+};
 
 Gekko.prototype.finalize = function() {
   var tradingMethod = _.find(
@@ -99,7 +99,7 @@ Gekko.prototype.finalize = function() {
     return this.shutdown();
 
   tradingMethod.finish(this.shutdown.bind(this));
-}
+};
 
 Gekko.prototype.shutdown = function() {
   this.end();

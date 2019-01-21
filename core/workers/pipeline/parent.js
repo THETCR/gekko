@@ -31,4 +31,4 @@ module.exports = (mode, config, callback) => {
   child.on('exit', handle.exit);
 
   return child;
-}
+};

@@ -12,7 +12,7 @@ const reduce = (state, event) => {
   state = {
     ...state,
     latestUpdate: new Date()
-  }
+  };
 
   if(trackAllEvents.includes(type)) {
     if(!state.events[type]) {
@@ -61,7 +61,7 @@ const reduce = (state, event) => {
   }
 
   return state;
-}
+};
 
 // export default reduce;
 module.exports = reduce;

@@ -10,7 +10,7 @@ var pluginHelper = require(`${dirs.core}pluginUtil`);
 var pluginMock = {
   slug: 'mongodb adapter',
   dependencies: config.mongodb.dependencies
-}
+};
 
 // exit if plugin couldn't be loaded
 var cannotLoad = pluginHelper.cannotLoad(pluginMock);
@@ -23,7 +23,7 @@ var mode = util.gekkoMode();
 var collections = [
   mongoUtil.settings.historyCollection,
   mongoUtil.settings.adviceCollection
-]
+];
 
 var connection = mongojs(config.mongodb.connectionString, collections);
 var collection = connection.collection(mongoUtil.settings.historyCollection);

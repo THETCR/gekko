@@ -16,7 +16,7 @@ var Trader = function(config) {
   this.price;
 
   this.lakebtc = new Lakebtc(this.key, this.secret);
-}
+};
 
 // if the exchange errors we try the same call again after
 // waiting 10 seconds
@@ -39,7 +39,7 @@ Trader.prototype.retry = function(method, args) {
     function() { method.apply(self, args) },
     wait
   );
-}
+};
 
 Trader.prototype.getPortfolio = function(callback) {
   var set = function(err, data) {
@@ -48,17 +48,17 @@ Trader.prototype.getPortfolio = function(callback) {
 	  portfolio.push({name: asset, amount: parseFloat(amount)});
     });
     callback(err, portfolio);
-  }
+  };
   this.lakebtc.getAccountInfo(_.bind(set, this));
-}
+};
 
 Trader.prototype.getTicker = function(callback) {
   this.lakebtc.ticker(callback);
-}
+};
 
 Trader.prototype.getFee = function(callback) {
   callback(false, 0.002);
-}
+};
 
 Trader.prototype.buy = function(amount, price, callback) {
   var set = function(err, result) {
@@ -75,7 +75,7 @@ Trader.prototype.buy = function(amount, price, callback) {
   amount = Math.floor(amount);
   amount /= 10000;
   this.lakebtc.buyOrder(_.bind(set, this), [price, amount, 'USD']);
-}
+};
 
 Trader.prototype.sell = function(amount, price, callback) {
   var set = function(err, result) {
@@ -86,7 +86,7 @@ Trader.prototype.sell = function(amount, price, callback) {
   };
 
   this.lakebtc.sell(_.bind(set, this), [price, amount, 'USD']);
-}
+};
 
 Trader.prototype.checkOrder = function(order, callback) {
   var check = function(err, result) {
@@ -95,7 +95,7 @@ Trader.prototype.checkOrder = function(order, callback) {
   };
 
   this.lakebtc.getOrders(_.bind(check, this));
-}
+};
 
 Trader.prototype.cancelOrder = function(order, callback) {
   var cancel = function(err, result) {
@@ -104,7 +104,7 @@ Trader.prototype.cancelOrder = function(order, callback) {
   };
 
   this.lakebtc.cancelOrder(_.bind(cancel, this), [order]);
-}
+};
 
 Trader.prototype.getTrades = function(since, callback, descending) {
   var args = _.toArray(arguments);
@@ -115,7 +115,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
   };
   since = since ? since.unix() : moment().subtract(5, 'minutes').unix();
   this.lakebtc.bctrades( _.bind(process, this), since);
-}
+};
 
 Trader.getCapabilities = function () {
   return {
@@ -133,6 +133,6 @@ Trader.getCapabilities = function () {
     fetchTimespan: 60,
     tid: 'tid'
   };
-}
+};
 
 module.exports = Trader;

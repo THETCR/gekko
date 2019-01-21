@@ -28,7 +28,7 @@ const AsyncIndicatorRunner = function() {
   this.inflight = false;
   this.backlog = [];
   this.age = 0;
-}
+};
 
 AsyncIndicatorRunner.prototype.processCandle = function(candle, next) {
   if(this.inflight) {
@@ -36,7 +36,7 @@ AsyncIndicatorRunner.prototype.processCandle = function(candle, next) {
   }
 
   this.age++;
-  this.inflight = true;  
+  this.inflight = true;
 
   this.candleProps.open.push(candle.open);
   this.candleProps.high.push(candle.high);
@@ -53,7 +53,7 @@ AsyncIndicatorRunner.prototype.processCandle = function(candle, next) {
   }
 
   this.calculateIndicators(next);
-}
+};
 
 AsyncIndicatorRunner.prototype.calculateIndicators = function(next) {
   const done = _.after(
@@ -68,7 +68,7 @@ AsyncIndicatorRunner.prototype.calculateIndicators = function(next) {
 
     this.talibIndicators[name].result = _.mapValues(result, v => _.last(v));
     done();
-  }
+  };
 
   // handle result from talib
   _.each(
@@ -86,7 +86,7 @@ AsyncIndicatorRunner.prototype.calculateIndicators = function(next) {
 
     this.tulipIndicators[name].result = _.mapValues(result, v => _.last(v));
     done();
-  }
+  };
 
   // handle result from tulip indicators
   _.each(
@@ -96,7 +96,7 @@ AsyncIndicatorRunner.prototype.calculateIndicators = function(next) {
       tulindResultHander(name)
     )
   );
-}
+};
 
 AsyncIndicatorRunner.prototype.handlePostFlight = function(next) {
   return () => {
@@ -108,7 +108,7 @@ AsyncIndicatorRunner.prototype.handlePostFlight = function(next) {
       this.processCandle(candle, next);
     }
   }
-}
+};
 
 AsyncIndicatorRunner.prototype.addTalibIndicator = function(name, type, parameters) {
   if(!talib)
@@ -126,7 +126,7 @@ AsyncIndicatorRunner.prototype.addTalibIndicator = function(name, type, paramete
     run: talib[type].create(parameters),
     result: NaN
   }
-}
+};
 
 AsyncIndicatorRunner.prototype.addTulipIndicator = function(name, type, parameters) {
   if(!tulind) {
@@ -145,6 +145,6 @@ AsyncIndicatorRunner.prototype.addTulipIndicator = function(name, type, paramete
     run: tulind[type].create(parameters),
     result: NaN
   }
-}
+};
 
 module.exports = AsyncIndicatorRunner;

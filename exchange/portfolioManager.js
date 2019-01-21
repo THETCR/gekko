@@ -61,11 +61,11 @@ class Portfolio {
 
       if(_.isFunction(callback))
         callback();
-    }
+    };
 
     this.api.getPortfolio(set);
   }
-  
+
   setFee(callback) {
     this.api.getFee((err, fee) => {
       if(err)
@@ -84,4 +84,4 @@ class Portfolio {
 
 }
 
-module.exports = Portfolio
+module.exports = Portfolio;

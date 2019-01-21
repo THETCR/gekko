@@ -19,6 +19,6 @@ const ChildToParent = function() {
       }
     }, this);
 
-}
+};
 
 module.exports = ChildToParent;

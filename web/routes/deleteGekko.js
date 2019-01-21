@@ -8,7 +8,7 @@ module.exports = function *() {
   let id = this.request.body.id;
 
   if(!id) {
-    this.body = { status: 'not ok' }
+    this.body = { status: 'not ok' };
     return;
   }
 
@@ -19,4 +19,4 @@ module.exports = function *() {
   }
 
   this.body = { status: 'ok' };
-}
+};

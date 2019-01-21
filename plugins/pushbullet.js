@@ -147,10 +147,10 @@ Pushbullet.prototype.processTradeCompleted = function(trade) {
 
 
       if (nBal >= oBal) { // profit!
-        balanceChangeStr = `\n\nRound trip profit of: \n${getNumStr(diffBal)}${config.watch.currency} \n${getNumStr(percDiffBal,2)}%\n`
+        balanceChangeStr = `\n\nRound trip profit of: \n${getNumStr(diffBal)}${config.watch.currency} \n${getNumStr(percDiffBal,2)}%\n`;
         subject = `${subject}: +${getNumStr(percDiffBal,2)}%`
       } else if (nBal < oBal) { //  Loss :(
-        balanceChangeStr = `\n\nRound trip loss of: \n-${getNumStr(diffBal)}${config.watch.currency} \n-${getNumStr(percDiffBal,2)}%\n`
+        balanceChangeStr = `\n\nRound trip loss of: \n-${getNumStr(diffBal)}${config.watch.currency} \n-${getNumStr(percDiffBal,2)}%\n`;
         subject = `${subject}: -${getNumStr(percDiffBal,2)}%`
       }
 

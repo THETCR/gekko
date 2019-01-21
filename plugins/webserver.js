@@ -8,7 +8,7 @@ var Actor = function(next) {
 
   this.server = new Server();
   this.server.setup(next);
-}
+};
 
 Actor.prototype.init = function(data) {
   this.server.broadcastHistory(data);

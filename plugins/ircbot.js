@@ -11,7 +11,7 @@ var Actor = function() {
   _.bindAll(this);
 
   this.bot = new irc.Client(ircbot.server, ircbot.botName, {
-    channels: [ ircbot.channel ] 
+    channels: [ ircbot.channel ]
   });
 
   this.bot.addListener("message", this.verifyQuestion);
@@ -32,7 +32,7 @@ var Actor = function() {
   };
 
   this.rawCommands = _.keys(this.commands);
-}
+};
 
 Actor.prototype.processCandle = function(candle, done) {
   this.price = candle.close;
@@ -53,12 +53,12 @@ Actor.prototype.processAdvice = function(advice) {
 Actor.prototype.verifyQuestion = function(from, to, text, message) {
   if(text in this.commands)
     this[this.commands[text]]();
-}
+};
 
 Actor.prototype.newAdvice = function() {
   this.bot.say(ircbot.channel, 'Guys! Important news!');
   this.emitAdvice();
-}
+};
 
 // sent advice over to the IRC channel
 Actor.prototype.emitAdvice = function() {
@@ -128,7 +128,7 @@ Actor.prototype.emitHelp = function() {
 
   this.bot.say(ircbot.channel, message);
 
-}
+};
 
 Actor.prototype.emitRealAdvice = function() {
   // http://www.examiner.com/article/uncaged-a-look-at-the-top-10-quotes-of-gordon-gekko
@@ -144,7 +144,7 @@ Actor.prototype.emitRealAdvice = function() {
   ];
 
   this.bot.say(ircbot.channel, _.first(_.shuffle(realAdvice)));
-}
+};
 
 Actor.prototype.logError = function(message) {
   log.error('IRC ERROR:', message);

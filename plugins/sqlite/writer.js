@@ -15,7 +15,7 @@ var Store = function(done, pluginMeta) {
 
   this.cache = [];
   this.buffered = util.gekkoMode() === "importer";
-}
+};
 
 Store.prototype.upsertTables = function() {
   var createQueries = [
@@ -46,7 +46,7 @@ Store.prototype.upsertTables = function() {
   _.each(createQueries, function(q) {
     this.db.run(q, next);
   }, this);
-}
+};
 
 Store.prototype.writeCandles = function() {
   if(_.isEmpty(this.cache))
@@ -83,16 +83,16 @@ Store.prototype.writeCandles = function() {
     this.db.run("COMMIT");
     // TEMP: should fix https://forum.gekko.wizb.it/thread-57279-post-59194.html#pid59194
     this.db.run("pragma wal_checkpoint;");
-    
+
     this.cache = [];
-  }
+  };
 
   this.db.serialize(transaction);
-}
+};
 
 var processCandle = function(candle, done) {
   this.cache.push(candle);
-  if (!this.buffered || this.cache.length > 1000) 
+  if (!this.buffered || this.cache.length > 1000)
     this.writeCandles();
 
   done();
@@ -102,7 +102,7 @@ var finalize = function(done) {
   this.writeCandles();
   this.db.close(() => { done(); });
   this.db = null;
-}
+};
 
 if(config.candleWriter.enabled) {
   Store.prototype.processCandle = processCandle;

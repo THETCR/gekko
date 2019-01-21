@@ -18,4 +18,4 @@ module.exports = function(config, done) {
     if(code !== 0)
       done('ERROR, unable to scan dateranges, please check the console.');
   });
-}
+};

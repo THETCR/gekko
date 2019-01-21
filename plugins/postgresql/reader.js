@@ -11,7 +11,7 @@ const { Query } = require('pg');
 var Reader = function() {
   _.bindAll(this);
   this.db = handle;
-}
+};
 
 // returns the furthest point (up to `from`) in time we have valid data from
 Reader.prototype.mostRecentWindow = function(from, to, next) {
@@ -19,7 +19,7 @@ Reader.prototype.mostRecentWindow = function(from, to, next) {
   from = from.unix();
 
   var maxAmount = to - from + 1;
-  
+
   this.db.connect((err,client,done) => {
     var query = client.query(new Query(`
     SELECT start from ${postgresUtil.table('candles')}
@@ -83,8 +83,8 @@ Reader.prototype.mostRecentWindow = function(from, to, next) {
         to: mostRecent
       });
     });
-  });  
-}
+  });
+};
 
 Reader.prototype.tableExists = function (name, next) {
   this.db.connect((err,client,done) => {
@@ -101,14 +101,14 @@ Reader.prototype.tableExists = function (name, next) {
 
       next(null, result.rows.length === 1);
     });
-  });  
-}
+  });
+};
 
 Reader.prototype.get = function(from, to, what, next) {
   if(what === 'full'){
     what = '*';
   }
-  
+
   this.db.connect((err,client,done) => {
     var query = client.query(new Query(`
     SELECT ${what} from ${postgresUtil.table('candles')}
@@ -125,8 +125,8 @@ Reader.prototype.get = function(from, to, what, next) {
       done();
       next(null, rows);
     });
-  });  
-}
+  });
+};
 
 Reader.prototype.count = function(from, to, next) {
   this.db.connect((err,client,done) => {
@@ -143,8 +143,8 @@ Reader.prototype.count = function(from, to, next) {
       done();
       next(null, _.first(rows).count);
     });
-  });  
-}
+  });
+};
 
 Reader.prototype.countTotal = function(next) {
   this.db.connect((err,client,done) => {
@@ -160,8 +160,8 @@ Reader.prototype.countTotal = function(next) {
       done();
       next(null, _.first(rows).count);
     });
-  });  
-}
+  });
+};
 
 Reader.prototype.getBoundry = function(next) {
   this.db.connect((err,client,done) => {
@@ -187,12 +187,12 @@ Reader.prototype.getBoundry = function(next) {
       done();
       next(null, _.first(rows));
     });
-  });  
-}
+  });
+};
 
 Reader.prototype.close = function() {
   //obsolete due to connection pooling
   //this.db.end();
-}
+};
 
 module.exports = Reader;

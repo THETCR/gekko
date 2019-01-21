@@ -23,14 +23,14 @@ var Trader = function(config) {
   this.bitfinex = new Bitfinex.RESTv1({apiKey: this.key, apiSecret: this.secret, transform: true});
 
   this.interval = 4000;
-}
+};
 
 const includes = (str, list) => {
   if(!_.isString(str))
     return false;
 
   return _.some(list, item => str.includes(item));
-}
+};
 
 const recoverableErrors = [
   'SOCKETTIMEDOUT',
@@ -137,7 +137,7 @@ Trader.prototype.getPortfolio = function(callback) {
 
   const fetch = cb => this.bitfinex.wallet_balances(this.handleResponse('getPortfolio', cb));
   retry(null, fetch, processResponse);
-}
+};
 
 Trader.prototype.getTicker = function(callback) {
   const processResponse = (err, data) => {
@@ -149,22 +149,22 @@ Trader.prototype.getTicker = function(callback) {
 
   const fetch = cb => this.bitfinex.ticker(this.pair, this.handleResponse('getTicker', cb));
   retry(null, fetch, processResponse);
-}
+};
 
 Trader.prototype.getFee = function(callback) {
   const makerFee = 0.1;
   // const takerFee = 0.2;
   callback(undefined, makerFee / 100);
-}
+};
 
 Trader.prototype.roundAmount = function(amount) {
   return Math.floor(amount*100000000)/100000000;
-}
+};
 
 Trader.prototype.roundPrice = function(price) {
   // todo: calc significant digits
   return price;
-}
+};
 
 Trader.prototype.submitOrder = function(type, amount, price, callback) {
   const processResponse = (err, data) => {
@@ -172,7 +172,7 @@ Trader.prototype.submitOrder = function(type, amount, price, callback) {
       return callback(err);
 
     callback(null, data.order_id);
-  }
+  };
 
   const fetch = cb => this.bitfinex.new_order(this.pair,
     amount + '',
@@ -184,15 +184,15 @@ Trader.prototype.submitOrder = function(type, amount, price, callback) {
   );
 
   retry(null, fetch, processResponse);
-}
+};
 
 Trader.prototype.buy = function(amount, price, callback) {
   this.submitOrder('buy', amount, price, callback);
-}
+};
 
 Trader.prototype.sell = function(amount, price, callback) {
   this.submitOrder('sell', amount, price, callback);
-}
+};
 
 Trader.prototype.checkOrder = function(order_id, callback) {
   const processResponse = (err, data) => {
@@ -215,11 +215,11 @@ Trader.prototype.checkOrder = function(order_id, callback) {
       executed: data.original_amount === data.executed_amount,
       filledAmount: +data.executed_amount
     });
-  }
+  };
 
   const fetcher = cb => this.bitfinex.order_status(order_id, this.handleResponse('checkOrder', cb));
   retry(null, fetcher, processResponse);
-}
+};
 
 
 Trader.prototype.getOrder = function(order_id, callback) {
@@ -245,10 +245,10 @@ Trader.prototype.getOrder = function(order_id, callback) {
 
       const fees = {
         [trade.fee_currency]: trade.fee_amount
-      }
+      };
 
       callback(undefined, {price, amount, date, fees});
-    }
+    };
 
     // we need another API call to fetch the fees
     const feeFetcher = cb => this.bitfinex.past_trades(this.currency, {since: data.timestamp}, this.handleResponse('pastTrades', cb));
@@ -259,7 +259,7 @@ Trader.prototype.getOrder = function(order_id, callback) {
 
   const fetcher = cb => this.bitfinex.order_status(order_id, this.handleResponse('getOrder', cb));
   retry(null, fetcher, processResponse);
-}
+};
 
 
 Trader.prototype.cancelOrder = function(order_id, callback) {
@@ -269,21 +269,21 @@ Trader.prototype.cancelOrder = function(order_id, callback) {
     }
 
     return callback(undefined, false);
-  }
+  };
 
   const handler = cb => this.bitfinex.cancel_order(order_id, this.handleResponse('cancelOrder', cb));
   retry(null, handler, processResponse);
-}
+};
 
 Trader.prototype.getTrades = function(since, callback, descending) {
-  const processResponse = (err, data) => {  
+  const processResponse = (err, data) => {
     if (err) return callback(err);
 
     var trades = _.map(data, function(trade) {
       return {
-        tid: trade.tid, 
-        date:  trade.timestamp, 
-        price: +trade.price, 
+        tid: trade.tid,
+        date:  trade.timestamp,
+        price: +trade.price,
         amount: +trade.amount
       }
     });
@@ -291,13 +291,13 @@ Trader.prototype.getTrades = function(since, callback, descending) {
     callback(undefined, descending ? trades : trades.reverse());
   };
 
-  var path = this.pair; 
-  if(since) 
-    path += '?limit_trades=2000'; 
+  var path = this.pair;
+  if(since)
+    path += '?limit_trades=2000';
 
   const handler = cb => this.bitfinex.trades(path, this.handleResponse('getTrades', cb));
   retry(null, handler, processResponse);
-}
+};
 
 Trader.getCapabilities = function () {
   return {
@@ -314,6 +314,6 @@ Trader.getCapabilities = function () {
     forceReorderDelay: true,
     gekkoBroker: 0.6
   };
-}
+};
 
 module.exports = Trader;

@@ -65,7 +65,7 @@ const Fetcher = function(config) {
   this.firstFetch = true;
 
   this.batcher.on('new batch', this.relayTrades);
-}
+};
 
 util.makeEventEmitter(Fetcher);
 
@@ -74,7 +74,7 @@ Fetcher.prototype._fetch = function(since) {
     return;
 
   this.exchangeTrader.getTrades(since, this.processTrades, false);
-}
+};
 
 Fetcher.prototype.fetch = function() {
   var since = false;
@@ -87,7 +87,7 @@ Fetcher.prototype.fetch = function() {
   this.tries = 0;
   log.debug('Requested', this.pair, 'trade data from', this.exchange.name, '...');
   this._fetch(since);
-}
+};
 
 Fetcher.prototype.processTrades = function(err, trades) {
   if(err || _.isEmpty(trades)) {
@@ -100,10 +100,10 @@ Fetcher.prototype.processTrades = function(err, trades) {
     return;
   }
   this.batcher.write(trades);
-}
+};
 
 Fetcher.prototype.relayTrades = function(batch) {
   this.emit('trades batch', batch);
-}
+};
 
 module.exports = Fetcher;

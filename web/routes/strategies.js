@@ -18,10 +18,10 @@ module.exports = function *() {
   for(let i = 0; i < strats.length; i++) {
     let strat = strats[i];
     if(strategyParamsDir.indexOf(strat.name + '.toml') !== -1)
-      strat.params = yield fs.readFile(stratConfigPath + '/' + strat.name + '.toml', 'utf8')
+      strat.params = yield fs.readFile(stratConfigPath + '/' + strat.name + '.toml', 'utf8');
     else
       strat.params = '';
   }
 
   this.body = strats;
-}
+};

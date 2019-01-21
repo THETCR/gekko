@@ -6,7 +6,7 @@
 // Acts as ~fake~ stream: takes
 // 1m candles as input and emits
 // bigger candles.
-// 
+//
 // input are transported candles.
 
 var _ = require('lodash');
@@ -21,7 +21,7 @@ var CandleBatcher = function(candleSize) {
   this.calculatedCandles = [];
 
   _.bindAll(this);
-}
+};
 
 util.makeEventEmitter(CandleBatcher);
 
@@ -38,7 +38,7 @@ CandleBatcher.prototype.write = function(candles) {
   }, this);
 
   return this.emitted;
-}
+};
 
 CandleBatcher.prototype.check = function() {
   if(_.size(this.smallCandles) % this.candleSize !== 0)
@@ -47,7 +47,7 @@ CandleBatcher.prototype.check = function() {
   this.emitted++;
   this.calculatedCandles.push(this.calculate());
   this.smallCandles = [];
-}
+};
 
 CandleBatcher.prototype.flush = function() {
   _.each(
@@ -56,7 +56,7 @@ CandleBatcher.prototype.flush = function() {
   );
 
   this.calculatedCandles = [];
-}
+};
 
 CandleBatcher.prototype.calculate = function() {
   // remove the id property of the small candle
@@ -88,6 +88,6 @@ CandleBatcher.prototype.calculate = function() {
 
   candle.start = first.start;
   return candle;
-}
+};
 
 module.exports = CandleBatcher;

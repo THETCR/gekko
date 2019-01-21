@@ -32,12 +32,12 @@ method.init = function() {
 
   // define the indicators we need
   this.addIndicator('macd', 'MACD', this.settings);
-}
+};
 
 // what happens on every new candle?
 method.update = function(candle) {
   // nothing!
-}
+};
 
 // for debugging purposes: log the last calculated
 // EMAs and diff.
@@ -54,7 +54,7 @@ method.log = function() {
   log.debug('\t', 'macd:', diff.toFixed(digits));
   log.debug('\t', 'signal:', signal.toFixed(digits));
   log.debug('\t', 'macdiff:', macd.result.toFixed(digits));
-}
+};
 
 method.check = function() {
   var macddiff = this.indicators.macd.result;
@@ -129,6 +129,6 @@ method.check = function() {
 
     this.advice();
   }
-}
+};
 
 module.exports = method;

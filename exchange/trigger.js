@@ -32,7 +32,7 @@ class Trigger {
     this.trigger = new triggers[type]({
       onTrigger: this.propogateTrigger,
       ...props
-    })
+    });
 
     this.scheduleFetch();
   }
@@ -52,7 +52,7 @@ class Trigger {
     if(!this.isLive) {
       return;
     }
-    
+
     if(err) {
       return console.log('[GB/trigger] failed to fetch ticker:', err);
     }

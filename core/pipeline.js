@@ -1,6 +1,6 @@
 /*
 
-  A pipeline implements a full Gekko Flow based on a config and 
+  A pipeline implements a full Gekko Flow based on a config and
   a mode. The mode is an abstraction that tells Gekko what market
   to load (realtime, backtesting or importing) while making sure
   all enabled plugins are actually supported by that market.
@@ -72,7 +72,7 @@ var pipeline = (settings) => {
     });
 
     next();
-  }
+  };
 
   // Subscribe all plugins to other emitting plugins
   var subscribePlugins = function(next) {
@@ -98,7 +98,7 @@ var pipeline = (settings) => {
         if(_.size(singleEventEmitters) > 1) {
           var error = `Multiple plugins are broadcasting`;
           error += ` the event "${subscription.event}" (${singleEventEmitters.join(',')}).`;
-          error += 'This is unsupported.'
+          error += 'This is unsupported.';
           util.die(error);
         } else {
           subscription.emitter = _.first(singleEventEmitters);
@@ -169,14 +169,14 @@ var pipeline = (settings) => {
     });
 
     next();
-  }
+  };
 
   var prepareMarket = function(next) {
     if(mode === 'backtest' && config.backtest.daterange === 'scan')
       require(dirs.core + 'prepareDateRange')(next);
     else
       next();
-  }
+  };
 
   var setupMarket = function(next) {
     // load a market based on the config (or fallback to mode)
@@ -191,7 +191,7 @@ var pipeline = (settings) => {
     market = new Market(config);
 
     next();
-  }
+  };
 
   var subscribePluginsToMarket = function(next) {
 
@@ -217,7 +217,7 @@ var pipeline = (settings) => {
 
     next();
 
-  }
+  };
 
   log.info('Setting up Gekko in', mode, 'mode');
   log.info('');
@@ -236,7 +236,7 @@ var pipeline = (settings) => {
       var gekkoStream = new GekkoStream(plugins);
 
       market
-        .pipe(gekkoStream)
+        .pipe(gekkoStream);
 
         // convert JS objects to JSON string
         // .pipe(new require('stringify-stream')())
@@ -247,6 +247,6 @@ var pipeline = (settings) => {
     }
   );
 
-}
+};
 
 module.exports = pipeline;

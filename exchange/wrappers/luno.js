@@ -23,12 +23,12 @@ const Trader = function(config) {
     return market.pair[0] === this.currency && market.pair[1] === this.asset;
   });
   this.interval = 2000;
-}
+};
 
 const log = function() {
   const message = node_util.format.apply(null, _.toArray(arguments));
   console.log(moment().format('YYYY-MM-DD HH:mm:ss') + ' (DEBUG):    ' + message);
-}
+};
 
 Trader.prototype.inspect = function(obj) {
   return node_util.inspect(obj, {
@@ -46,18 +46,18 @@ const setPrecision = (amount, digits) => {
   amount = Math.floor(amount);
   amount /= precision;
   return amount;
-}
+};
 
 const round = (value, decimals = 14) => {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-}
+};
 
 const includes = (str, list) => {
   if (!_.isString(str))
     return false;
   let result = _.some(list, item => str.includes(item));
   return result;
-}
+};
 
 const recoverableErrors = [
   'SOCKETTIMEDOUT',
@@ -136,7 +136,7 @@ Trader.prototype.getTicker = function(callback) {
 
   const handler = cb => this.luno.getTicker(processResponse('getTicker', cb));
   retry(null, handler, process);
-}
+};
 
 Trader.prototype.getFee = function(callback) {
   // log(name, 'getFee()');
@@ -160,7 +160,7 @@ Trader.prototype.getFee = function(callback) {
   const handler = cb => this.luno.getFee(processResponse('getFee', cb));
   retry(null, handler, process);
   */
-}
+};
 
 Trader.prototype.getPortfolio = function(callback) {
   // log(name, 'getPortfolio()');
@@ -198,7 +198,7 @@ Trader.prototype.getPortfolio = function(callback) {
 
   const handler = cb => this.luno.getBalance(processResponse('getPortfolio', cb));
   retry(null, handler, process);
-}
+};
 
 Trader.prototype.buy = function(amount, price, callback) {
   log(name, 'buy() amount:', amount, 'price:', price);
@@ -217,7 +217,7 @@ Trader.prototype.buy = function(amount, price, callback) {
 
   const handler = cb => this.luno.postBuyOrder(amount, price, processResponse('buy', cb));
   retry(null, handler, process);
-}
+};
 
 Trader.prototype.sell = function(amount, price, callback) {
   log(name, 'sell() amount:', amount, 'price:', price);
@@ -236,16 +236,16 @@ Trader.prototype.sell = function(amount, price, callback) {
 
   const handler = cb => this.luno.postSellOrder(amount, price, processResponse('sell', cb));
   retry(null, handler, process);
-}
+};
 
 Trader.prototype.roundAmount = function(amount) {
   amount = setPrecision(amount, this.market.precision);
   return amount;
-}
+};
 
 Trader.prototype.roundPrice = function(price) {
   return +price;
-}
+};
 
 Trader.prototype.getOrder = function(order, callback) {
   // log(name, 'getOrder() order id:', order);
@@ -284,7 +284,7 @@ Trader.prototype.getOrder = function(order, callback) {
 
   const handler = cb => this.luno.getOrder(order, processResponse('getOrder', cb));
   retry(null, handler, process);
-}
+};
 
 Trader.prototype.checkOrder = function(order, callback) {
   // log(name, 'checkOrder() order id:', order);
@@ -302,14 +302,14 @@ Trader.prototype.checkOrder = function(order, callback) {
       executed: data.limit_volume === data.base,
       filledAmount: +data.base,
       remaining: round(+data.limit_volume - +data.base)
-    }
+    };
     log(name, 'checkOrder()', order, 'result:', this.inspect(result));
     callback(undefined, result);
   };
 
   const handler = cb => this.luno.getOrder(order, processResponse('checkOrder', cb));
   retry(null, handler, process);
-}
+};
 
 Trader.prototype.cancelOrder = function(order, callback) {
   log(name, 'cancelOrder() order id:', order);
@@ -345,15 +345,15 @@ Trader.prototype.cancelOrder = function(order, callback) {
       const remaining = {
         remaining: orderStatus.remaining,
         filled: orderStatus.filledAmount
-      }
+      };
       log(name, 'cancelOrder() --> status: false remaining:', this.inspect(remaining));
       return callback(undefined, false, remaining);
     });
-  }
+  };
 
   const handler = cb => this.luno.stopOrder(order, processResponse('cancelOrder', cb));
   retry(null, handler, process);
-}
+};
 
 Trader.prototype.getTrades = function(since, callback, descending) {
   // log(name, 'getTrades() since:', since);
@@ -383,11 +383,11 @@ Trader.prototype.getTrades = function(since, callback, descending) {
   const options = {
     pair: this.pair,
     since: since
-  }
+  };
 
   const handler = cb => this.luno.getTrades(options, processResponse('getTrades', cb));
   retry(null, handler, process);
-}
+};
 
 Trader.getCapabilities = function() {
   return {
@@ -411,6 +411,6 @@ Trader.getCapabilities = function() {
     forceReorderDelay: true,
     gekkoBroker: 0.6
   };
-}
+};
 
 module.exports = Trader;

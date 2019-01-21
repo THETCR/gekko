@@ -45,7 +45,7 @@ IFTTT.prototype.portfolioUpdate = function(portfolio) {
     "Your current " + config.watch.currency + " balance is " + portfolio.currency + '.' +
     "Your current " + config.watch.exchange + " balance is " + portfolio.assert + '.';
   this.send(message);
-}
+};
 
 IFTTT.prototype.processAdvice = function(advice) {
   if (advice.recommendation == 'soft' && iftttConfig.muteSoft) return;

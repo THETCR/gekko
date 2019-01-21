@@ -15,7 +15,7 @@ var Actor = function() {
                password: xmppbot.client_pwd,
                host: xmppbot.client_host,
                port: xmppbot.client_port
-               });  
+               });
 
   this.advice = 'Dont got one yet :(';
   this.adviceTime = utc();
@@ -36,13 +36,13 @@ var Actor = function() {
   this.bot.addListener('online', this.setState);
   this.bot.addListener('stanza', this.rawStanza);
   this.bot.addListener("error", this.logError);
-  this.bot.connection.socket.setTimeout(0)
+  this.bot.connection.socket.setTimeout(0);
   this.bot.connection.socket.setKeepAlive(true, 10000)
 
-}
+};
 
 Actor.prototype.setState = function() {
-    var elem = new xmpp.Element('presence', { }).c('show').t('chat').up().c('status').t(this.state)
+    var elem = new xmpp.Element('presence', { }).c('show').t('chat').up().c('status').t(this.state);
     this.bot.send(elem);
 };
 
@@ -62,7 +62,7 @@ Actor.prototype.rawStanza = function(stanza) {
      }
 
      var message_recv = body.getText();   //Get Incoming Message
-     this.verifyQuestion(from, message_recv);	
+     this.verifyQuestion(from, message_recv);
   }
 };
 
@@ -92,14 +92,14 @@ Actor.prototype.processAdvice = function(advice) {
 Actor.prototype.verifyQuestion = function(receiver, text) {
   if(text in this.commands)
     this[this.commands[text]](receiver);
-}
+};
 
 Actor.prototype.newAdvice = function(receiver) {
   this.sendMessageTo(receiver, 'Important news!');
   this.emitAdvice(receiver);
-}
+};
 
-// sent advice 
+// sent advice
 Actor.prototype.emitAdvice = function(receiver) {
   var message = [
     'Advice for ',
@@ -124,7 +124,7 @@ Actor.prototype.emitAdvice = function(receiver) {
   this.sendMessageTo(receiver, message);
 };
 
-// sent price 
+// sent price
 Actor.prototype.emitPrice = function(receiver) {
 
   var message = [
@@ -146,7 +146,7 @@ Actor.prototype.emitPrice = function(receiver) {
   this.sendMessageTo(receiver, message);
 };
 
-// sent donation info 
+// sent donation info
 Actor.prototype.emitDonation = function(receiver) {
   var message = 'You want to donate? How nice of you! You can send your coins here:';
   message += '\nBTC:\t19UGvmFPfFyFhPMHu61HTMGJqXRdVcHAj3';
@@ -167,7 +167,7 @@ Actor.prototype.emitHelp = function(receiver) {
 
   this.sendMessageTo(receiver, message);
 
-}
+};
 
 Actor.prototype.emitRealAdvice = function(receiver) {
   // http://www.examiner.com/article/uncaged-a-look-at-the-top-10-quotes-of-gordon-gekko
@@ -183,7 +183,7 @@ Actor.prototype.emitRealAdvice = function(receiver) {
   ];
 
   this.sendMessageTo(receiver, _.first(_.shuffle(realAdvice)));
-}
+};
 
 Actor.prototype.logError = function(message) {
   log.error('XMPP ERROR:', message);

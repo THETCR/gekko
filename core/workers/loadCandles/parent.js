@@ -46,7 +46,7 @@ module.exports = (config, callback) => {
   const message = {
     what: 'start',
     config
-  }
+  };
 
   const done = _.once(callback);
 
@@ -65,4 +65,4 @@ module.exports = (config, callback) => {
     if(code !== 0)
       done('ERROR, unable to load candles, please check the console.');
   });
-}
+};

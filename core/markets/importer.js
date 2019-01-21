@@ -39,7 +39,7 @@ if(error)
 var fetcher = require(dirs.importers + config.watch.exchange);
 
 if(to <= from)
-  util.die('This daterange does not make sense.')
+  util.die('This daterange does not make sense.');
 
 var Market = function() {
   _.bindAll(this);
@@ -64,7 +64,7 @@ var Market = function() {
     function() {
       this.done = true;
     }.bind(this)
-  )
+  );
 
   this.tradeBatcher.on(
     'new batch',
@@ -79,7 +79,7 @@ var Market = function() {
   Readable.call(this, {objectMode: true});
 
   this.get();
-}
+};
 
 var Readable = require('stream').Readable;
 Market.prototype = Object.create(Readable.prototype, {
@@ -90,11 +90,11 @@ Market.prototype._read = _.noop;
 
 Market.prototype.pushCandles = function(candles) {
   _.each(candles, this.push);
-}
+};
 
 Market.prototype.get = function() {
   this.fetcher.fetch();
-}
+};
 
 Market.prototype.processTrades = function(trades) {
   this.tradeBatcher.write(trades);
@@ -112,6 +112,6 @@ Market.prototype.processTrades = function(trades) {
   }
 
   setTimeout(this.get, 1000);
-}
+};
 
 module.exports = Market;

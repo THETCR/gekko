@@ -34,11 +34,11 @@ const BacktestResultExporter = function() {
     this.processTradeCompleted = null;
 
   _.bindAll(this);
-}
+};
 
 BacktestResultExporter.prototype.processPortfolioValueChange = function(portfolio) {
   this.portfolioValue = portfolio.balance;
-}
+};
 
 BacktestResultExporter.prototype.processStratCandle = function(candle) {
   let strippedCandle;
@@ -81,11 +81,11 @@ BacktestResultExporter.prototype.processStratUpdate = function(stratUpdate) {
     ...stratUpdate,
     date: stratUpdate.date.unix()
   });
-}
+};
 
 BacktestResultExporter.prototype.processPerformanceReport = function(performanceReport) {
   this.performanceReport = performanceReport;
-}
+};
 
 BacktestResultExporter.prototype.finalize = function(done) {
   const backtest = {
@@ -141,6 +141,6 @@ BacktestResultExporter.prototype.writeToDisk = function(backtest, next) {
       next();
     }
   );
-}
+};
 
 module.exports = BacktestResultExporter;

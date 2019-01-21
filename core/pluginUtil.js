@@ -57,7 +57,7 @@ var pluginHelper = {
     return error;
   },
   // loads a plugin
-  // 
+  //
   // @param Object plugin
   //    plugin config object
   // @param Function next
@@ -76,7 +76,7 @@ var pluginHelper = {
         'does not support the mode',
         gekkoMode + '.',
         'It has been disabled.'
-      )
+      );
       return next();
     }
 
@@ -108,13 +108,13 @@ var pluginHelper = {
 
       instance.meta = plugin;
       _.defer(function() {
-        next(null, instance); 
+        next(null, instance);
       });
     }
 
     if(!plugin.silent)
       log.info('\n');
   }
-}
+};
 
 module.exports = pluginHelper;

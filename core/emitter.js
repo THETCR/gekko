@@ -11,14 +11,14 @@ const NativeEventEmitter = events.EventEmitter;
 const GekkoEventEmitter = function() {
   NativeEventEmitter.call(this);
   this.defferedEvents = [];
-}
+};
 
 util.inherits(GekkoEventEmitter, NativeEventEmitter);
 
 // push to stack
 GekkoEventEmitter.prototype.deferredEmit = function(name, payload) {
   this.defferedEvents.push({name, payload});
-}
+};
 
 // resolve FIFO
 GekkoEventEmitter.prototype.broadcastDeferredEmit = function() {
@@ -29,6 +29,6 @@ GekkoEventEmitter.prototype.broadcastDeferredEmit = function() {
 
   this.emit(event.name, event.payload);
   return true;
-}
+};
 
 module.exports = GekkoEventEmitter;

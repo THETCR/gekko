@@ -8,7 +8,7 @@ var Indicator = function (weight) {
   this.prices = [];
   this.result = 0;
   this.age = 0;
-}
+};
 
 Indicator.prototype.update = function (price) {
   this.prices[this.age] = price;
@@ -23,6 +23,6 @@ Indicator.prototype.update = function (price) {
   }
 
   this.age++;
-}
+};
 
 module.exports = Indicator;

@@ -14,7 +14,7 @@ var start = (config, candleSize, daterange) => {
   load(config.candleSize, candles => {
     process.send(candles);
   })
-}
+};
 
 process.send('ready');
 
@@ -25,4 +25,4 @@ process.on('message', (m) => {
 
 process.on('disconnect', function() {
   process.exit(0);
-})
+});

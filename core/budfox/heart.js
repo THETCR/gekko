@@ -17,14 +17,14 @@ var Heart = function() {
   this.lastTick = false;
 
   _.bindAll(this);
-}
+};
 
 util.makeEventEmitter(Heart);
 
 Heart.prototype.pump = function() {
   log.debug('scheduling ticks');
   this.scheduleTicks();
-}
+};
 
 Heart.prototype.tick = function() {
   if(this.lastTick) {
@@ -36,7 +36,7 @@ Heart.prototype.tick = function() {
 
   this.lastTick = moment().unix();
   this.emit('tick');
-}
+};
 
 Heart.prototype.scheduleTicks = function() {
   setInterval(
@@ -46,6 +46,6 @@ Heart.prototype.scheduleTicks = function() {
 
   // start!
   _.defer(this.tick);
-}
+};
 
 module.exports = Heart;

@@ -19,24 +19,24 @@ var Actor = function(done) {
   ].join('-');
 
   this.init(done);
-}
+};
 
 // This actor is dynamically build based on
 // what the config specifies it should emit.
-// 
+//
 // This way we limit overhead because Gekko
 // only binds to events redis is going to
 // emit.
 
 var proto = {};
 _.each(redisBeacon.broadcast, function(e) {
-  // grab the corresponding subscription 
+  // grab the corresponding subscription
   var subscription = _.find(subscriptions, function(s) { return s.event === e });
 
   if(!subscription)
     util.die('Gekko does not know this event:' + e);
 
-  var channel = redisBeacon.channelPrefix + subscription.event
+  var channel = redisBeacon.channelPrefix + subscription.event;
 
   proto[subscription.handler] = function(message, cb) {
     if(!_.isFunction(cb))
@@ -48,20 +48,20 @@ _.each(redisBeacon.broadcast, function(e) {
     }, cb);
   };
 
-}, this)
+}, this);
 
 Actor.prototype = proto;
 
 Actor.prototype.init = function(done) {
   this.client = redis.createClient(redisBeacon.port, redisBeacon.host);
   this.client.on('ready', _.once(done));
-}
+};
 
 Actor.prototype.emit = function(channel, message) {
   log.debug('Going to publish to redis channel:', channel);
 
   var data = JSON.stringify(message);
   this.client.publish(channel, data);
-}
+};
 
 module.exports = Actor;

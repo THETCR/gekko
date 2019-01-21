@@ -17,7 +17,7 @@ var silent = config.silent;
 var sendToParent = function() {
   var send = method => (...args) => {
     process.send({log: method, message: args.join(' ')});
-  }
+  };
 
   return {
     error: send('error'),
@@ -25,7 +25,7 @@ var sendToParent = function() {
     info: send('info'),
     write: send('write')
   }
-}
+};
 
 var Log = function() {
   _.bindAll(this);
@@ -62,12 +62,12 @@ Log.prototype = {
     var message = fmt.apply(null, args);
     this.output.info(message);
   }
-}
+};
 
 if(debug)
   Log.prototype.debug = function() {
-    this._write('info', arguments, 'DEBUG');  
-  }
+    this._write('info', arguments, 'DEBUG');
+  };
 else
   Log.prototype.debug = _.noop;
 

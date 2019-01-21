@@ -13,7 +13,7 @@ var to = moment.utc(daterange.to);
 var from = moment.utc(daterange.from);
 
 if(to <= from)
-  util.die('This daterange does not make sense.')
+  util.die('This daterange does not make sense.');
 
 if(!from.isValid())
   util.die('invalid `from`');
@@ -41,7 +41,7 @@ var Market = function() {
     from: from.clone(),
     to: from.clone().add(this.batchSize, 'm').subtract(1, 's')
   }
-}
+};
 
 var Readable = require('stream').Readable;
 Market.prototype = Object.create(Readable.prototype, {
@@ -64,7 +64,7 @@ Market.prototype.get = function() {
     'full',
     this.processCandles
   )
-}
+};
 
 Market.prototype.processCandles = function(err, candles) {
   this.pushing = true;
@@ -83,7 +83,7 @@ Market.prototype.processCandles = function(err, candles) {
   if(!this.ended && amount < this.batchSize) {
     var d = function(ts) {
       return moment.unix(ts).utc().format('YYYY-MM-DD HH:mm:ss');
-    }
+    };
     var from = d(_.first(candles).start);
     var to = d(_.last(candles).start);
     log.warn(`Simulation based on incomplete market data (${this.batchSize - amount} missing between ${from} and ${to}).`);
@@ -99,10 +99,10 @@ Market.prototype.processCandles = function(err, candles) {
   this.iterator = {
     from: this.iterator.from.clone().add(this.batchSize, 'm'),
     to: this.iterator.from.clone().add(this.batchSize * 2, 'm').subtract(1, 's')
-  }
+  };
 
   if(!this.closed)
     this.get();
-}
+};
 
 module.exports = Market;

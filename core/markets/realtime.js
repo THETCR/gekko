@@ -10,7 +10,7 @@ const slug = config.watch.exchange.toLowerCase();
 const exchange = exchangeChecker.getExchangeCapabilities(slug);
 
 if(!exchange)
-  util.die(`Unsupported exchange: ${slug}`)
+  util.die(`Unsupported exchange: ${slug}`);
 
 const error = exchangeChecker.cantMonitor(config.watch);
 if(error)

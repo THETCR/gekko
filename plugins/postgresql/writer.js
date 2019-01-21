@@ -12,7 +12,7 @@ var Store = function(done, pluginMeta) {
   this.db = handle;
   this.cache = [];
   done();
-}
+};
 
 Store.prototype.writeCandles = function() {
   if(_.isEmpty(this.cache)){
@@ -49,7 +49,7 @@ Store.prototype.writeCandles = function() {
   });
 
   this.cache = [];
-}
+};
 
 var processCandle = function(candle, done) {
   this.cache.push(candle);
@@ -63,7 +63,7 @@ var finalize = function(done) {
   this.writeCandles();
   this.db = null;
   done();
-}
+};
 
 if(config.candleWriter.enabled) {
   Store.prototype.processCandle = processCandle;

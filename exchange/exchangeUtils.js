@@ -45,20 +45,20 @@ const retryInstance = (options, checkFn, callback, e) => {
       callback(err, result);
     });
   });
-}
+};
 
 // es6 bind all: https://github.com/posrix/es6-class-bind-all/blob/master/lib/es6ClassBindAll.js
 const allMethods = targetClass => {
-  const propertys = Object.getOwnPropertyNames(Object.getPrototypeOf(targetClass))
-  propertys.splice(propertys.indexOf('constructor'), 1)
+  const propertys = Object.getOwnPropertyNames(Object.getPrototypeOf(targetClass));
+  propertys.splice(propertys.indexOf('constructor'), 1);
   return propertys
-}
+};
 
 const bindAll = (targetClass, methodNames = []) => {
   for (const name of !methodNames.length ? allMethods(targetClass) : methodNames) {
     targetClass[name] = targetClass[name].bind(targetClass)
   }
-}
+};
 
 const isValidOrder = ({api, market, amount, price}) => {
   let reason = false;
@@ -87,7 +87,7 @@ const isValidOrder = ({api, market, amount, price}) => {
     reason,
     valid: !reason
   }
-}
+};
 
 
 // https://gist.github.com/jiggzson/b5f489af9ad931e3d186
@@ -114,7 +114,7 @@ const scientificToDecimal = num => {
   }
 
   return num;
-}
+};
 
 // TEMP until we have proper scheduling
 const cacheFn = (fn, timeout) => {
@@ -143,7 +143,7 @@ const cacheFn = (fn, timeout) => {
       inflight = false;
     })
   }
-}
+};
 
 module.exports = {
   retry: retryInstance,
@@ -151,4 +151,4 @@ module.exports = {
   isValidOrder,
   scientificToDecimal,
   cacheFn
-}
+};

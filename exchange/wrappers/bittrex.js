@@ -39,7 +39,7 @@ var Trader = function(config) {
   });
 
   this.bittrexApi = Bittrex;
-}
+};
 
 const recoverableErrors = [
   'SOCKETTIMEDOUT',
@@ -54,7 +54,7 @@ const includes = (str, list) => {
     return false;
 
   return _.some(list, item => str.includes(item));
-}
+};
 
 Trader.prototype.processResponse = function(callback) {
   return (err, response) => {
@@ -78,7 +78,7 @@ Trader.prototype.processResponse = function(callback) {
 
     callback(undefined, response);
   }
-}
+};
 
 Trader.prototype.getPortfolio = function(callback) {
   const handle = (err, data) => {
@@ -114,19 +114,19 @@ Trader.prototype.getPortfolio = function(callback) {
     ];
 
     callback(undefined, portfolio);
-  }
+  };
 
   const fetch = next => this.bittrexApi.getbalances(this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.roundPrice = function(price) {
   return _.round(price, 8);
-}
+};
 
 Trader.prototype.roundAmount = function(price) {
   return _.floor(price, 8);
-}
+};
 
 Trader.prototype.getTicker = function(callback) {
   const handle = (err, data) => {
@@ -140,15 +140,15 @@ Trader.prototype.getTicker = function(callback) {
       bid: parseFloat(tick.Bid),
       ask: parseFloat(tick.Ask),
     })
-  }
+  };
 
   const fetch = next => this.bittrexApi.getticker({market: this.pair}, this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.getFee = function(callback) {
   callback(false, 0.00025);
-}
+};
 
 Trader.prototype.buy = function(amount, price, callback) {
   const handle = (err, result) => {
@@ -165,11 +165,11 @@ Trader.prototype.buy = function(amount, price, callback) {
     }
 
     callback(undefined, id);
-  }
+  };
 
   const fetch = next => this.bittrexApi.buylimit({market: this.pair, quantity: amount, rate: price}, this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.sell = function(amount, price, callback) {
   const handle = (err, result) => {
@@ -186,11 +186,11 @@ Trader.prototype.sell = function(amount, price, callback) {
     }
 
     callback(undefined, id);
-  }
+  };
 
   const fetch = next => this.bittrexApi.selllimit({market: this.pair, quantity: amount, rate: price}, this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.checkOrder = function(order, callback) {
   const handle = (err, result) => {
@@ -201,11 +201,11 @@ Trader.prototype.checkOrder = function(order, callback) {
 
     console.log('checkOrder', result);
     throw 'a';
-  }
+  };
 
   const fetch = next => this.bittrexApi.getopenorders({market: this.pair}, this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.getOrder = function(order, callback) {
 
@@ -235,11 +235,11 @@ Trader.prototype.getOrder = function(order, callback) {
     }
 
     callback(err, {price, amount, date});
-  }
+  };
 
   const fetch = next => this.bittrexApi.getorder({uuid: order}, this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.cancelOrder = function(order, callback) {
   const handle = (err, result) => {
@@ -255,11 +255,11 @@ Trader.prototype.cancelOrder = function(order, callback) {
     // }
 
     callback(undefined, true);
-  }
+  };
 
   const fetch = next => this.bittrexApi.cancel({uuid: order}, this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.getTrades = function(since, callback, descending) {;
   var firstFetch = !!since;
@@ -293,11 +293,11 @@ Trader.prototype.getTrades = function(since, callback, descending) {;
     });
 
     callback(null, result.reverse());
-  }
+  };
 
   var params = {
     currencyPair: joinCurrencies(this.currency, this.asset)
-  }
+  };
 
   if(since) {
     params.start = since.unix();
@@ -305,7 +305,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {;
 
   const fetch = next => this.bittrexApi.getmarkethistory({ market: params.currencyPair }, this.processResponse(next));
   retry(null, fetch, handle);
-}
+};
 
 Trader.getCapabilities = function() {
   return {

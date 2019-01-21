@@ -8,7 +8,7 @@ const dirs = util.dirs();
 const getTOML = function(fileName) {
   var raw = fs.readFileSync(fileName);
   return toml.parse(raw);
-}
+};
 
 // build a config object out of a directory of TOML files
 module.exports = function() {
@@ -16,7 +16,7 @@ module.exports = function() {
 
   let _config = getTOML(configDir + 'general.toml');
   fs.readdirSync(configDir + 'plugins').forEach(function(pluginFile) {
-    let pluginName = _.first(pluginFile.split('.'))
+    let pluginName = _.first(pluginFile.split('.'));
     _config[pluginName] = getTOML(configDir + 'plugins/' + pluginFile);
   });
 
@@ -39,4 +39,4 @@ module.exports = function() {
     _config.backtest = getTOML(configDir + 'backtest.toml');
 
   return _config;
-}
+};

@@ -164,7 +164,7 @@ var util = {
   getStartTime: function() {
     return startTime;
   },
-}
+};
 
 // NOTE: those options are only used
 // in stand alone mode

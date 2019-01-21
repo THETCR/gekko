@@ -14,7 +14,7 @@ const Trader = function() {
   this.price = 100;
   this.trend = 'up';
   this.tid = 0;
-}
+};
 
 Trader.prototype.getTrades = function(since, cb) {
   const amount = moment().diff(this.at, 'seconds');
@@ -48,7 +48,7 @@ Trader.prototype.getTrades = function(since, cb) {
   );
 
   cb(null, trades);
-}
+};
 
 Trader.getCapabilities = function () {
   return {
@@ -66,7 +66,7 @@ Trader.getCapabilities = function () {
     tid: 'tid',
     tradable: false
   };
-}
+};
 
 module.exports = Trader;
 

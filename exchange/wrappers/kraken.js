@@ -13,13 +13,13 @@ const Trader = function(config) {
   if(_.isObject(config)) {
     this.key = config.key;
     this.secret = config.secret;
-    this.currency = config.currency.toUpperCase()
+    this.currency = config.currency.toUpperCase();
     this.asset = config.asset.toUpperCase();
   }
 
   this.name = 'kraken';
   this.since = null;
-  
+
   this.market = _.find(Trader.getCapabilities().markets, (market) => {
     return market.pair[0] === this.currency && market.pair[1] === this.asset
   });
@@ -32,7 +32,7 @@ const Trader = function(config) {
     this.secret,
     {timeout: +moment.duration(60, 'seconds')}
   );
-}
+};
 
 const recoverableErrors = [
   'SOCKETTIMEDOUT',
@@ -56,14 +56,14 @@ const unknownResultErrors = [
   'Response code 504',
   'Response code 522',
   'Response code 520',
-]
+];
 
 const includes = (str, list) => {
   if(!_.isString(str))
     return false;
 
   return _.some(list, item => str.includes(item));
-}
+};
 
 Trader.prototype.handleResponse = function(funcName, callback, nonMutating, payload) {
   return (error, body) => {
@@ -107,7 +107,7 @@ Trader.prototype.handleResponse = function(funcName, callback, nonMutating, payl
                 return false;
               }
 
-              const ts = moment.unix((o.opentm + '').split('.')[0])
+              const ts = moment.unix((o.opentm + '').split('.')[0]);
               if(moment().diff(ts, 'm') > 10) {
                 return false;
               }
@@ -265,7 +265,7 @@ Trader.prototype.getTicker = function(callback) {
     callback(undefined, ticker);
   };
 
-  const reqData = {pair: this.pair}
+  const reqData = {pair: this.pair};
   const fetch = cb => this.kraken.api('Ticker', reqData, this.handleResponse('getTicker', cb, true));
   retry(null, fetch, handle);
 };
@@ -364,7 +364,7 @@ Trader.prototype.getOrder = function(order, callback) {
 
   const fetch = cb => this.kraken.api('QueryOrders', reqData, this.handleResponse('getOrder', cb, true));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.checkOrder = function(order, callback) {
   const handle = (err, data) => {
@@ -411,7 +411,7 @@ Trader.prototype.cancelOrder = function(order, callback) {
     }
 
     callback(undefined, false);
-  }
+  };
 
   const fetch = cb => this.kraken.api('CancelOrder', reqData, this.handleResponse('cancelOrder', cb, false, order));
   retry(null, fetch, handle);
@@ -425,11 +425,11 @@ Trader.prototype.getRawOpenOrders = function(callback) {
     }
 
     callback(undefined, data.result.open);
-  }
+  };
 
   const fetch = cb => this.kraken.api('OpenOrders', {}, this.handleResponse('getOpenOrders', cb, true));
   retry(null, fetch, handle);
-}
+};
 
 Trader.prototype.getOpenOrders = function(callback) {
 
@@ -450,7 +450,7 @@ Trader.prototype.getOpenOrders = function(callback) {
 
     callback(undefined, orders);
   });
-}
+};
 
 Trader.getCapabilities = function () {
   return {
@@ -466,6 +466,6 @@ Trader.getCapabilities = function () {
     tradable: true,
     gekkoBroker: 0.6
   };
-}
+};
 
 module.exports = Trader;

@@ -4,7 +4,7 @@ const moment = require('moment');
 
 const statslite = require('stats-lite');
 const util = require('../../core/util');
-const log = require(util.dirs().core + 'log')
+const log = require(util.dirs().core + 'log');
 const ENV = util.gekkoEnv();
 
 const config = util.getConfig();
@@ -19,7 +19,7 @@ const PerformanceAnalyzer = function() {
   this.dates = {
     start: false,
     end: false
-  }
+  };
 
   this.startPrice = 0;
   this.endPrice = 0;
@@ -39,7 +39,7 @@ const PerformanceAnalyzer = function() {
     id: 0,
     entry: false,
     exit: false
-  }
+  };
 
   this.portfolio = {};
   this.balance;
@@ -48,7 +48,7 @@ const PerformanceAnalyzer = function() {
   this.openRoundTrip = false;
 
   this.warmupCompleted = false;
-}
+};
 
 PerformanceAnalyzer.prototype.processPortfolioValueChange = function(event) {
   if(!this.start.balance) {
@@ -56,18 +56,18 @@ PerformanceAnalyzer.prototype.processPortfolioValueChange = function(event) {
   }
 
   this.balance = event.balance;
-}
+};
 
 PerformanceAnalyzer.prototype.processPortfolioChange = function(event) {
   if(!this.start.portfolio) {
     this.start.portfolio = event;
   }
-}
+};
 
 PerformanceAnalyzer.prototype.processStratWarmupCompleted = function() {
   this.warmupCompleted = true;
   this.processCandle(this.warmupCandle, _.noop);
-}
+};
 
 PerformanceAnalyzer.prototype.processCandle = function(candle, done) {
   if(!this.warmupCompleted) {
@@ -90,7 +90,7 @@ PerformanceAnalyzer.prototype.processCandle = function(candle, done) {
   }
 
   done();
-}
+};
 
 PerformanceAnalyzer.prototype.emitRoundtripUpdate = function() {
   const uPnl = this.price - this.roundTrip.entry.price;
@@ -101,7 +101,7 @@ PerformanceAnalyzer.prototype.emitRoundtripUpdate = function() {
     uPnl,
     uProfit: uPnl / this.roundTrip.entry.total * 100
   })
-}
+};
 
 PerformanceAnalyzer.prototype.processTradeCompleted = function(trade) {
   this.trades++;
@@ -115,7 +115,7 @@ PerformanceAnalyzer.prototype.processTradeCompleted = function(trade) {
     this.logger.handleTrade(trade, report);
     this.deferredEmit('performanceReport', report);
   }
-}
+};
 
 PerformanceAnalyzer.prototype.registerRoundtripPart = function(trade) {
   if(this.trades === 1 && trade.action === 'sell') {
@@ -133,19 +133,19 @@ PerformanceAnalyzer.prototype.registerRoundtripPart = function(trade) {
       date: trade.date,
       price: trade.price,
       total: trade.portfolio.currency + (trade.portfolio.asset * trade.price),
-    }
+    };
     this.openRoundTrip = true;
   } else if(trade.action === 'sell') {
     this.roundTrip.exit = {
       date: trade.date,
       price: trade.price,
       total: trade.portfolio.currency + (trade.portfolio.asset * trade.price),
-    }
+    };
     this.openRoundTrip = false;
 
     this.handleCompletedRoundtrip();
   }
-}
+};
 
 PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
   var roundtrip = {
@@ -160,7 +160,7 @@ PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
     exitBalance: this.roundTrip.exit.total,
 
     duration: this.roundTrip.exit.date.diff(this.roundTrip.entry.date)
-  }
+  };
 
   roundtrip.pnl = roundtrip.exitBalance - roundtrip.entryBalance;
   roundtrip.profit = (100 * roundtrip.exitBalance / roundtrip.entryBalance) - 100;
@@ -177,7 +177,7 @@ PerformanceAnalyzer.prototype.handleCompletedRoundtrip = function() {
   if (roundtrip.exitBalance < roundtrip.entryBalance)
     this.losses.push(roundtrip);
 
-}
+};
 
 PerformanceAnalyzer.prototype.calculateReportStatistics = function() {
   if(!this.start.balance || !this.start.portfolio) {
@@ -227,12 +227,12 @@ PerformanceAnalyzer.prototype.calculateReportStatistics = function() {
     sharpe,
     downside,
     ratioRoundTrips
-  }
+  };
 
   report.alpha = report.relativeProfit - report.market;
 
   return report;
-}
+};
 
 PerformanceAnalyzer.prototype.finalize = function(done) {
   if(!this.trades) {
@@ -245,7 +245,7 @@ PerformanceAnalyzer.prototype.finalize = function(done) {
     this.emit('performanceReport', report);
   }
   done();
-}
+};
 
 
 module.exports = PerformanceAnalyzer;

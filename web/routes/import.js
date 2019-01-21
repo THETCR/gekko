@@ -13,7 +13,7 @@ const base = require('./baseConfig');
 module.exports = function *() {
   let mode = 'importer';
 
-  let config = {}
+  let config = {};
 
   _.merge(config, base, this.request.body);
 
@@ -56,7 +56,7 @@ module.exports = function *() {
         latest: event.latest,
         done: event.done
       }
-    }
+    };
     broadcast(wsEvent);
   });
 
@@ -68,8 +68,8 @@ module.exports = function *() {
     latest: '',
     from: daterange.from,
     to: daterange.to
-  }
+  };
 
   importManager.add(_import);
   this.body = _import;
-}
+};

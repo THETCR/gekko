@@ -20,7 +20,7 @@ const slug = config.watch.exchange.toLowerCase();
 const exchange = exchangeChecker.getExchangeCapabilities(slug);
 
 if(!exchange)
-  util.die(`Unsupported exchange: ${slug}`)
+  util.die(`Unsupported exchange: ${slug}`);
 
 const error = exchangeChecker.cantMonitor(config.watch);
 if(error)
@@ -45,7 +45,7 @@ var Market = function() {
     this.get,
     TICKINTERVAL
   );
-}
+};
 
 var Readable = require('stream').Readable;
 Market.prototype = Object.create(Readable.prototype, {
@@ -65,7 +65,7 @@ Market.prototype.get = function() {
     'full',
     this.processCandles
   )
-}
+};
 
 Market.prototype.processCandles = function(err, candles) {
   var amount = _.size(candles);
@@ -86,6 +86,6 @@ Market.prototype.processCandles = function(err, candles) {
   }, this);
 
   this.latestTs = _.last(candles).start.unix() + 1;
-}
+};
 
 module.exports = Market;

@@ -11,4 +11,4 @@ module.exports = {
     if(_.has(cache, name))
       return cache[name];
   }
-}
+};

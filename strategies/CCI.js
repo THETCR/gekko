@@ -26,11 +26,11 @@ method.init = function() {
   // log.debug("CCI started with:\nup:\t", this.uplevel, "\ndown:\t", this.downlevel, "\npersistence:\t", this.persisted);
   // define the indicators we need
   this.addIndicator('cci', 'CCI', this.settings);
-}
+};
 
 // what happens on every new candle?
 method.update = function(candle) {
-}
+};
 
 // for debugging purposes: log the last calculated
 // EMAs and diff.
@@ -50,7 +50,7 @@ method.log = function(candle) {
         log.debug('\t In sufficient data available.');
     else
         log.debug('\t', 'CCI:\t\t', cci.result.toFixed(2));
-}
+};
 
 /*
  *
@@ -120,6 +120,6 @@ method.check = function(candle) {
     }
 
     log.debug("Trend: ", this.trend.direction, " for ", this.trend.duration);
-}
+};
 
 module.exports = method;

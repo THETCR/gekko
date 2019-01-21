@@ -31,7 +31,7 @@ const Trader = function(config) {
     this.pair = [config.asset, config.currency].join('-').toUpperCase();
     this.post_only =
       typeof config.post_only !== 'undefined' ? config.post_only : true;
-    
+
     if (config.sandbox) {
       this.use_sandbox = config.sandbox;
     }
@@ -72,7 +72,7 @@ const includes = (str, list) => {
     return false;
 
   return _.some(list, item => str.includes(item));
-}
+};
 
 Trader.prototype.processResponse = function(method, next) {
   return (error, response, body) => {
@@ -106,7 +106,7 @@ Trader.prototype.processResponse = function(method, next) {
 
     return next(undefined, body);
   }
-}
+};
 
 Trader.prototype.getPortfolio = function(callback) {
   const result = (err, data) => {
@@ -149,11 +149,11 @@ Trader.prototype.getFee = function(callback) {
 
 Trader.prototype.roundPrice = function(price) {
   return this.getMaxDecimalsNumber(price, this.currency == 'BTC' ? 5 : 2);
-}
+};
 
 Trader.prototype.roundAmount = function(amount) {
   return this.getMaxDecimalsNumber(amount);
-}
+};
 
 Trader.prototype.buy = function(amount, price, callback) {
   const buyParams = {
@@ -240,7 +240,7 @@ Trader.prototype.getOrder = function(order, callback) {
     const fees = {
       // you always pay fee in the base currency on gdax
       [this.currency]: +data.fill_fees
-    }
+    };
     const feePercent = +data.fill_fees / price / amount * 100;
 
     callback(undefined, { price, amount, date, fees, feePercent });

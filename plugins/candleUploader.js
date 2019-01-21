@@ -19,7 +19,7 @@ CandleUploader.prototype.processCandle = function(candle, done) {
 
 CandleUploader.prototype.schedule = function() {
   this.timer = setTimeout(this.upload, 10 * 1000);
-}
+};
 
 CandleUploader.prototype.rawUpload = function(candles, count, next) {
 
@@ -54,7 +54,7 @@ CandleUploader.prototype.rawUpload = function(candles, count, next) {
 
       setTimeout(() => this.rawUpload(candles, count, next), 2000);
     });
-}
+};
 
 CandleUploader.prototype.upload = function() {
   const amount = this.candles.length;
@@ -67,11 +67,11 @@ CandleUploader.prototype.upload = function() {
   });
 
   this.candles = [];
-}
+};
 
 CandleUploader.prototype.finish = function(next) {
   this.upload();
   clearTimeout(this.timer);
-}
+};
 
 module.exports = CandleUploader;

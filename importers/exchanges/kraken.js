@@ -32,7 +32,7 @@ var fetch = () => {
     }
     else
         fetcher.getTrades(from, handleFetch);
-}
+};
 
 var handleFetch = (err, trades) => {
     if(!err && !trades.length) {
@@ -47,7 +47,7 @@ var handleFetch = (err, trades) => {
     }
 
     var last = moment.unix(_.last(trades).date).utc();
-    lastId = _.last(trades).tid
+    lastId = _.last(trades).tid;
     if(last < from) {
         log.debug('Skipping data, they are before from date', last.format());
         return fetch();
@@ -63,9 +63,9 @@ var handleFetch = (err, trades) => {
         )
     }
 
-    prevLastId = lastId
+    prevLastId = lastId;
     fetcher.emit('trades', trades);
-}
+};
 
 module.exports = function (daterange) {
 
@@ -76,6 +76,6 @@ module.exports = function (daterange) {
         bus: fetcher,
         fetch: fetch
     }
-}
+};
 
 

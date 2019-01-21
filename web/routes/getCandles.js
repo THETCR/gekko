@@ -37,4 +37,4 @@ module.exports = function *() {
   config = {};
   _.merge(config, base, this.request.body);
   this.body = yield candleLoader(config);
-}
+};
