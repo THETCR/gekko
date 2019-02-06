@@ -24,14 +24,14 @@ export const connect = () => {
 
   setTimeout(() => {
     // in case we cannot connect
-    if(!info.connected) {
+    if (!info.connected) {
       initializeState();
       bus.$emit('WS_STATUS_CHANGE', info);
     }
   }, 500);
 
   socket.onopen = () => {
-    if(info.connected)
+    if (info.connected)
       return;
 
     info.connected = true;
@@ -39,20 +39,20 @@ export const connect = () => {
     initializeState();
   }
   socket.onclose = () => {
-    if(!info.connected)
+    if (!info.connected)
       return;
 
     info.connected = false;
     bus.$emit('WS_STATUS_CHANGE', info);
   }
   socket.onerror = () => {
-    if(!info.connected)
+    if (!info.connected)
       return;
 
     info.connected = false;
     bus.$emit('WS_STATUS_CHANGE', info);
   }
-  socket.onmessage = function(message) {
+  socket.onmessage = function (message) {
     const payload = JSON.parse(message.data);
     // console.log('ws message:', payload);
     bus.$emit(payload.type, payload);

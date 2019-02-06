@@ -6,10 +6,10 @@ var mixin = {
       datasets: [],
       datasetScanstate: 'idle',
       unscannableMakets: []
-    }    
+    }
   },
   methods: {
-    scan: function() {
+    scan: function () {
       this.datasetScanstate = 'scanning';
 
       post('scansets', {}, (error, response) => {
@@ -34,7 +34,7 @@ var mixin = {
 
         // for now, filter out sets smaller than 3 hours..
         sets = sets.filter(set => {
-          if(set.to.diff(set.from, 'hours') > 2)
+          if (set.to.diff(set.from, 'hours') > 2)
             return true;
         });
 
@@ -42,10 +42,10 @@ var mixin = {
           let adiff = a.to.diff(a.from);
           let bdiff = b.to.diff(b.from);
 
-          if(adiff < bdiff)
+          if (adiff < bdiff)
             return -1;
 
-          if(adiff > bdiff)
+          if (adiff > bdiff)
             return 1;
 
           return 0;

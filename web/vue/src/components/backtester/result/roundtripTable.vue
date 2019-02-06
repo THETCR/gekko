@@ -28,66 +28,67 @@
 </template>
 
 <script>
-import _ from 'lodash'
+  import _ from 'lodash'
 
-export default {
-  props: ['roundtrips'],
-  data: () => {
-    return {}
-  },
-  methods: {
-    diff: n => moment.duration(n).humanize(),
-    humanizeDuration: (n) => window.humanizeDuration(n),
-    fmt: date => {
-
-      // roundtrips coming out of a backtest
-      // are unix timestamp, live roundtrips
-      // are date strings.
-      // TODO: normalize
-
-      let mom;
-
-      if(_.isNumber(date)) {
-        mom = moment.unix(date);
-      } else {
-        mom = moment(date).utc();
-      }
-
-      return mom.utc().format('YYYY-MM-DD HH:mm');
+  export default {
+    props: ['roundtrips'],
+    data: () => {
+      return {}
     },
-    round: n => (+n).toFixed(3),
-  },
-}
+    methods: {
+      diff: n => moment.duration(n).humanize(),
+      humanizeDuration: (n) => window.humanizeDuration(n),
+      fmt: date => {
+
+        // roundtrips coming out of a backtest
+        // are unix timestamp, live roundtrips
+        // are date strings.
+        // TODO: normalize
+
+        let mom;
+
+        if (_.isNumber(date)) {
+          mom = moment.unix(date);
+        } else {
+          mom = moment(date).utc();
+        }
+
+        return mom.utc().format('YYYY-MM-DD HH:mm');
+      },
+      round: n => (+n).toFixed(3),
+    },
+  }
 </script>
 
 <style>
 
-.roundtrips {
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
+  .roundtrips {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
 
-.roundtrips table {
-  width: 100%;
-}
+  .roundtrips table {
+    width: 100%;
+  }
 
-.roundtrips table th,
-.roundtrips table td {
-  border: 1px solid #c6cbd1;
-  padding: 8px 12px;
-}
+  .roundtrips table th,
+  .roundtrips table td {
+    border: 1px solid #c6cbd1;
+    padding: 8px 12px;
+  }
 
-.roundtrips table td.loss {
-  color: red;
-  text-align: right;
-}
-.roundtrips table td.profit {
-  color: green;
-  text-align: right;
-}
+  .roundtrips table td.loss {
+    color: red;
+    text-align: right;
+  }
 
-.roundtrips table tr:nth-child(2n) {
-  background-color: #f6f8fa;
-}
+  .roundtrips table td.profit {
+    color: green;
+    text-align: right;
+  }
+
+  .roundtrips table tr:nth-child(2n) {
+    background-color: #f6f8fa;
+  }
 
 </style>

@@ -13,7 +13,7 @@ export const syncImports = (state, imports) => {
 export const updateImport = (state, update) => {
   let index = state.imports.findIndex(i => i.id === update.import_id);
   let item = state.imports[index];
-  if(!item)
+  if (!item)
     return state;
 
   let updated = Vue.util.extend(item, update.updates);

@@ -16,7 +16,7 @@ const pipelineRunner = promisify(require('../../core/workers/pipeline/parent'));
 //     roundtrips: true
 //   }
 // }
-module.exports = function *() {
+module.exports = function* () {
   const mode = 'backtest';
 
   const config = {};

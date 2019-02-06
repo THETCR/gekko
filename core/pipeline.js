@@ -47,12 +47,12 @@ const pipeline = (settings) => {
   let market;
 
   // Instantiate each enabled plugin
-  const loadPlugins = function(next) {
+  const loadPlugins = function (next) {
     // load all plugins
     async.mapSeries(
       pluginParameters,
       pluginHelper.load,
-      function(error, _plugins) {
+      function (error, _plugins) {
         if (error)
           return util.die(error, true);
 
@@ -64,9 +64,9 @@ const pipeline = (settings) => {
 
   // Some plugins emit their own events, store
   // a reference to those plugins.
-  const referenceEmitters = function(next) {
+  const referenceEmitters = function (next) {
 
-    _.each(plugins, function(plugin) {
+    _.each(plugins, function (plugin) {
       if (plugin.meta.emits)
         emitters[plugin.meta.slug] = plugin;
     });
@@ -75,7 +75,7 @@ const pipeline = (settings) => {
   };
 
   // Subscribe all plugins to other emitting plugins
-  const subscribePlugins = function(next) {
+  const subscribePlugins = function (next) {
     // events broadcasted by plugins
     const pluginSubscriptions = _.filter(
       subscriptions,
@@ -91,9 +91,9 @@ const pipeline = (settings) => {
         // cache full list
         subscription.emitters = subscription.emitter;
         const singleEventEmitters = subscription.emitter
-          .filter(
-            s => _.size(plugins.filter(p => p.meta.slug === s)),
-          );
+        .filter(
+          s => _.size(plugins.filter(p => p.meta.slug === s)),
+        );
 
         if (_.size(singleEventEmitters) > 1) {
           let error = `Multiple plugins are broadcasting`;
@@ -108,8 +108,8 @@ const pipeline = (settings) => {
 
     // subscribe interested plugins to
     // emitting plugins
-    _.each(plugins, function(plugin) {
-      _.each(pluginSubscriptions, function(sub) {
+    _.each(plugins, function (plugin) {
+      _.each(pluginSubscriptions, function (sub) {
 
         if (plugin[sub.handler]) {
           // if a plugin wants to listen
@@ -141,10 +141,10 @@ const pipeline = (settings) => {
 
           // attach handler
           emitters[sub.emitter]
-            .on(sub.event,
-              plugin[
-                sub.handler
-                ]);
+          .on(sub.event,
+            plugin[
+              sub.handler
+              ]);
         }
 
       });
@@ -157,8 +157,8 @@ const pipeline = (settings) => {
     );
 
     // subscribe plugins to the market
-    _.each(plugins, function(plugin) {
-      _.each(marketSubscriptions, function(sub) {
+    _.each(plugins, function (plugin) {
+      _.each(marketSubscriptions, function (sub) {
 
         if (plugin[sub.handler]) {
           if (sub.event === 'candle')
@@ -171,14 +171,14 @@ const pipeline = (settings) => {
     next();
   };
 
-  const prepareMarket = function(next) {
+  const prepareMarket = function (next) {
     if (mode === 'backtest' && config.backtest.daterange === 'scan')
       require(dirs.core + 'prepareDateRange')(next);
     else
       next();
   };
 
-  const setupMarket = function(next) {
+  const setupMarket = function (next) {
     // load a market based on the config (or fallback to mode)
     let marketType;
     if (config.market)
@@ -193,7 +193,7 @@ const pipeline = (settings) => {
     next();
   };
 
-  const subscribePluginsToMarket = function(next) {
+  const subscribePluginsToMarket = function (next) {
 
     // events broadcasted by the market
     const marketSubscriptions = _.filter(
@@ -201,8 +201,8 @@ const pipeline = (settings) => {
       { emitter: 'market' },
     );
 
-    _.each(plugins, function(plugin) {
-      _.each(marketSubscriptions, function(sub) {
+    _.each(plugins, function (plugin) {
+      _.each(marketSubscriptions, function (sub) {
 
         if (sub.event === 'candle')
         // these are handled via the market stream
@@ -231,12 +231,12 @@ const pipeline = (settings) => {
       setupMarket,
       subscribePluginsToMarket,
     ],
-    function() {
+    function () {
 
       const gekkoStream = new GekkoStream(plugins);
 
       market
-        .pipe(gekkoStream);
+      .pipe(gekkoStream);
 
       // convert JS objects to JSON string
       // .pipe(new require('stringify-stream')())

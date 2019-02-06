@@ -9,8 +9,8 @@ const parts = {
 
 const gekkoRoot = __dirname + '/../../';
 
-module.exports = function *() {
-  if(!_.has(parts, this.params.part))
+module.exports = function* () {
+  if (!_.has(parts, this.params.part))
     return this.body = 'error :(';
 
   const fileName = gekkoRoot + '/' + parts[this.params.part] + '.toml';

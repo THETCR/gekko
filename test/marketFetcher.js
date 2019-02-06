@@ -27,9 +27,9 @@ const TRADES = [
 ];
 
 // stub the exchange
-const FakeProvider = function() {
+const FakeProvider = function () {
 };
-const getTrades = function(since, handler, descending) {
+const getTrades = function (since, handler, descending) {
   handler(
     null,
     TRADES,
@@ -49,18 +49,18 @@ spoofer[util.dirs().budfox + 'tradeBatcher'] = TradeBatcher;
 
 const MarketFetcher = proxyquire(dirs.budfox + 'marketFetcher', spoofer);
 
-describe('budfox/marketFetcher', function() {
-  it('should throw when not passed a config', function() {
-    expect(function() {
+describe('budfox/marketFetcher', function () {
+  it('should throw when not passed a config', function () {
+    expect(function () {
       new MarketFetcher();
     }).to.throw('TradeFetcher expects a config');
   });
 
-  it('should instantiate', function() {
+  it('should instantiate', function () {
     mf = new MarketFetcher(config);
   });
 
-  it('should fetch with correct arguments', function() {
+  it('should fetch with correct arguments', function () {
 
     // mf.fetch should call the DataProvider like:
     // provider.getTrades(since, callback, descending)
@@ -81,18 +81,18 @@ describe('budfox/marketFetcher', function() {
     expect(descending).to.equal(false);
   });
 
-  xit('should retry on error', function() {
+  xit('should retry on error', function () {
     // todo
   });
 
-  it('should pass the data to the tradebatcher', function() {
+  it('should pass the data to the tradebatcher', function () {
     mf.fetch();
     expect(getTradesSpy.callCount).to.equal(2);
 
     expect(tradeBatcherSpy.lastCall.args[0]).to.deep.equal(TRADES);
   });
 
-  xit('should relay trades', function() {
+  xit('should relay trades', function () {
     // todo
   });
 

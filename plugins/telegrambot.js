@@ -7,7 +7,7 @@ const emitTrades = telegrambot.emitTrades;
 const utc = moment.utc;
 const telegram = require("node-telegram-bot-api");
 
-const Actor = function() {
+const Actor = function () {
   _.bindAll(this);
 
   this.advice = null;
@@ -34,14 +34,14 @@ const Actor = function() {
   this.bot.onText(/(.+)/, this.verifyQuestion);
 };
 
-Actor.prototype.processCandle = function(candle, done) {
+Actor.prototype.processCandle = function (candle, done) {
   this.price = candle.close;
   this.priceTime = candle.start;
 
   done();
 };
 
-Actor.prototype.processAdvice = function(advice) {
+Actor.prototype.processAdvice = function (advice) {
   if (advice.recommendation === 'soft') return;
   this.advice = advice.recommendation;
   this.adviceTime = utc();
@@ -49,7 +49,7 @@ Actor.prototype.processAdvice = function(advice) {
   this.subscribers.forEach(this.emitAdvice, this);
 };
 
-if(emitTrades) {
+if (emitTrades) {
   Actor.prototype.processTradeInitiated = function (tradeInitiated) {
     const message = 'Trade initiated. ID: ' + tradeInitiated.id +
       '\nAction: ' + tradeInitiated.action + '\nPortfolio: ' +
@@ -88,7 +88,7 @@ if(emitTrades) {
   }
 }
 
-Actor.prototype.verifyQuestion = function(msg, text) {
+Actor.prototype.verifyQuestion = function (msg, text) {
   this.chatId = msg.chat.id;
   if (text[1].toLowerCase() in this.commands) {
     this[this.commands[text[1].toLowerCase()]]();
@@ -97,11 +97,11 @@ Actor.prototype.verifyQuestion = function(msg, text) {
   }
 };
 
-Actor.prototype.emitStart = function() {
+Actor.prototype.emitStart = function () {
   this.bot.sendMessage(this.chatId, 'Hello! How can I help you?');
 };
 
-Actor.prototype.emitSubscribe = function() {
+Actor.prototype.emitSubscribe = function () {
   if (this.subscribers.indexOf(this.chatId) === -1) {
     this.subscribers.push(this.chatId);
     this.bot.sendMessage(this.chatId, `Success! Got ${this.subscribers.length} subscribers.`);
@@ -110,7 +110,7 @@ Actor.prototype.emitSubscribe = function() {
   }
 };
 
-Actor.prototype.emitUnSubscribe = function() {
+Actor.prototype.emitUnSubscribe = function () {
   if (this.subscribers.indexOf(this.chatId) > -1) {
     this.subscribers.splice(this.subscribers.indexOf(this.chatId), 1);
     this.bot.sendMessage(this.chatId, "Success!");
@@ -119,7 +119,7 @@ Actor.prototype.emitUnSubscribe = function() {
   }
 };
 
-Actor.prototype.emitAdvice = function(chatId) {
+Actor.prototype.emitAdvice = function (chatId) {
   let message = [
     'Advice for ',
     config.watch.exchange,
@@ -154,7 +154,7 @@ Actor.prototype.emitAdvice = function(chatId) {
 };
 
 // sent price over to the last chat
-Actor.prototype.emitPrice = function() {
+Actor.prototype.emitPrice = function () {
   const message = [
     'Current price at ',
     config.watch.exchange,
@@ -174,14 +174,14 @@ Actor.prototype.emitPrice = function() {
   this.bot.sendMessage(this.chatId, message);
 };
 
-Actor.prototype.emitDonate = function() {
+Actor.prototype.emitDonate = function () {
   this.bot.sendMessage(this.chatId, telegrambot.donate);
 };
 
-Actor.prototype.emitHelp = function() {
+Actor.prototype.emitHelp = function () {
   let message = _.reduce(
     this.rawCommands,
-    function(message, command) {
+    function (message, command) {
       return message + ' ' + command + ',';
     },
     'Possible commands are:'
@@ -190,7 +190,7 @@ Actor.prototype.emitHelp = function() {
   this.bot.sendMessage(this.chatId, message);
 };
 
-Actor.prototype.logError = function(message) {
+Actor.prototype.logError = function (message) {
   log.error('Telegram ERROR:', message);
 };
 

@@ -4,36 +4,36 @@
 // - etc..
 const _ = require('lodash');
 
-const ListManager = function() {
+const ListManager = function () {
   this._list = [];
 };
 
 // add an item to the list
-ListManager.prototype.add = function(obj) {
-  if(!obj.id)
+ListManager.prototype.add = function (obj) {
+  if (!obj.id)
     return false;
   this._list.push(_.clone(obj));
   return true;
 };
 
 // update some properties on an item
-ListManager.prototype.update = function(id, updates) {
+ListManager.prototype.update = function (id, updates) {
   let item = this._list.find(i => i.id === id);
-  if(!item)
+  if (!item)
     return false;
   _.merge(item, updates);
   return true;
 };
 
 // get an item from the list
-ListManager.prototype.get = function(id) {
+ListManager.prototype.get = function (id) {
   return this._list.find(i => i.id === id);
 };
 
 // push a value to a array property of an item
-ListManager.prototype.push = function(id, prop, value) {
+ListManager.prototype.push = function (id, prop, value) {
   let item = this._list.find(i => i.id === id);
-  if(!item)
+  if (!item)
     return false;
 
   item[prop].push(value);
@@ -41,18 +41,18 @@ ListManager.prototype.push = function(id, prop, value) {
 };
 
 // delete an item from the list
-ListManager.prototype.delete = function(id) {
+ListManager.prototype.delete = function (id) {
   let wasThere = this._list.find(i => i.id === id);
   this._list = this._list.filter(i => i.id !== id);
 
-  if(wasThere)
+  if (wasThere)
     return true;
   else
     return false;
 };
 
 // getter
-ListManager.prototype.list = function() {
+ListManager.prototype.list = function () {
   return this._list;
 };
 

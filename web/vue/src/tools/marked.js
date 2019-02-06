@@ -5,7 +5,7 @@ const marked = require('marked');
 // https://github.com/chjj/marked/pull/451#issuecomment-49976076
 
 var myRenderer = new marked.Renderer();
-myRenderer.link = function(href, title, text) {
+myRenderer.link = function (href, title, text) {
   var external, newWindow, out;
   external = /^https?:\/\/.+$/.test(href);
   newWindow = external || title === 'newWindow';
@@ -19,6 +19,6 @@ myRenderer.link = function(href, title, text) {
   return out += ">" + text + "</a>";
 };
 
-marked.setOptions({renderer: myRenderer});
+marked.setOptions({ renderer: myRenderer });
 
 export default marked;

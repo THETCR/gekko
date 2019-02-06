@@ -23,7 +23,7 @@ class BaseOrder extends EventEmitter {
     bindAll(this);
   }
 
-  submit({side, amount, price, alreadyFilled}) {
+  submit({ side, amount, price, alreadyFilled }) {
     const check = isValidOrder({
       market: this.market,
       api: this.api,
@@ -31,8 +31,8 @@ class BaseOrder extends EventEmitter {
       price
     });
 
-    if(!check.valid) {
-      if(alreadyFilled) {
+    if (!check.valid) {
+      if (alreadyFilled) {
         // partially filled, but the remainder is too
         // small.
         return this.filled();

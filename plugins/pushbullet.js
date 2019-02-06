@@ -37,7 +37,7 @@ const util = require('../core/util.js');
 const config = util.getConfig();
 const pbConf = config.pushbullet;
 
-const Pushbullet = function(done) {
+const Pushbullet = function (done) {
   _.bindAll(this);
 
   this.pusher;
@@ -53,9 +53,9 @@ const Pushbullet = function(done) {
   this.setup();
 };
 
-Pushbullet.prototype.setup = function(done) {
+Pushbullet.prototype.setup = function (done) {
 
-  const setupPushBullet = function(err, result) {
+  const setupPushBullet = function (err, result) {
     if (pbConf.sendMessageOnStart) {
       const title = pbConf.tag;
       const exchange = config.watch.exchange;
@@ -84,14 +84,14 @@ Pushbullet.prototype.setup = function(done) {
   setupPushBullet.call(this)
 };
 
-Pushbullet.prototype.processCandle = function(candle, done) {
+Pushbullet.prototype.processCandle = function (candle, done) {
   this.price = candle.close;
 
   done();
 };
 
 
-Pushbullet.prototype.processAdvice = function(advice) {
+Pushbullet.prototype.processAdvice = function (advice) {
 
   this.advicePrice = this.price;
   this.adviceTime = advice.date;
@@ -115,7 +115,7 @@ Pushbullet.prototype.processAdvice = function(advice) {
   }
 };
 
-Pushbullet.prototype.processTradeCompleted = function(trade) {
+Pushbullet.prototype.processTradeCompleted = function (trade) {
 
   //Check Starting balance is initialized - if 0, initialize it
   this.startingBalance = this.startingBalance ? this.startingBalance : trade.balance;
@@ -136,7 +136,8 @@ Pushbullet.prototype.processTradeCompleted = function(trade) {
       this.lastBuyTime = trade.date;
       this.lastBuyBalance = trade.balance;
     } else if (this.hasBought) { //if sell and we have previous buy data
-      exposureTimeStr = `\nExposure Time: ${moment.duration(trade.date.diff(this.lastBuyTime)).humanize()}`;
+      exposureTimeStr = `\nExposure Time: ${moment.duration(trade.date.diff(this.lastBuyTime))
+      .humanize()}`;
 
       //Calculate balance change
       let oBal = this.lastBuyBalance; // Old Balance
@@ -146,11 +147,15 @@ Pushbullet.prototype.processTradeCompleted = function(trade) {
 
 
       if (nBal >= oBal) { // profit!
-        balanceChangeStr = `\n\nRound trip profit of: \n${getNumStr(diffBal)}${config.watch.currency} \n${getNumStr(percDiffBal,2)}%\n`;
-        subject = `${subject}: +${getNumStr(percDiffBal,2)}%`
+        balanceChangeStr = `\n\nRound trip profit of: \n${getNumStr(diffBal)}${config.watch.currency} \n${getNumStr(
+          percDiffBal,
+          2)}%\n`;
+        subject = `${subject}: +${getNumStr(percDiffBal, 2)}%`
       } else if (nBal < oBal) { //  Loss :(
-        balanceChangeStr = `\n\nRound trip loss of: \n-${getNumStr(diffBal)}${config.watch.currency} \n-${getNumStr(percDiffBal,2)}%\n`;
-        subject = `${subject}: -${getNumStr(percDiffBal,2)}%`
+        balanceChangeStr = `\n\nRound trip loss of: \n-${getNumStr(diffBal)}${config.watch.currency} \n-${getNumStr(
+          percDiffBal,
+          2)}%\n`;
+        subject = `${subject}: -${getNumStr(percDiffBal, 2)}%`
       }
 
       //Calculate overall P/l
@@ -158,16 +163,22 @@ Pushbullet.prototype.processTradeCompleted = function(trade) {
       let tDiffBal = Math.abs(nBal - sBal);
       let percDiffTotBal = (tDiffBal / sBal) * 100;
       if (nBal >= sBal) { // profit!
-        totBalanceChangeStr = `\nOverall gain of: \n${getNumStr(tDiffBal)}${config.watch.currency} \n${getNumStr(percDiffTotBal,2)}%\n`
+        totBalanceChangeStr = `\nOverall gain of: \n${getNumStr(tDiffBal)}${config.watch.currency} \n${getNumStr(
+          percDiffTotBal,
+          2)}%\n`
       } else if (nBal < sBal) { //  Loss :(
-        totBalanceChangeStr = `\nOverall loss of \n-${getNumStr(tDiffBal)}${config.watch.currency} \n-${getNumStr(percDiffTotBal,2)}%\n`
+        totBalanceChangeStr = `\nOverall loss of \n-${getNumStr(tDiffBal)}${config.watch.currency} \n-${getNumStr(
+          percDiffTotBal,
+          2)}%\n`
 
       } else if (trade.action === 'sell' && !this.hasBought) {
         balanceChangeStr = `\n\nNot enough data for exposure time, round trip or overall performance yet. This will appear after bot has completed first round trip.`
       }
     }
 
-    let costOfTradeStr = `\nCost of Trade: ${getNumStr(trade.cost)}${config.watch.currency}, ${getNumStr(((trade.cost / (trade.amount*trade.price)) * 100), 2)}%`;
+    let costOfTradeStr = `\nCost of Trade: ${getNumStr(trade.cost)}${config.watch.currency}, ${getNumStr(
+      ((trade.cost / (trade.amount * trade.price)) * 100),
+      2)}%`;
 
     //build strings that are only sent for Live trading, not paperTrader
     let orderFillTimeStr = '';
@@ -186,7 +197,7 @@ Pushbullet.prototype.processTradeCompleted = function(trade) {
       } else if (trade.action === 'sell') {
         slip = 100 * ((this.advicePrice - trade.price) / this.advicePrice);
       }
-      slippageStr = `\nSlipped ${getNumStr(slip,2)}% from advice @ ${getNumStr(this.advicePrice)}`;
+      slippageStr = `\nSlipped ${getNumStr(slip, 2)}% from advice @ ${getNumStr(this.advicePrice)}`;
 
 
     }
@@ -289,9 +300,9 @@ function getPastTense(action) {
   return ret;
 }
 
-Pushbullet.prototype.mail = function(subject, content, done) {
+Pushbullet.prototype.mail = function (subject, content, done) {
   const pusher = new pushbullet(pbConf.key);
-  pusher.note(pbConf.email, subject, content, function(error, response) {
+  pusher.note(pbConf.email, subject, content, function (error, response) {
     if (error || !response) {
       log.error('Pushbullet ERROR:', error)
     } else if (response && response.active) {
@@ -300,7 +311,7 @@ Pushbullet.prototype.mail = function(subject, content, done) {
   });
 };
 
-Pushbullet.prototype.checkResults = function(err) {
+Pushbullet.prototype.checkResults = function (err) {
   if (err)
     log.warn('error sending pushbullet message', err);
   else

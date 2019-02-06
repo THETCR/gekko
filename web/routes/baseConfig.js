@@ -13,8 +13,7 @@ config.debug = true;
 //                       CONFIGURING TRADING ADVICE
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-config.tradingAdvisor = {
-};
+config.tradingAdvisor = {};
 
 config.candleWriter = {
   enabled: false
@@ -53,7 +52,7 @@ config.sqlite = {
   }]
 };
 
-  // Postgres adapter example config (please note: requires postgres >= 9.5):
+// Postgres adapter example config (please note: requires postgres >= 9.5):
 config.postgresql = {
   path: 'plugins/postgresql',
   version: 0.1,

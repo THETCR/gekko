@@ -11,13 +11,13 @@ const dirs = util.dirs();
 const Fetcher = require(dirs.exchanges + 'bitfinex');
 const retry = require(dirs.exchanges + '../exchangeUtils').retry;
 
-Fetcher.prototype.getTrades = function(upto, callback, descending) {
+Fetcher.prototype.getTrades = function (upto, callback, descending) {
   const handle = (err, data) => {
     if (err) return callback(err);
 
     let trades = [];
     if (_.isArray(data)) {
-      trades = _.map(data, function(trade) {
+      trades = _.map(data, function (trade) {
         return {
           tid: trade.ID,
           date: moment(trade.MTS).format('X'),
@@ -108,8 +108,8 @@ const handleFetch = (err, trades) => {
   } else {
     stride = SCANNING_STRIDE;
     lastTimestamp = moment(lastTimestamp)
-      .subtract(stride, 'h')
-      .valueOf();
+    .subtract(stride, 'h')
+    .valueOf();
   }
 
   // if we're not done the batch we need to refetch
@@ -137,7 +137,7 @@ const handleFetch = (err, trades) => {
   fetcher.emit('trades', lastBatch);
 };
 
-module.exports = function(daterange) {
+module.exports = function (daterange) {
   from = daterange.from.clone();
   end = daterange.to.clone();
 

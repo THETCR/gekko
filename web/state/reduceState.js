@@ -14,13 +14,13 @@ const reduce = (state, event) => {
     latestUpdate: new Date()
   };
 
-  if(trackAllEvents.includes(type)) {
-    if(!state.events[type]) {
+  if (trackAllEvents.includes(type)) {
+    if (!state.events[type]) {
       state = {
         ...state,
         events: {
           ...state.events,
-          [type]: [ payload ]
+          [type]: [payload]
         }
       }
     } else {
@@ -28,13 +28,13 @@ const reduce = (state, event) => {
         ...state,
         events: {
           ...state.events,
-          [type]: [ ...state.events[type], payload ]
+          [type]: [...state.events[type], payload]
         }
       }
     }
   }
 
-  if(!state.events.initial[type] && !skipInitialEvents.includes(type)) {
+  if (!state.events.initial[type] && !skipInitialEvents.includes(type)) {
     state = {
       ...state,
       events: {
@@ -47,7 +47,7 @@ const reduce = (state, event) => {
     }
   }
 
-  if(!skipLatestEvents.includes(type)) {
+  if (!skipLatestEvents.includes(type)) {
     state = {
       ...state,
       events: {

@@ -6,7 +6,7 @@ const config = util.getConfig();
 const handle = require('./handle');
 const postgresUtil = require('./util');
 
-const Store = function(done, pluginMeta) {
+const Store = function (done, pluginMeta) {
   _.bindAll(this);
   this.done = done;
   this.db = handle;
@@ -14,8 +14,8 @@ const Store = function(done, pluginMeta) {
   done();
 };
 
-Store.prototype.writeCandles = function() {
-  if(_.isEmpty(this.cache)){
+Store.prototype.writeCandles = function () {
+  if (_.isEmpty(this.cache)) {
     return;
   }
 
@@ -33,8 +33,8 @@ Store.prototype.writeCandles = function() {
     COMMIT; 
     `;
 
-    this.db.connect((err,client,done) => {
-      if(err) {
+    this.db.connect((err, client, done) => {
+      if (err) {
         util.die(err);
       }
       client.query(stmt, (err, res) => {
@@ -51,7 +51,7 @@ Store.prototype.writeCandles = function() {
   this.cache = [];
 };
 
-const processCandle = function(candle, done) {
+const processCandle = function (candle, done) {
   this.cache.push(candle);
   if (this.cache.length > 1)
     this.writeCandles();
@@ -59,13 +59,13 @@ const processCandle = function(candle, done) {
   done();
 };
 
-const finalize = function(done) {
+const finalize = function (done) {
   this.writeCandles();
   this.db = null;
   done();
 };
 
-if(config.candleWriter.enabled) {
+if (config.candleWriter.enabled) {
   Store.prototype.processCandle = processCandle;
   Store.prototype.finalize = finalize;
 }

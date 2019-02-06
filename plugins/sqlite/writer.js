@@ -6,7 +6,7 @@ const sqliteUtil = require('./util');
 const util = require('../../core/util');
 const log = require('../../core/log');
 
-const Store = function(done, pluginMeta) {
+const Store = function (done, pluginMeta) {
   _.bindAll(this);
   this.done = done;
 
@@ -17,7 +17,7 @@ const Store = function(done, pluginMeta) {
   this.buffered = util.gekkoMode() === 'importer';
 };
 
-Store.prototype.upsertTables = function() {
+Store.prototype.upsertTables = function () {
   const createQueries = [
     `
       CREATE TABLE IF NOT EXISTS
@@ -43,13 +43,13 @@ Store.prototype.upsertTables = function() {
 
   const next = _.after(_.size(createQueries), this.done);
 
-  _.each(createQueries, function(q) {
+  _.each(createQueries, function (q) {
     this.db.run(q, next);
   }, this);
 };
 
-Store.prototype.writeCandles = function() {
-  if(_.isEmpty(this.cache))
+Store.prototype.writeCandles = function () {
+  if (_.isEmpty(this.cache))
     return;
 
   const transaction = () => {
@@ -58,7 +58,7 @@ Store.prototype.writeCandles = function() {
     const stmt = this.db.prepare(`
       INSERT OR IGNORE INTO ${sqliteUtil.table('candles')}
       VALUES (?,?,?,?,?,?,?,?,?)
-    `, function(err, rows) {
+    `, function (err, rows) {
       if (err) {
         log.error(err);
         return util.die('DB error at INSERT: ' + err);
@@ -90,7 +90,7 @@ Store.prototype.writeCandles = function() {
   this.db.serialize(transaction);
 };
 
-const processCandle = function(candle, done) {
+const processCandle = function (candle, done) {
   this.cache.push(candle);
   if (!this.buffered || this.cache.length > 1000)
     this.writeCandles();
@@ -98,7 +98,7 @@ const processCandle = function(candle, done) {
   done();
 };
 
-const finalize = function(done) {
+const finalize = function (done) {
   this.writeCandles();
   this.db.close(() => {
     done();
@@ -106,7 +106,7 @@ const finalize = function(done) {
   this.db = null;
 };
 
-if(config.candleWriter.enabled) {
+if (config.candleWriter.enabled) {
   Store.prototype.processCandle = processCandle;
   Store.prototype.finalize = finalize;
 }

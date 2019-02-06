@@ -20,7 +20,7 @@ const INDICATOR_PATH = dirs.indicators;
 
 const prices = [81, 24, 75, 21, 34, 25, 72, 92, 99, 2, 86, 80, 76, 8, 87, 75, 32, 65, 41, 9, 13, 26, 56, 28, 65, 58, 17, 90, 87, 86, 99, 3, 70, 1, 27, 9, 92, 68, 9];
 
-describe('indicators/MACD', function() {
+describe('indicators/MACD', function () {
 
   const MACD = require(INDICATOR_PATH + 'MACD');
 
@@ -28,25 +28,25 @@ describe('indicators/MACD', function() {
   const verified_macd12v26v9signal = [0, -0.9094017094017091, -1.5253785277716898, -2.7832136016766986, -4.163664288050406, -5.6827024692486034, -6.446164537489373, -6.362243760897504, -5.625417347318147, -6.052744871045796, -5.833373944272349, -5.30259580036777, -4.65618988848228, -5.045484284038693, -4.791629572278152, -4.328500841796362, -4.4346555410831, -4.355458057034607, -4.537216091296979, -5.373208009675945, -6.499372682470117, -7.526155810665873, -7.941036733679333, -8.379264883158616, -8.199742548209226, -7.735429074656398, -7.753454558826904, -6.890511775599502, -5.55279041392015, -3.990911084902719, -2.153906678881361, -1.767472753734144, -1.2375115118120907, -1.7434057341391904, -2.4532458933799184, -3.535292464233935, -3.4616339629506956, -3.0424794314197485, -3.363123569918823];
   const verified_macd12v26v9result = [0, -3.6376068376068362, -2.4639072734799217, -5.031340295620034, -5.521802745494824, -6.076152724792792, -3.053848272963074, 0.33568310636747434, 2.9473056543174314, -1.7093100949105917, 0.8774837070937913, 2.1231125756183227, 2.585623647541957, -1.5571775822256484, 1.0154188470421683, 1.8525149219271597, -0.42461879714695083, 0.3167899361939739, -0.7270321370494885, -3.3439676735158663, -4.504658691176687, -4.107132512783021, -1.6595236920538383, -1.7529125979171347, 0.7180893397975616, 1.8572538942113148, -0.07210193668202258, 3.4517711329096086, 5.350885446717413, 6.247517316069724, 7.3480176240854345, 1.5457357005888681, 2.1198449676882127, -2.0235768893083987, -2.839360636962912, -4.3281862834160645, 0.2946340051329588, 1.6766181261237905, -1.2825765539962966];
 
-  it('should correctly calculate MACD diffs with 12/26/9', function() {
+  it('should correctly calculate MACD diffs with 12/26/9', function () {
     const macd = new MACD({ short: 12, long: 26, signal: 9 });
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       macd.update(p);
       expect(macd.diff).to.equal(verified_macd12v26v9diff[i]);
     });
   });
 
-  it('should correctly calculate MACD signals with 12/26/9', function() {
+  it('should correctly calculate MACD signals with 12/26/9', function () {
     const macd = new MACD({ short: 12, long: 26, signal: 9 });
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       macd.update(p);
       expect(macd.signal.result).to.equal(verified_macd12v26v9signal[i]);
     });
   });
 
-  it('should correctly calculate MACD results with 12/26/9', function() {
+  it('should correctly calculate MACD results with 12/26/9', function () {
     const macd = new MACD({ short: 12, long: 26, signal: 9 });
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       macd.update(p);
       expect(macd.result).to.equal(verified_macd12v26v9result[i]);
     });
@@ -54,7 +54,7 @@ describe('indicators/MACD', function() {
 
 });
 
-describe('indicators/PPO', function() {
+describe('indicators/PPO', function () {
 
   const PPO = require(INDICATOR_PATH + 'PPO');
 
@@ -62,37 +62,37 @@ describe('indicators/PPO', function() {
   const verified_ppo12v26v9signal = [0, -1.184459534676611, -1.9885302582960718, -3.745845132981037, -5.777039310062954, -8.16550533543518, -9.37760330442056, -9.257882858351403, -8.161812838675571, -8.889010093515365, -8.584218899274903, -7.799354079941956, -6.8413370240775215, -7.526706965971911, -7.165958947594484, -6.475733760160976, -6.697106239936169, -6.616770935244445, -6.979665377476208, -8.565030175799809, -10.845485322187589, -13.07012750628584, -14.066722075380872, -15.202434810836897, -15.021461036461314, -14.245932817066137, -14.52070378533354, -12.912836013185082, -10.402935451400865, -7.541843268741416, -4.3269711598629925, -3.539946795995747, -2.5254897897307083, -3.431519446980441, -4.8031986116885825, -7.099226541592141, -6.908586559167689, -6.044738388556036, -6.712515369453642];
   const verified_ppo12v26v9hist = [0, -4.737838138706444, -3.2162828944778434, -7.02925949873986, -8.12477670832767, -9.553864101488896, -4.84839187594152, 0.47888178427663064, 4.3842800787033305, -2.9087890193591743, 1.2191647769618479, 3.13945927733179, 3.832068223457742, -2.7414797675775553, 1.4429920735097133, 2.760900749734034, -0.8854899191007712, 0.32134121876689914, -1.4515777689270495, -6.341459193294403, -9.121820585551113, -8.898568736392996, -3.9863782763801243, -4.54285094182409, 0.7238950975023304, 3.102112877580705, -1.099083873069608, 6.431471088593835, 10.03960224713687, 11.444368730637798, 12.859488435513693, 3.1480974554689825, 4.057828025060156, -3.6241186289989296, -5.486716658832568, -9.18411171961423, 0.762559929697809, 3.455392682446609, -2.6711079235904203];
 
-  it('should correctly calculate PPOs with 12/26/9', function() {
+  it('should correctly calculate PPOs with 12/26/9', function () {
     const ppo = new PPO({ short: 12, long: 26, signal: 9 });
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       ppo.update(p);
       expect(ppo.result.ppo).to.equal(verified_ppo12v26v9[i]);
     });
   });
 
-  it('should correctly calculate PPO signals with 12/26/9', function() {
+  it('should correctly calculate PPO signals with 12/26/9', function () {
     const ppo = new PPO({ short: 12, long: 26, signal: 9 });
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       ppo.update(p);
       expect(ppo.result.PPOsignal).to.equal(verified_ppo12v26v9signal[i]);
     });
   });
 
 
-  it('should correctly calculate PPO hists with 12/26/9', function() {
+  it('should correctly calculate PPO hists with 12/26/9', function () {
     const ppo = new PPO({ short: 12, long: 26, signal: 9 });
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       ppo.update(p);
       expect(ppo.result.PPOhist).to.equal(verified_ppo12v26v9hist[i]);
     });
   });
 });
 
-xdescribe('indicators/DEMA', function() {
+xdescribe('indicators/DEMA', function () {
 
   const DEMA = require(INDICATOR_PATH + 'DEMA');
 
-  xit('should correctly calculate DEMAs', function() {
+  xit('should correctly calculate DEMAs', function () {
     // TODO!
   });
 

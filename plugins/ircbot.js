@@ -7,7 +7,7 @@ const utc = moment.utc;
 
 const irc = require('irc');
 
-const Actor = function() {
+const Actor = function () {
   _.bindAll(this);
 
   this.bot = new irc.Client(ircbot.server, ircbot.botName, {
@@ -34,34 +34,34 @@ const Actor = function() {
   this.rawCommands = _.keys(this.commands);
 };
 
-Actor.prototype.processCandle = function(candle, done) {
+Actor.prototype.processCandle = function (candle, done) {
   this.price = candle.close;
   this.priceTime = candle.start;
 
   done();
 };
 
-Actor.prototype.processAdvice = function(advice) {
+Actor.prototype.processAdvice = function (advice) {
   if (advice.recommendation == "soft" && ircbot.muteSoft) return;
   this.advice = advice.recommendation;
   this.adviceTime = utc();
 
-  if(ircbot.emitUpdates)
+  if (ircbot.emitUpdates)
     this.newAdvice();
 };
 
-Actor.prototype.verifyQuestion = function(from, to, text, message) {
-  if(text in this.commands)
+Actor.prototype.verifyQuestion = function (from, to, text, message) {
+  if (text in this.commands)
     this[this.commands[text]]();
 };
 
-Actor.prototype.newAdvice = function() {
+Actor.prototype.newAdvice = function () {
   this.bot.say(ircbot.channel, 'Guys! Important news!');
   this.emitAdvice();
 };
 
 // sent advice over to the IRC channel
-Actor.prototype.emitAdvice = function() {
+Actor.prototype.emitAdvice = function () {
   const message = [
     'Advice for ',
     config.watch.exchange,
@@ -86,7 +86,7 @@ Actor.prototype.emitAdvice = function() {
 };
 
 // sent price over to the IRC channel
-Actor.prototype.emitPrice = function() {
+Actor.prototype.emitPrice = function () {
 
   const message = [
     'Current price at ',
@@ -108,17 +108,17 @@ Actor.prototype.emitPrice = function() {
 };
 
 // sent donation info over to the IRC channel
-Actor.prototype.emitDonation = function() {
+Actor.prototype.emitDonation = function () {
   let message = 'You want to donate? How nice of you! You can send your coins here:';
   message += '\nBTC:\t13r1jyivitShUiv9FJvjLH7Nh1ZZptumwW';
 
   this.bot.say(ircbot.channel, message);
 };
 
-Actor.prototype.emitHelp = function() {
+Actor.prototype.emitHelp = function () {
   let message = _.reduce(
     this.rawCommands,
-    function(message, command) {
+    function (message, command) {
       return message + ' ' + command + ',';
     },
     'possible commands are:',
@@ -130,7 +130,7 @@ Actor.prototype.emitHelp = function() {
 
 };
 
-Actor.prototype.emitRealAdvice = function() {
+Actor.prototype.emitRealAdvice = function () {
   // http://www.examiner.com/article/uncaged-a-look-at-the-top-10-quotes-of-gordon-gekko
   // http://elitedaily.com/money/memorable-gordon-gekko-quotes/
   const realAdvice = [
@@ -146,7 +146,7 @@ Actor.prototype.emitRealAdvice = function() {
   this.bot.say(ircbot.channel, _.first(_.shuffle(realAdvice)));
 };
 
-Actor.prototype.logError = function(message) {
+Actor.prototype.logError = function (message) {
   log.error('IRC ERROR:', message);
 };
 

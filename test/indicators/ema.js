@@ -20,7 +20,7 @@ const INDICATOR_PATH = dirs.indicators;
 
 const prices = [81, 24, 75, 21, 34, 25, 72, 92, 99, 2, 86, 80, 76, 8, 87, 75, 32, 65, 41, 9, 13, 26, 56, 28, 65, 58, 17, 90, 87, 86, 99, 3, 70, 1, 27, 9, 92, 68, 9];
 
-describe('indicators/EMA', function() {
+describe('indicators/EMA', function () {
 
   const EMA = require(INDICATOR_PATH + 'EMA');
 
@@ -28,25 +28,25 @@ describe('indicators/EMA', function() {
   const verified_ema12results = [81, 72.23076923076923, 72.65680473372781, 64.709604005462, 59.98504954308323, 54.602734228762735, 57.27923665510693, 62.620892554321244, 68.2176783151949, 58.030343189780304, 62.33336731442949, 65.05131080451726, 66.73572452689922, 57.69945921506857, 62.20723472044264, 64.17535245575915, 59.2252982317962, 60.11371388844294, 57.173142520990176, 49.761889825453224, 44.10621446769119, 41.320643011123316, 43.57900562479665, 41.182235528674084, 44.84650698580115, 46.87012129567789, 42.27471801941975, 49.61706909335518, 55.368289232839, 60.080860120094535, 66.06842010161846, 56.365586239831, 58.46318835678008, 49.62269784035237, 46.14228278799047, 40.42808543599194, 48.36222613814702, 51.383422116893634, 44.86289563737154];
   const verified_ema26results = [81, 76.77777777777777, 76.64609053497942, 72.52415790275873, 69.67051657662846, 66.36158942280413, 66.77924946555937, 68.64745320885127, 70.89579000819562, 65.79239815573669, 67.28925755160805, 68.2307940292667, 68.80629076783954, 64.30212108133291, 65.98344544567863, 66.65133837562836, 64.08457257002625, 64.15238200928357, 62.43739074933664, 58.479065508645036, 55.11024584133799, 52.95393133457221, 53.17956605052982, 51.314413009749835, 52.32816019421281, 52.748296476122974, 50.10027451492868, 53.05580973604507, 55.57019420004173, 57.82425388892753, 60.874309156414384, 56.58732329297628, 57.58085490090396, 53.38968046379996, 51.4348893183333, 48.29156418364194, 51.52922609596476, 52.74928342218959, 49.50859576128666];
 
-  it('should correctly calculate EMAs with weight 10', function() {
+  it('should correctly calculate EMAs with weight 10', function () {
     const ema = new EMA(10);
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       ema.update(p);
       expect(ema.result).to.equal(verified_ema10results[i]);
     });
   });
 
-  it('should correctly calculate EMAs with weight 12', function() {
+  it('should correctly calculate EMAs with weight 12', function () {
     const ema = new EMA(12);
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       ema.update(p);
       expect(ema.result).to.equal(verified_ema12results[i]);
     });
   });
 
-  it('should correctly calculate EMAs with weight 26', function() {
+  it('should correctly calculate EMAs with weight 26', function () {
     const ema = new EMA(26);
-    _.each(prices, function(p, i) {
+    _.each(prices, function (p, i) {
       ema.update(p);
       expect(ema.result).to.equal(verified_ema26results[i]);
     });

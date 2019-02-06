@@ -11,7 +11,7 @@ const CandleBatcher = require(dirs.core + 'candleBatcher');
 const moment = require('moment');
 const isLeecher = config.market && config.market.type === 'leech';
 
-const Actor = function(done) {
+const Actor = function (done) {
   _.bindAll(this);
 
   this.done = done;
@@ -36,9 +36,9 @@ const Actor = function(done) {
     done();
 };
 
-Actor.prototype.setupStrategy = function() {
+Actor.prototype.setupStrategy = function () {
 
-  if(!fs.existsSync(dirs.methods + this.strategyName + '.js'))
+  if (!fs.existsSync(dirs.methods + this.strategyName + '.js'))
     util.die('Gekko can\'t find the strategy "' + this.strategyName + '"');
 
   log.info('\t', 'Using the strategy: ' + this.strategyName);
@@ -49,46 +49,46 @@ Actor.prototype.setupStrategy = function() {
   // to the WrappedStrategy.
   const WrappedStrategy = require('./baseTradingMethod');
 
-  _.each(strategy, function(fn, name) {
+  _.each(strategy, function (fn, name) {
     WrappedStrategy.prototype[name] = fn;
   });
 
   let stratSettings;
-  if(config[this.strategyName]) {
+  if (config[this.strategyName]) {
     stratSettings = config[this.strategyName];
   }
 
   this.strategy = new WrappedStrategy(stratSettings);
   this.strategy
-    .on(
-      'stratWarmupCompleted',
-      e => this.deferredEmit('stratWarmupCompleted', e)
-    )
-    .on('advice', this.relayAdvice)
-    .on(
-      'stratUpdate',
-      e => this.deferredEmit('stratUpdate', e)
-    ).on('stratNotification',
-      e => this.deferredEmit('stratNotification', e)
-    );
+  .on(
+    'stratWarmupCompleted',
+    e => this.deferredEmit('stratWarmupCompleted', e)
+  )
+  .on('advice', this.relayAdvice)
+  .on(
+    'stratUpdate',
+    e => this.deferredEmit('stratUpdate', e)
+  ).on('stratNotification',
+    e => this.deferredEmit('stratNotification', e)
+  );
 
   this.strategy
-    .on('tradeCompleted', this.processTradeCompleted);
+  .on('tradeCompleted', this.processTradeCompleted);
 
   this.batcher
-    .on('candle', _candle => {
-      const { id, ...candle } = _candle;
-      this.deferredEmit('stratCandle', candle);
-      this.emitStratCandle(candle);
-    });
+  .on('candle', _candle => {
+    const { id, ...candle } = _candle;
+    this.deferredEmit('stratCandle', candle);
+    this.emitStratCandle(candle);
+  });
 };
 
 // HANDLERS
 // process the 1m candles
-Actor.prototype.processCandle = function(candle, done) {
+Actor.prototype.processCandle = function (candle, done) {
   this.candle = candle;
   const completedBatch = this.batcher.write([candle]);
-  if(completedBatch) {
+  if (completedBatch) {
     this.next = done;
   } else {
     done();
@@ -98,22 +98,22 @@ Actor.prototype.processCandle = function(candle, done) {
 };
 
 // propogate a custom sized candle to the trading strategy
-Actor.prototype.emitStratCandle = function(candle) {
+Actor.prototype.emitStratCandle = function (candle) {
   const next = this.next || _.noop;
   this.strategy.tick(candle, next);
 };
 
-Actor.prototype.processTradeCompleted = function(trade) {
+Actor.prototype.processTradeCompleted = function (trade) {
   this.strategy.processTrade(trade);
 };
 
 // pass through shutdown handler
-Actor.prototype.finish = function(done) {
+Actor.prototype.finish = function (done) {
   this.strategy.finish(done);
 };
 
 // EMITTERS
-Actor.prototype.relayAdvice = function(advice) {
+Actor.prototype.relayAdvice = function (advice) {
   advice.date = this.candle.start.clone().add(1, 'minute');
   this.deferredEmit('advice', advice);
 };

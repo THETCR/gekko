@@ -17,7 +17,7 @@ const _args = false;
 
 // helper functions
 const util = {
-  getConfig: function() {
+  getConfig: function () {
     // cache
     if (_config)
       return _config;
@@ -32,19 +32,19 @@ const util = {
     return _config;
   },
   // overwrite the whole config
-  setConfig: function(config) {
+  setConfig: function (config) {
     _config = config;
   },
-  setConfigProperty: function(parent, key, value) {
+  setConfigProperty: function (parent, key, value) {
     if (parent)
       _config[parent][key] = value;
     else
       _config[key] = value;
   },
-  getVersion: function() {
+  getVersion: function () {
     return util.getPackage().version;
   },
-  getPackage: function() {
+  getPackage: function () {
     if (_package)
       return _package;
 
@@ -52,34 +52,34 @@ const util = {
     _package = JSON.parse(fs.readFileSync(__dirname + '/../package.json', 'utf8'));
     return _package;
   },
-  getRequiredNodeVersion: function() {
+  getRequiredNodeVersion: function () {
     return util.getPackage().engines.node;
   },
-  recentNode: function() {
+  recentNode: function () {
     const required = util.getRequiredNodeVersion();
     return semver.satisfies(process.version, required);
   },
   // check if two moments are corresponding
   // to the same time
-  equals: function(a, b) {
+  equals: function (a, b) {
     return !(a < b || a > b);
   },
-  minToMs: function(min) {
+  minToMs: function (min) {
     return min * 60 * 1000;
   },
-  defer: function(fn) {
-    return function(args) {
+  defer: function (fn) {
+    return function (args) {
       var args = _.toArray(arguments);
-      return _.defer(function() {
+      return _.defer(function () {
         fn.apply(this, args);
       });
     };
   },
-  logVersion: function() {
+  logVersion: function () {
     return `Gekko version: v${util.getVersion()}`
       + `\nNodejs version: ${process.version}`;
   },
-  die: function(m, soft) {
+  die: function (m, soft) {
 
     if (_gekkoEnv === 'child-process') {
       return process.send({ type: 'error', error: '\n ERROR: ' + m + '\n' });
@@ -101,7 +101,7 @@ const util = {
     }
     process.exit(1);
   },
-  dirs: function() {
+  dirs: function () {
     const ROOT = __dirname + '/../';
 
     return {
@@ -121,19 +121,19 @@ const util = {
       broker: ROOT + 'exchange/',
     };
   },
-  inherit: function(dest, source) {
+  inherit: function (dest, source) {
     require('util').inherits(
       dest,
       source,
     );
   },
-  makeEventEmitter: function(dest) {
+  makeEventEmitter: function (dest) {
     util.inherit(dest, require('events').EventEmitter);
   },
-  setGekkoMode: function(mode) {
+  setGekkoMode: function (mode) {
     _gekkoMode = mode;
   },
-  gekkoMode: function() {
+  gekkoMode: function () {
     if (_gekkoMode)
       return _gekkoMode;
 
@@ -144,26 +144,26 @@ const util = {
     else
       return 'realtime';
   },
-  gekkoModes: function() {
+  gekkoModes: function () {
     return [
       'importer',
       'backtest',
       'realtime',
     ];
   },
-  setGekkoEnv: function(env) {
+  setGekkoEnv: function (env) {
     _gekkoEnv = env;
   },
-  gekkoEnv: function() {
+  gekkoEnv: function () {
     return _gekkoEnv || 'standalone';
   },
-  launchUI: function() {
+  launchUI: function () {
     if (program['ui'])
       return true;
     else
       return false;
   },
-  getStartTime: function() {
+  getStartTime: function () {
     return startTime;
   },
 };
@@ -171,15 +171,15 @@ const util = {
 // NOTE: those options are only used
 // in stand alone mode
 program
-  .version(util.logVersion())
-  .option('-c, --config <file>', 'Config file')
-  .option('-b, --backtest', 'backtesting mode')
-  .option('-i, --import', 'importer mode')
-  .option('--ui', 'launch a web UI')
-  .parse(process.argv);
+.version(util.logVersion())
+.option('-c, --config <file>', 'Config file')
+.option('-b, --backtest', 'backtesting mode')
+.option('-i, --import', 'importer mode')
+.option('--ui', 'launch a web UI')
+.parse(process.argv);
 
 // make sure the current node version is recent enough
-if(!util.recentNode())
+if (!util.recentNode())
   util.die([
     'Your local version of Node.js is too old. ',
     'You have ',

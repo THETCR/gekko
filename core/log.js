@@ -14,7 +14,7 @@ const config = util.getConfig();
 const debug = config.debug;
 const silent = config.silent;
 
-const sendToParent = function() {
+const sendToParent = function () {
   const send = method => (...args) => {
     process.send({ log: method, message: args.join(' ') });
   };
@@ -27,7 +27,7 @@ const sendToParent = function() {
   };
 };
 
-const Log = function() {
+const Log = function () {
   _.bindAll(this);
   this.env = util.gekkoEnv();
 
@@ -38,8 +38,8 @@ const Log = function() {
 };
 
 Log.prototype = {
-  _write: function(method, args, name) {
-    if(!name)
+  _write: function (method, args, name) {
+    if (!name)
       name = method.toUpperCase();
 
     let message = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -48,30 +48,30 @@ Log.prototype = {
 
     this.output[method](message);
   },
-  error: function() {
+  error: function () {
     this._write('error', arguments);
   },
-  warn: function() {
+  warn: function () {
     this._write('warn', arguments);
   },
-  info: function() {
+  info: function () {
     this._write('info', arguments);
   },
-  write: function() {
+  write: function () {
     const args = _.toArray(arguments);
     const message = fmt.apply(null, args);
     this.output.info(message);
   }
 };
 
-if(debug)
-  Log.prototype.debug = function() {
+if (debug)
+  Log.prototype.debug = function () {
     this._write('info', arguments, 'DEBUG');
   };
 else
   Log.prototype.debug = _.noop;
 
-if(silent) {
+if (silent) {
   Log.prototype.debug = _.noop;
   Log.prototype.info = _.noop;
   Log.prototype.warn = _.noop;

@@ -5,24 +5,24 @@ const util = require('../core/util.js');
 const config = util.getConfig();
 const adviceLoggerConfig = config.adviceLogger;
 
-const Actor = function() {
+const Actor = function () {
   this.price = 'N/A';
   this.marketTime = {
-    format: function() {
+    format: function () {
       return 'N/A';
     },
   };
   _.bindAll(this);
 };
 
-Actor.prototype.processCandle = function(candle, done) {
+Actor.prototype.processCandle = function (candle, done) {
   this.price = candle.close;
   this.marketTime = candle.start;
 
   done();
 };
 
-Actor.prototype.processAdvice = function(advice) {
+Actor.prototype.processAdvice = function (advice) {
   if (adviceLoggerConfig.muteSoft && advice.recommendation == 'soft') return;
   console.log();
   log.info('We have new trading advice!');
@@ -32,7 +32,7 @@ Actor.prototype.processAdvice = function(advice) {
   console.log()
 };
 
-Actor.prototype.finalize = function(advice, done) {
+Actor.prototype.finalize = function (advice, done) {
   // todo
   done();
 };

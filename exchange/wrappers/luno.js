@@ -8,7 +8,7 @@ const name = 'Luno';
 
 let tradeAttempt = 0;
 
-const Trader = function(config) {
+const Trader = function (config) {
   if (_.isObject(config)) {
     this.key = config.key;
     this.secret = config.secret;
@@ -25,12 +25,12 @@ const Trader = function(config) {
   this.interval = 2000;
 };
 
-const log = function() {
+const log = function () {
   const message = node_util.format.apply(null, _.toArray(arguments));
   console.log(moment().format('YYYY-MM-DD HH:mm:ss') + ' (DEBUG):    ' + message);
 };
 
-Trader.prototype.inspect = function(obj) {
+Trader.prototype.inspect = function (obj) {
   return node_util.inspect(obj, {
     showhidden: false,
     depth: null,
@@ -67,7 +67,7 @@ const recoverableErrors = [
 ];
 
 
-const processResponse = function(funcName, callback) {
+const processResponse = function (funcName, callback) {
   return (error, body) => {
     /* BitX Error Codes
           Error: BitX error 400: invalid id
@@ -116,7 +116,7 @@ const processResponse = function(funcName, callback) {
 
 //------- Gekko Functions ---------//
 
-Trader.prototype.getTicker = function(callback) {
+Trader.prototype.getTicker = function (callback) {
   // log(name, 'getTicker()');
 
   const process = (err, data) => {
@@ -137,7 +137,7 @@ Trader.prototype.getTicker = function(callback) {
   retry(null, handler, process);
 };
 
-Trader.prototype.getFee = function(callback) {
+Trader.prototype.getFee = function (callback) {
   // log(name, 'getFee()');
 
   if (this.pair === 'ETHXBT')
@@ -161,7 +161,7 @@ Trader.prototype.getFee = function(callback) {
   */
 };
 
-Trader.prototype.getPortfolio = function(callback) {
+Trader.prototype.getPortfolio = function (callback) {
   // log(name, 'getPortfolio()');
 
   const process = (err, data) => {
@@ -183,9 +183,9 @@ Trader.prototype.getPortfolio = function(callback) {
     }
 
     const portfolio = [{
-        name: this.asset.toUpperCase(),
-        amount: assetAmount
-      },
+      name: this.asset.toUpperCase(),
+      amount: assetAmount
+    },
       {
         name: this.currency.toUpperCase(),
         amount: currencyAmount
@@ -199,7 +199,7 @@ Trader.prototype.getPortfolio = function(callback) {
   retry(null, handler, process);
 };
 
-Trader.prototype.buy = function(amount, price, callback) {
+Trader.prototype.buy = function (amount, price, callback) {
   log(name, 'buy() amount:', amount, 'price:', price);
 
   tradeAttempt = 0;
@@ -218,7 +218,7 @@ Trader.prototype.buy = function(amount, price, callback) {
   retry(null, handler, process);
 };
 
-Trader.prototype.sell = function(amount, price, callback) {
+Trader.prototype.sell = function (amount, price, callback) {
   log(name, 'sell() amount:', amount, 'price:', price);
 
   tradeAttempt = 0;
@@ -237,16 +237,16 @@ Trader.prototype.sell = function(amount, price, callback) {
   retry(null, handler, process);
 };
 
-Trader.prototype.roundAmount = function(amount) {
+Trader.prototype.roundAmount = function (amount) {
   amount = setPrecision(amount, this.market.precision);
   return amount;
 };
 
-Trader.prototype.roundPrice = function(price) {
+Trader.prototype.roundPrice = function (price) {
   return +price;
 };
 
-Trader.prototype.getOrder = function(order, callback) {
+Trader.prototype.getOrder = function (order, callback) {
   // log(name, 'getOrder() order id:', order);
 
   if (!order) {
@@ -285,7 +285,7 @@ Trader.prototype.getOrder = function(order, callback) {
   retry(null, handler, process);
 };
 
-Trader.prototype.checkOrder = function(order, callback) {
+Trader.prototype.checkOrder = function (order, callback) {
   // log(name, 'checkOrder() order id:', order);
 
   if (!order) {
@@ -310,7 +310,7 @@ Trader.prototype.checkOrder = function(order, callback) {
   retry(null, handler, process);
 };
 
-Trader.prototype.cancelOrder = function(order, callback) {
+Trader.prototype.cancelOrder = function (order, callback) {
   log(name, 'cancelOrder() order id:', order);
 
   if (!order) {
@@ -354,7 +354,7 @@ Trader.prototype.cancelOrder = function(order, callback) {
   retry(null, handler, process);
 };
 
-Trader.prototype.getTrades = function(since, callback, descending) {
+Trader.prototype.getTrades = function (since, callback, descending) {
   // log(name, 'getTrades() since:', since);
 
   const process = (err, result) => {
@@ -377,7 +377,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
   };
 
   if (moment.isMoment(since)) since = since.valueOf();
-  (_.isNumber(since) && since > 0) ? since: since = 0;
+  (_.isNumber(since) && since > 0) ? since : since = 0;
 
   const options = {
     pair: this.pair,
@@ -388,14 +388,14 @@ Trader.prototype.getTrades = function(since, callback, descending) {
   retry(null, handler, process);
 };
 
-Trader.getCapabilities = function() {
+Trader.getCapabilities = function () {
   return {
     name: 'Luno',
     slug: 'luno',
     currencies: ['MYR', 'KES', 'NGN', 'ZAR', 'XBT'],
     assets: ['ETH', 'XBT'],
     markets: [
-      { pair: ['XBT', 'ETH'], minimalOrder: { amount: 0.01,   unit: 'asset' }, precision: 2 },
+      { pair: ['XBT', 'ETH'], minimalOrder: { amount: 0.01, unit: 'asset' }, precision: 2 },
       { pair: ['MYR', 'XBT'], minimalOrder: { amount: 0.0005, unit: 'asset' }, precision: 6 },
       { pair: ['KES', 'XBT'], minimalOrder: { amount: 0.0005, unit: 'asset' }, precision: 6 },
       { pair: ['NGN', 'XBT'], minimalOrder: { amount: 0.0005, unit: 'asset' }, precision: 6 },

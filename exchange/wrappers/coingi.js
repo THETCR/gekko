@@ -7,7 +7,7 @@ const Errors = require('../core/error');
 const log = require('../core/log');
 
 
-const Trader = function(config) {
+const Trader = function (config) {
   _.bindAll(this);
 
   if (_.isObject(config)) {
@@ -42,7 +42,8 @@ const retryForever = {
   maxTimeout: 30,
 };
 
-const recoverableErrors = new RegExp(/(SOCKETTIMEDOUT|TIMEDOUT|CONNRESET|CONNREFUSED|NOTFOUND|API:Invalid nonce|Service:Unavailable|Request timed out|Response code 520|Response code 504|Response code 502)/);
+const recoverableErrors = new RegExp(
+  /(SOCKETTIMEDOUT|TIMEDOUT|CONNRESET|CONNREFUSED|NOTFOUND|API:Invalid nonce|Service:Unavailable|Request timed out|Response code 520|Response code 504|Response code 502)/);
 
 Trader.prototype.processError = function (funcName, error) {
   if (!error)
@@ -72,12 +73,10 @@ Trader.prototype.handleResponse = function (funcName, callback) {
 };
 
 
-
-
 /* PORTFOLIO MANAGER */
 
 Trader.prototype.getTicker = function (callback) {
-  const setTicker = function(err, data) {
+  const setTicker = function (err, data) {
     if (err)
       return callback(err);
 
@@ -88,7 +87,9 @@ Trader.prototype.getTicker = function (callback) {
     callback(undefined, ticker);
   };
 
-  let handler = (cb) => this.coingi.api('order-book', "/" + this.pair + "/1/1/1", this.handleResponse('getTicker', cb));
+  let handler = (cb) => this.coingi.api('order-book',
+    "/" + this.pair + "/1/1/1",
+    this.handleResponse('getTicker', cb));
   util.retryCustom(retryForever, _.bind(handler, this), _.bind(setTicker, this));
 };
 
@@ -96,13 +97,13 @@ Trader.prototype.getTicker = function (callback) {
 Trader.prototype.getTrades = function (since, callback, ascending) {
   const startTs = since ? moment(since).valueOf() : null;
 
-  const processResults = function(err, trades) {
+  const processResults = function (err, trades) {
     if (err) {
       return callback(err);
     }
 
     const parsedTrades = [];
-    _.each(trades, function(trade) {
+    _.each(trades, function (trade) {
       // Even when you supply 'since' you can still get more trades than you asked for, it needs to be filtered
       if (_.isNull(startTs) || startTs < moment(trade.timestamp).valueOf()) {
         parsedTrades.push({
@@ -126,12 +127,14 @@ Trader.prototype.getTrades = function (since, callback, ascending) {
     optionalSince = "/" + startTs;
   }
 
-  let handler = (cb) => this.coingi.api('transactions', "/" + this.pair + "/512" + optionalSince, this.handleResponse('getTrades', cb));
+  let handler = (cb) => this.coingi.api('transactions',
+    "/" + this.pair + "/512" + optionalSince,
+    this.handleResponse('getTrades', cb));
   util.retryCustom(retryForever, _.bind(handler, this), _.bind(processResults, this));
 };
 
 Trader.prototype.getPortfolio = function (callback) {
-  const setBalance = function(err, data) {
+  const setBalance = function (err, data) {
     if (err)
       return callback(err);
 
@@ -148,7 +151,9 @@ Trader.prototype.getPortfolio = function (callback) {
     return callback(undefined, portfolio);
   };
 
-  let handler = (cb) => this.coingi.api('balance', {currencies: this.asset + "," + this.currency}, this.handleResponse('getPortfolio', cb));
+  let handler = (cb) => this.coingi.api('balance',
+    { currencies: this.asset + "," + this.currency },
+    this.handleResponse('getPortfolio', cb));
   util.retryCustom(retryForever, _.bind(handler, this), _.bind(setBalance, this));
 };
 
@@ -159,9 +164,15 @@ Trader.prototype.getFee = function (callback) {
 };
 
 Trader.prototype.addOrder = function (tradeType, amount, price, callback) {
-  log.debug('[coingi.js] (add-order)', tradeType.toUpperCase(), amount, this.asset, '@', price, this.currency);
+  log.debug('[coingi.js] (add-order)',
+    tradeType.toUpperCase(),
+    amount,
+    this.asset,
+    '@',
+    price,
+    this.currency);
 
-  const setOrder = function(err, data) {
+  const setOrder = function (err, data) {
     if (err)
       return callback(err);
 
@@ -184,7 +195,7 @@ Trader.prototype.addOrder = function (tradeType, amount, price, callback) {
 
 
 Trader.prototype.getOrder = function (orderId, callback) {
-  const getOrder = function(err, order) {
+  const getOrder = function (err, order) {
     if (err)
       return callback(err);
 
@@ -198,7 +209,7 @@ Trader.prototype.getOrder = function (orderId, callback) {
     }
   };
 
-  let reqData = {ordeId: orderId};
+  let reqData = { ordeId: orderId };
   let handler = (cb) => this.coingi.api('get-order', reqData, this.handleResponse('getOrder', cb));
   util.retryCustom(retryCritical, _.bind(handler, this), _.bind(getOrder, this));
 };
@@ -212,7 +223,7 @@ Trader.prototype.sell = function (amount, price, callback) {
 };
 
 Trader.prototype.checkOrder = function (orderId, callback) {
-  const check = function(err, order) {
+  const check = function (err, order) {
     if (err)
       return callback(err);
 
@@ -223,14 +234,18 @@ Trader.prototype.checkOrder = function (orderId, callback) {
     callback(undefined, order !== null && order.status === 2);
   };
 
-  let reqData = {orderId: orderId};
-  let handler = (cb) => this.coingi.api('get-order', reqData, this.handleResponse('checkOrder', cb));
+  let reqData = { orderId: orderId };
+  let handler = (cb) => this.coingi.api('get-order',
+    reqData,
+    this.handleResponse('checkOrder', cb));
   util.retryCustom(retryCritical, _.bind(handler, this), _.bind(check, this));
 };
 
 Trader.prototype.cancelOrder = function (order, callback) {
-  let reqData = {orderId: order};
-  let handler = (cb) => this.coingi.api('cancel-order', reqData, this.handleResponse('cancelOrder', cb));
+  let reqData = { orderId: order };
+  let handler = (cb) => this.coingi.api('cancel-order',
+    reqData,
+    this.handleResponse('cancelOrder', cb));
   util.retryCustom(retryForever, _.bind(handler, this), callback);
 };
 
@@ -242,34 +257,34 @@ Trader.getCapabilities = function () {
     assets: ['BTC', 'DASH', 'DOGE', 'EUR', 'LTC', 'NMC', 'PPC', 'VTC'],
     markets: [
       // Tradeable against BTC
-      {pair: ['USD', 'BTC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
-      {pair: ['EUR', 'BTC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
+      { pair: ['USD', 'BTC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
+      { pair: ['EUR', 'BTC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
 
       // Tradeable against DASH
-      {pair: ['BTC', 'DASH'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
+      { pair: ['BTC', 'DASH'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
 
       // Tradeable against DOGE
-      {pair: ['BTC', 'DOGE'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
-      {pair: ['USD', 'DOGE'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
+      { pair: ['BTC', 'DOGE'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
+      { pair: ['USD', 'DOGE'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
 
       // Tradeable against EUR
-      {pair: ['USD', 'EUR'], minimalOrder: {amount: 0.01, unit: 'asset'}, precision: 2},
+      { pair: ['USD', 'EUR'], minimalOrder: { amount: 0.01, unit: 'asset' }, precision: 2 },
 
       // Tradeable against LTC
-      {pair: ['BTC', 'LTC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
-      {pair: ['EUR', 'LTC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
-      {pair: ['USD', 'LTC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
+      { pair: ['BTC', 'LTC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
+      { pair: ['EUR', 'LTC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
+      { pair: ['USD', 'LTC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
 
       // Tradeable against NMC
-      {pair: ['BTC', 'NMC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
+      { pair: ['BTC', 'NMC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
 
       // Tradeable against PPC
-      {pair: ['USD', 'PPC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
-      {pair: ['EUR', 'PPC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
-      {pair: ['BTC', 'PPC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8},
+      { pair: ['USD', 'PPC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
+      { pair: ['EUR', 'PPC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
+      { pair: ['BTC', 'PPC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 },
 
       // Tradeable against VTC
-      {pair: ['BTC', 'VTC'], minimalOrder: {amount: 0.00001, unit: 'asset'}, precision: 8}
+      { pair: ['BTC', 'VTC'], minimalOrder: { amount: 0.00001, unit: 'asset' }, precision: 8 }
     ],
     requires: ['key', 'secret'],
     providesHistory: 'date',

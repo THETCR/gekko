@@ -11,10 +11,10 @@ const log = require(dirs.core + 'log');
 
 const TrailingStop = require(dirs.broker + 'triggers/trailingStop');
 
-const PaperTrader = function() {
+const PaperTrader = function () {
   _.bindAll(this);
 
-  if(calcConfig.feeUsing === 'maker') {
+  if (calcConfig.feeUsing === 'maker') {
     this.rawFee = calcConfig.feeMaker;
   } else {
     this.rawFee = calcConfig.feeTaker;
@@ -32,7 +32,7 @@ const PaperTrader = function() {
 
   this.balance = false;
 
-  if(this.portfolio.asset > 0) {
+  if (this.portfolio.asset > 0) {
     this.exposed = true;
   }
 
@@ -44,20 +44,20 @@ const PaperTrader = function() {
   this.warmupCandle;
 };
 
-PaperTrader.prototype.relayPortfolioChange = function() {
+PaperTrader.prototype.relayPortfolioChange = function () {
   this.deferredEmit('portfolioChange', {
     asset: this.portfolio.asset,
     currency: this.portfolio.currency
   });
 };
 
-PaperTrader.prototype.relayPortfolioValueChange = function() {
+PaperTrader.prototype.relayPortfolioValueChange = function () {
   this.deferredEmit('portfolioValueChange', {
     balance: this.getBalance()
   });
 };
 
-PaperTrader.prototype.extractFee = function(amount) {
+PaperTrader.prototype.extractFee = function (amount) {
   amount *= 1e8;
   amount *= this.fee;
   amount = Math.floor(amount);
@@ -65,21 +65,21 @@ PaperTrader.prototype.extractFee = function(amount) {
   return amount;
 };
 
-PaperTrader.prototype.setStartBalance = function() {
+PaperTrader.prototype.setStartBalance = function () {
   this.balance = this.getBalance();
 };
 
 // after every succesfull trend ride we hopefully end up
 // with more BTC than we started with, this function
 // calculates Gekko's profit in %.
-PaperTrader.prototype.updatePosition = function(what) {
+PaperTrader.prototype.updatePosition = function (what) {
 
   let cost;
   let amount;
 
   // virtually trade all {currency} to {asset}
   // at the current price (minus fees)
-  if(what === 'long') {
+  if (what === 'long') {
     cost = (1 - this.fee) * this.portfolio.currency;
     this.portfolio.asset += this.extractFee(this.portfolio.currency / this.price);
     amount = this.portfolio.asset;
@@ -91,7 +91,7 @@ PaperTrader.prototype.updatePosition = function(what) {
 
   // virtually trade all {currency} to {asset}
   // at the current price (minus fees)
-  else if(what === 'short') {
+  else if (what === 'short') {
     cost = (1 - this.fee) * (this.portfolio.asset * this.price);
     this.portfolio.currency += this.extractFee(this.portfolio.asset * this.price);
     amount = this.portfolio.currency / this.price;
@@ -106,21 +106,21 @@ PaperTrader.prototype.updatePosition = function(what) {
   return { cost, amount, effectivePrice };
 };
 
-PaperTrader.prototype.getBalance = function() {
+PaperTrader.prototype.getBalance = function () {
   return this.portfolio.currency + this.price * this.portfolio.asset;
 };
 
-PaperTrader.prototype.now = function() {
+PaperTrader.prototype.now = function () {
   return this.candle.start.clone().add(1, 'minute');
 };
 
-PaperTrader.prototype.processAdvice = function(advice) {
+PaperTrader.prototype.processAdvice = function (advice) {
   let action;
-  if(advice.recommendation === 'short') {
+  if (advice.recommendation === 'short') {
     action = 'sell';
 
     // clean up potential old stop trigger
-    if(this.activeStopTrigger) {
+    if (this.activeStopTrigger) {
       this.deferredEmit('triggerAborted', {
         id: this.activeStopTrigger.id,
         date: advice.date
@@ -129,13 +129,13 @@ PaperTrader.prototype.processAdvice = function(advice) {
       delete this.activeStopTrigger;
     }
 
-  } else if(advice.recommendation === 'long') {
+  } else if (advice.recommendation === 'long') {
     action = 'buy';
 
-    if(advice.trigger) {
+    if (advice.trigger) {
 
       // clean up potential old stop trigger
-      if(this.activeStopTrigger) {
+      if (this.activeStopTrigger) {
         this.deferredEmit('triggerAborted', {
           id: this.activeStopTrigger.id,
           date: advice.date
@@ -183,12 +183,12 @@ PaperTrader.prototype.processAdvice = function(advice) {
   });
 };
 
-PaperTrader.prototype.createTrigger = function(advice) {
+PaperTrader.prototype.createTrigger = function (advice) {
   const trigger = advice.trigger;
 
-  if(trigger && trigger.type === 'trailingStop') {
+  if (trigger && trigger.type === 'trailingStop') {
 
-    if(!trigger.trailValue) {
+    if (!trigger.trailValue) {
       return log.warn(`[Papertrader] ignoring trailing stop without trail value`);
     }
 
@@ -218,7 +218,7 @@ PaperTrader.prototype.createTrigger = function(advice) {
   }
 };
 
-PaperTrader.prototype.onStopTrigger = function() {
+PaperTrader.prototype.onStopTrigger = function () {
 
   const date = this.now();
 
@@ -249,13 +249,13 @@ PaperTrader.prototype.onStopTrigger = function() {
   delete this.activeStopTrigger;
 };
 
-PaperTrader.prototype.processStratWarmupCompleted = function() {
+PaperTrader.prototype.processStratWarmupCompleted = function () {
   this.warmupCompleted = true;
   this.processCandle(this.warmupCandle, _.noop);
 };
 
-PaperTrader.prototype.processCandle = function(candle, done) {
-  if(!this.warmupCompleted) {
+PaperTrader.prototype.processCandle = function (candle, done) {
+  if (!this.warmupCompleted) {
     this.warmupCandle = candle;
     return done();
   }
@@ -263,17 +263,17 @@ PaperTrader.prototype.processCandle = function(candle, done) {
   this.price = candle.close;
   this.candle = candle;
 
-  if(!this.balance) {
+  if (!this.balance) {
     this.setStartBalance();
     this.relayPortfolioChange();
     this.relayPortfolioValueChange();
   }
 
-  if(this.exposed) {
+  if (this.exposed) {
     this.relayPortfolioValueChange();
   }
 
-  if(this.activeStopTrigger) {
+  if (this.activeStopTrigger) {
     this.activeStopTrigger.instance.updatePrice(this.price);
   }
 

@@ -15,13 +15,13 @@ const BATCH_ITER_SIZE = BATCH_SIZE * 10;
 const Fetcher = require(dirs.exchanges + 'gdax');
 const retry = require(dirs.exchanges + '../exchangeUtils').retry;
 
-Fetcher.prototype.getTrades = function(sinceTid, callback) {
+Fetcher.prototype.getTrades = function (sinceTid, callback) {
   let lastScan = 0;
 
   const handle = (err, data) => {
     if (err) return callback(err);
 
-    let result = _.map(data, function(trade) {
+    let result = _.map(data, function (trade) {
       return {
         tid: trade.trade_id,
         amount: parseFloat(trade.size),
@@ -33,11 +33,13 @@ Fetcher.prototype.getTrades = function(sinceTid, callback) {
     callback(null, result.reverse());
   };
 
-  const fetch = cb => this.gdax_public.getProductTrades(this.pair, { after: sinceTid, limit: BATCH_SIZE }, this.processResponse('getTrades', cb));
+  const fetch = cb => this.gdax_public.getProductTrades(this.pair,
+    { after: sinceTid, limit: BATCH_SIZE },
+    this.processResponse('getTrades', cb));
   retry(null, fetch, handle);
 };
 
-Fetcher.prototype.findFirstTrade = function(sinceTs, callback) {
+Fetcher.prototype.findFirstTrade = function (sinceTs, callback) {
   let currentId = 0;
   let sinceM = moment(sinceTs).utc();
 
@@ -54,7 +56,8 @@ Fetcher.prototype.findFirstTrade = function(sinceTs, callback) {
     }
 
     currentId = _.first(data).trade_id;
-    log.debug(`Have trade id ${currentId} for date ${_.first(data).time} ${sinceM.from(m, true)} to scan`);
+    log.debug(`Have trade id ${currentId} for date ${_.first(data).time} ${sinceM.from(m,
+      true)} to scan`);
 
     let nextScanId = currentId - SCAN_ITER_SIZE;
     if (nextScanId <= SCAN_ITER_SIZE) {
@@ -64,12 +67,16 @@ Fetcher.prototype.findFirstTrade = function(sinceTs, callback) {
     }
 
     setTimeout(() => {
-      const fetch = cb => this.gdax_public.getProductTrades(this.pair, { after: nextScanId, limit: 1 }, this.processResponse('getTrades', cb));
+      const fetch = cb => this.gdax_public.getProductTrades(this.pair,
+        { after: nextScanId, limit: 1 },
+        this.processResponse('getTrades', cb));
       retry(null, fetch, handle);
     }, QUERY_DELAY);
   };
 
-  const fetch = cb => this.gdax_public.getProductTrades(this.pair, { limit: 1 }, this.processResponse('getTrades', cb));
+  const fetch = cb => this.gdax_public.getProductTrades(this.pair,
+    { limit: 1 },
+    this.processResponse('getTrades', cb));
   retry(null, fetch, handle);
 };
 

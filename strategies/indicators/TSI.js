@@ -1,7 +1,7 @@
 // required indicators
 const EMA = require('./EMA.js');
 
-const Indicator = function(settings) {
+const Indicator = function (settings) {
   this.input = 'candle';
   this.lastClose = null;
   this.tsi = 0;
@@ -11,7 +11,7 @@ const Indicator = function(settings) {
   this.absoluteOuter = new EMA(settings.short);
 };
 
-Indicator.prototype.update = function(candle) {
+Indicator.prototype.update = function (candle) {
   const close = candle.close;
   const prevClose = this.lastClose;
 

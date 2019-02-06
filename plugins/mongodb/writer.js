@@ -25,7 +25,7 @@ const Store = function Store(done) {
   done();
 };
 
-Store.prototype.writeCandles = function writeCandles () {
+Store.prototype.writeCandles = function writeCandles() {
   if (_.isEmpty(this.candleCache)) { // nothing to do
     return;
   }
@@ -74,7 +74,7 @@ const processCandle = function processCandle(candle, done) {
   done();
 };
 
-const finalize = function(done) {
+const finalize = function (done) {
   this.writeCandles();
   // Fix connection closed before all candles was written to db
   setTimeout(() => {

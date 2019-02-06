@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import _ from 'lodash';
+
 const reduceState = require('../../../../../state/reduceState');
 
 export const syncGekkos = (state, data) => {
-  if(!data) {
+  if (!data) {
     return state;
   }
 
@@ -21,8 +22,9 @@ export const addGekko = (state, gekko) => {
 }
 
 export const updateGekko = (state, update) => {
-  if(!update.id || !_.has(state.gekkos, update.id)) {
-    return console.error('cannot update unknown gekko..');;
+  if (!update.id || !_.has(state.gekkos, update.id)) {
+    return console.error('cannot update unknown gekko..');
+    ;
   }
 
   state.gekkos = {
@@ -33,7 +35,7 @@ export const updateGekko = (state, update) => {
 }
 
 export const archiveGekko = (state, id) => {
-  if(!_.has(state.gekkos, id)) {
+  if (!_.has(state.gekkos, id)) {
     return console.error('cannot archive unknown gekko..');
   }
 
@@ -51,7 +53,7 @@ export const archiveGekko = (state, id) => {
 }
 
 export const errorGekko = (state, data) => {
-  if(!_.has(state.gekkos, data.id)) {
+  if (!_.has(state.gekkos, data.id)) {
     return console.error('cannot error unknown gekko..');
   }
 
@@ -68,7 +70,7 @@ export const errorGekko = (state, data) => {
 }
 
 export const deleteGekko = (state, id) => {
-  if(!_.has(state.archivedGekkos, id)) {
+  if (!_.has(state.archivedGekkos, id)) {
     return console.error('cannot delete unknown gekko..');
   }
 

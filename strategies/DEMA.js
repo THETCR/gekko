@@ -6,7 +6,7 @@ const log = require('../core/log.js');
 const method = {};
 
 // prepare everything our method needs
-method.init = function() {
+method.init = function () {
   this.name = 'DEMA';
 
   this.currentTrend;
@@ -18,13 +18,13 @@ method.init = function() {
 };
 
 // what happens on every new candle?
-method.update = function(candle) {
+method.update = function (candle) {
   // nothing!
 };
 
 // for debugging purposes: log the last calculated
 // EMAs and diff.
-method.log = function() {
+method.log = function () {
   let dema = this.indicators.dema;
   let sma = this.indicators.sma;
 
@@ -36,7 +36,7 @@ method.log = function() {
   log.debug('\t DEMA age:', dema.inner.age, 'candles');
 };
 
-method.check = function(candle) {
+method.check = function (candle) {
   let dema = this.indicators.dema;
   let sma = this.indicators.sma;
   let resDEMA = dema.result;
@@ -46,19 +46,19 @@ method.check = function(candle) {
 
   let message = '@ ' + price.toFixed(8) + ' (' + resDEMA.toFixed(5) + '/' + diff.toFixed(5) + ')';
 
-  if(diff > this.settings.thresholds.up) {
+  if (diff > this.settings.thresholds.up) {
     log.debug('we are currently in uptrend', message);
 
-    if(this.currentTrend !== 'up') {
+    if (this.currentTrend !== 'up') {
       this.currentTrend = 'up';
       this.advice('long');
     } else
       this.advice();
 
-  } else if(diff < this.settings.thresholds.down) {
+  } else if (diff < this.settings.thresholds.down) {
     log.debug('we are currently in a downtrend', message);
 
-    if(this.currentTrend !== 'down') {
+    if (this.currentTrend !== 'down') {
       this.currentTrend = 'down';
       this.advice('short');
     } else

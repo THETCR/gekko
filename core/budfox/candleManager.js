@@ -13,21 +13,21 @@ const log = require(dirs.core + 'log');
 
 const CandleCreator = require(dirs.budfox + 'candleCreator');
 
-const Manager = function() {
+const Manager = function () {
   _.bindAll(this);
 
   this.candleCreator = new CandleCreator;
 
   this.candleCreator
-    .on('candles', this.relayCandles);
+  .on('candles', this.relayCandles);
 };
 
 util.makeEventEmitter(Manager);
-Manager.prototype.processTrades = function(tradeBatch) {
+Manager.prototype.processTrades = function (tradeBatch) {
   this.candleCreator.write(tradeBatch);
 };
 
-Manager.prototype.relayCandles = function(candles) {
+Manager.prototype.relayCandles = function (candles) {
   this.emit('candles', candles);
 };
 

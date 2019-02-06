@@ -21,7 +21,7 @@ const BaseOrder = require('./order');
 const states = require('./states');
 
 class StickyOrder extends BaseOrder {
-  constructor({api, marketConfig, capabilities}) {
+  constructor({ api, marketConfig, capabilities }) {
     super(api);
 
     this.market = marketConfig;
@@ -33,13 +33,13 @@ class StickyOrder extends BaseOrder {
     // bound helpers
     this.roundPrice = this.api.roundPrice.bind(this.api);
     this.roundAmount = this.api.roundAmount.bind(this.api);
-    if(_.isFunction(this.api.outbidPrice)) {
+    if (_.isFunction(this.api.outbidPrice)) {
       this.outbidPrice = this.api.outbidPrice.bind(this.api);
     }
   }
 
   create(side, rawAmount, params = {}) {
-    if(this.completed || this.completing) {
+    if (this.completed || this.completing) {
       return false;
     }
 
@@ -51,15 +51,15 @@ class StickyOrder extends BaseOrder {
 
     this.initialLimit = params.initialLimit;
 
-    if(side === 'buy') {
-      if(params.limit) {
+    if (side === 'buy') {
+      if (params.limit) {
         this.limit = this.roundPrice(params.limit);
       } else {
         this.noLimit = true;
         this.limit = Infinity;
       }
     } else {
-      if(params.limit) {
+      if (params.limit) {
         this.limit = this.roundPrice(params.limit);
       } else {
         this.noLimit = true;
@@ -74,12 +74,12 @@ class StickyOrder extends BaseOrder {
 
     this.outbid = params.outbid && _.isFunction(this.outbidPrice);
 
-    if(this.data && this.data.ticker) {
+    if (this.data && this.data.ticker) {
       this.price = this.calculatePrice(this.data.ticker);
       this.createOrder();
     } else {
       this.api.getTicker((err, ticker) => {
-        if(this.handleError(err)) {
+        if (this.handleError(err)) {
           console.log(new Date, 'error get ticker');
           return;
         }
@@ -96,42 +96,42 @@ class StickyOrder extends BaseOrder {
 
     const r = this.roundPrice;
 
-    if(this.initialLimit && !this.id) {
+    if (this.initialLimit && !this.id) {
       console.log('passing initial limit of:', this.limit);
       return r(this.limit);
     }
 
-    if(this.side === 'buy') {
+    if (this.side === 'buy') {
 
-      if(!this.noLimit && ticker.bid >= this.limit) {
+      if (!this.noLimit && ticker.bid >= this.limit) {
         return r(this.limit);
       }
 
-      if(!this.outbid) {
+      if (!this.outbid) {
         return r(ticker.bid);
       }
 
       const outbidPrice = this.outbidPrice(ticker.bid, true);
 
-      if(outbidPrice <= this.limit && outbidPrice < ticker.ask) {
+      if (outbidPrice <= this.limit && outbidPrice < ticker.ask) {
         return r(outbidPrice);
       } else {
         return r(this.limit);
       }
 
-    } else if(this.side === 'sell') {
+    } else if (this.side === 'sell') {
 
-      if(!this.noLimit && ticker.ask <= this.limit) {
+      if (!this.noLimit && ticker.ask <= this.limit) {
         return r(this.limit);
       }
 
-      if(!this.outbid) {
+      if (!this.outbid) {
         return r(ticker.ask);
       }
 
       const outbidPrice = this.outbidPrice(ticker.ask, false);
 
-      if(outbidPrice >= this.limit && outbidPrice > ticker.bid) {
+      if (outbidPrice >= this.limit && outbidPrice > ticker.bid) {
         return r(outbidPrice);
       } else {
         return r(this.limit);
@@ -140,7 +140,7 @@ class StickyOrder extends BaseOrder {
   }
 
   createOrder() {
-    if(this.completed || this.completing) {
+    if (this.completed || this.completing) {
       return false;
     }
 
@@ -158,7 +158,7 @@ class StickyOrder extends BaseOrder {
   // on an exchange that does not pass fill data on cancel
   // see https://github.com/askmike/gekko/pull/2450
   handleInsufficientFundsError(err) {
-    if(
+    if (
       !err ||
       err.type !== 'insufficientFunds' ||
       !this.capabilities.limitedCancelConfirmation ||
@@ -172,20 +172,20 @@ class StickyOrder extends BaseOrder {
     setTimeout(
       () => {
         this.api.getOrder(id, (innerError, res) => {
-          if(this.handleError(innerError)) {
+          if (this.handleError(innerError)) {
             return;
           }
 
           const amount = res.amount;
 
-          if(this.orders[id].filled === amount) {
+          if (this.orders[id].filled === amount) {
             // handle original error
             return this.handleError(err);
           }
 
           this.orders[id].filled = amount;
           this.emit('fill', this.calculateFilled());
-          if(this.calculateFilled() >= this.amount) {
+          if (this.calculateFilled() >= this.amount) {
             return this.filled(this.price);
           }
 
@@ -200,21 +200,21 @@ class StickyOrder extends BaseOrder {
 
   handleCreate(err, id) {
 
-    if(this.handleInsufficientFundsError(err)) {
+    if (this.handleInsufficientFundsError(err)) {
       return;
     }
 
-    if(this.handleError(err)) {
+    if (this.handleError(err)) {
       console.log(new Date, 'handleCreate error');
       return;
     }
 
-    if(!id) {
+    if (!id) {
       console.log('BLUP! no id...');
     }
 
     // potentailly clean up old order
-    if(
+    if (
       this.id &&
       this.orders[this.id] &&
       this.orders[this.id].filled === 0
@@ -242,15 +242,15 @@ class StickyOrder extends BaseOrder {
     this.sticking = false;
 
     // check whether we had an action pending
-    if(this.cancelling) {
+    if (this.cancelling) {
       return this.cancel();
     }
 
-    if(this.movingLimit) {
+    if (this.movingLimit) {
       return this.moveLimit();
     }
 
-    if(this.movingAmount) {
+    if (this.movingAmount) {
       return this.moveAmount();
     }
 
@@ -261,33 +261,36 @@ class StickyOrder extends BaseOrder {
 
   checkOrder() {
 
-    if(this.completed || this.completing) {
-      return console.log(new Date, 'checkOrder called on completed/completing order..', this.completed, this.completing);
+    if (this.completed || this.completing) {
+      return console.log(new Date,
+        'checkOrder called on completed/completing order..',
+        this.completed,
+        this.completing);
     }
 
     this.sticking = true;
 
     this.api.checkOrder(this.id, (err, result) => {
-      if(this.handleError(err)) {
+      if (this.handleError(err)) {
         console.log(new Date, 'checkOrder error');
         return;
       }
 
-      if(result.open) {
-        if(result.filledAmount !== this.orders[this.id].filled) {
+      if (result.open) {
+        if (result.filledAmount !== this.orders[this.id].filled) {
           this.orders[this.id].filled = result.filledAmount;
           this.emit('fill', this.calculateFilled());
         }
 
         // if we are already at limit we dont care where the top is
         // note: might be string VS float
-        if(this.price == this.limit) {
+        if (this.price == this.limit) {
           this.scheduleNextCheck();
           return;
         }
 
         this.api.getTicker((err, ticker) => {
-          if(this.handleError(err)) {
+          if (this.handleError(err)) {
             console.log(new Date, 'getTicker error');
             return;
           }
@@ -297,7 +300,7 @@ class StickyOrder extends BaseOrder {
 
           const bookSide = this.side === 'buy' ? 'bid' : 'ask';
           // note: might be string VS float
-          if(ticker[bookSide] != this.price) {
+          if (ticker[bookSide] != this.price) {
             return this.move(this.calculatePrice(ticker));
           }
 
@@ -311,7 +314,7 @@ class StickyOrder extends BaseOrder {
       // meaning we are done
       this.sticking = false;
 
-      if(!result.executed) {
+      if (!result.executed) {
         // not open and not executed means it never hit the book
         this.status = states.REJECTED;
         this.emitStatus();
@@ -328,7 +331,7 @@ class StickyOrder extends BaseOrder {
 
   // global error handler
   handleError(error) {
-    if(!error) {
+    if (!error) {
       return false;
     }
 
@@ -347,7 +350,7 @@ class StickyOrder extends BaseOrder {
   // on exchanges that support it.
   handleCancel(filled, data) {
     // it got filled before we could cancel
-    if(filled) {
+    if (filled) {
       this.orders[this.id].filled = this.amount;
       this.emit('fill', this.amount);
       this.filled(this.price);
@@ -356,16 +359,16 @@ class StickyOrder extends BaseOrder {
 
     // if we have data on partial fills
     // check whether we had a partial fill
-    if(_.isObject(data)) {
+    if (_.isObject(data)) {
       let amountFilled = data.filled;
 
-      if(!amountFilled && data.remaining) {
+      if (!amountFilled && data.remaining) {
         const alreadyFilled = this.calculateFilled();
         const orderAmount = this.roundAmount(this.amount - alreadyFilled);
         amountFilled = this.roundAmount(orderAmount - data.remaining);
       }
 
-      if(amountFilled > this.orders[this.id].filled) {
+      if (amountFilled > this.orders[this.id].filled) {
         this.orders[this.id].filled = amountFilled;
         this.emit('fill', this.calculateFilled());
       }
@@ -375,7 +378,7 @@ class StickyOrder extends BaseOrder {
   }
 
   move(price) {
-    if(this.completed || this.completing) {
+    if (this.completed || this.completing) {
       return false;
     }
 
@@ -383,13 +386,13 @@ class StickyOrder extends BaseOrder {
     this.emitStatus();
 
     this.api.cancelOrder(this.id, (err, filled, data) => {
-      if(this.handleError(err)) {
+      if (this.handleError(err)) {
         console.log(new Date, 'error move');
         return;
       }
 
       // it got filled before we could cancel
-      if(this.handleCancel(filled, data)) {
+      if (this.handleCancel(filled, data)) {
         return;
       }
 
@@ -410,24 +413,24 @@ class StickyOrder extends BaseOrder {
   }
 
   moveLimit(limit) {
-    if(this.completed || this.completing) {
+    if (this.completed || this.completing) {
       return false;
     }
 
-    if(!limit) {
+    if (!limit) {
       limit = this.moveLimitTo;
     }
 
-    if(this.limit === this.roundPrice(limit)) {
+    if (this.limit === this.roundPrice(limit)) {
       // effectively nothing changed
       return false;
     }
 
-    if(this.cancelling) {
+    if (this.cancelling) {
       return false;
     }
 
-    if(
+    if (
       this.status === states.INITIALIZING ||
       this.status === states.SUBMITTED ||
       this.status === states.MOVING ||
@@ -444,10 +447,10 @@ class StickyOrder extends BaseOrder {
 
     this.movingLimit = false;
 
-    if(this.side === 'buy' && this.limit < this.price) {
+    if (this.side === 'buy' && this.limit < this.price) {
       this.sticking = true;
       this.move(this.limit);
-    } else if(this.side === 'sell' && this.limit > this.price) {
+    } else if (this.side === 'sell' && this.limit > this.price) {
       this.sticking = true;
       this.move(this.limit);
     } else {
@@ -458,24 +461,24 @@ class StickyOrder extends BaseOrder {
   }
 
   moveAmount(amount) {
-    if(this.completed || this.completing)
+    if (this.completed || this.completing)
       return false;
 
-    if(!amount)
+    if (!amount)
       amount = this.moveAmountTo;
 
-    if(this.amount === this.roundAmount(amount))
-      // effectively nothing changed
+    if (this.amount === this.roundAmount(amount))
+    // effectively nothing changed
       return true;
 
-    if(this.calculateFilled() > this.roundAmount(amount)) {
+    if (this.calculateFilled() > this.roundAmount(amount)) {
       // the amount is now below how much we have
       // already filled.
       this.filled();
       return false;
     }
 
-    if(
+    if (
       this.status === states.INITIALIZING ||
       this.status === states.SUBMITTED ||
       this.status === states.MOVING ||
@@ -488,8 +491,8 @@ class StickyOrder extends BaseOrder {
 
     this.amount = this.roundAmount(amount - this.calculateFilled());
 
-    if(this.amount < this.market.minimalOrder.amount) {
-      if(this.calculateFilled()) {
+    if (this.amount < this.market.minimalOrder.amount) {
+      if (this.calculateFilled()) {
         // we already filled enough of the order!
         this.filled();
         return false;
@@ -504,13 +507,13 @@ class StickyOrder extends BaseOrder {
     this.sticking = true;
 
     this.api.cancelOrder(this.id, (err, filled, data) => {
-      if(this.handleError(err)) {
+      if (this.handleError(err)) {
         console.log(new Date, 'error cancel');
         return;
       }
 
       // it got filled before we could cancel
-      if(this.handleCancel(filled, data)) {
+      if (this.handleCancel(filled, data)) {
         return;
       }
 
@@ -521,10 +524,10 @@ class StickyOrder extends BaseOrder {
   }
 
   cancel() {
-    if(this.completed)
+    if (this.completed)
       return;
 
-    if(
+    if (
       this.status === states.SUBMITTED ||
       this.status === states.MOVING ||
       this.sticking
@@ -537,7 +540,7 @@ class StickyOrder extends BaseOrder {
     clearTimeout(this.timeout);
 
     this.api.cancelOrder(this.id, (err, filled, data) => {
-      if(this.handleError(err)) {
+      if (this.handleError(err)) {
         console.log(new Date, 'error cancel');
         return;
       }
@@ -545,7 +548,7 @@ class StickyOrder extends BaseOrder {
       this.cancelling = false;
 
       // it got filled before we could cancel
-      if(this.handleCancel(filled, data)) {
+      if (this.handleCancel(filled, data)) {
         return;
       }
 
@@ -557,26 +560,26 @@ class StickyOrder extends BaseOrder {
   }
 
   createSummary(next) {
-    if(!this.completed)
+    if (!this.completed)
       console.log(new Date, 'createSummary BUT ORDER NOT COMPLETED!');
 
-    if(!next)
+    if (!next)
       next = _.noop;
 
     const checkOrders = _.keys(this.orders)
-      .map(id => next => {
+    .map(id => next => {
 
-        if(!this.orders[id].filled) {
-          return next();
-        }
+      if (!this.orders[id].filled) {
+        return next();
+      }
 
-        setTimeout(() => this.api.getOrder(id, next), this.checkInterval);
-      });
+      setTimeout(() => this.api.getOrder(id, next), this.checkInterval);
+    });
 
     async.series(checkOrders, (err, trades) => {
       // note this is a standalone function after the order is
       // completed, as such we do not use the handleError flow.
-      if(err) {
+      if (err) {
         console.log(new Date, 'error createSummary (checkOrder)');
         return next(err);
       }
@@ -586,7 +589,7 @@ class StickyOrder extends BaseOrder {
       let date = moment(0);
 
       _.each(trades, trade => {
-        if(!trade) {
+        if (!trade) {
           return;
         }
 
@@ -606,16 +609,16 @@ class StickyOrder extends BaseOrder {
 
       const first = _.first(trades);
 
-      if(first && first.fees) {
+      if (first && first.fees) {
         summary.fees = {};
 
         _.each(trades, trade => {
-          if(!trade) {
+          if (!trade) {
             return;
           }
 
           _.each(trade.fees, (amount, currency) => {
-            if(!_.isNumber(summary.fees[currency])) {
+            if (!_.isNumber(summary.fees[currency])) {
               summary.fees[currency] = amount;
             } else {
               summary.fees[currency] += amount;
@@ -624,16 +627,16 @@ class StickyOrder extends BaseOrder {
         });
       }
 
-      if(first && !_.isUndefined(first.feePercent)) {
+      if (first && !_.isUndefined(first.feePercent)) {
         summary.feePercent = 0;
         let amount = 0;
 
         _.each(trades, trade => {
-          if(!trade || _.isUndefined(trade.feePercent)) {
+          if (!trade || _.isUndefined(trade.feePercent)) {
             return;
           }
 
-          if(trade.feePercent === 0) {
+          if (trade.feePercent === 0) {
             return;
           }
 

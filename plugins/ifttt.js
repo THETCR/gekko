@@ -5,7 +5,7 @@ const util = require('../core/util.js');
 const config = util.getConfig();
 const iftttConfig = config.ifttt;
 
-const IFTTT = function(done) {
+const IFTTT = function (done) {
   _.bindAll(this);
   this.ifttt;
   this.price = 'N/A';
@@ -13,8 +13,8 @@ const IFTTT = function(done) {
   this.setup();
 };
 
-IFTTT.prototype.setup = function(done) {
-  const setupIFTTT = function() {
+IFTTT.prototype.setup = function (done) {
+  const setupIFTTT = function () {
     if (iftttConfig.sendMessageOnStart) {
       const exchange = config.watch.exchange;
       const currency = config.watch.currency;
@@ -34,20 +34,20 @@ IFTTT.prototype.setup = function(done) {
   setupIFTTT.call(this)
 };
 
-IFTTT.prototype.processCandle = function(candle, done) {
+IFTTT.prototype.processCandle = function (candle, done) {
   this.price = candle.close;
 
   done();
 };
 
-IFTTT.prototype.portfolioUpdate = function(portfolio) {
+IFTTT.prototype.portfolioUpdate = function (portfolio) {
   const message = 'Gekko has detected a portfolio update. ' +
     'Your current ' + config.watch.currency + ' balance is ' + portfolio.currency + '.' +
     'Your current ' + config.watch.exchange + ' balance is ' + portfolio.assert + '.';
   this.send(message);
 };
 
-IFTTT.prototype.processAdvice = function(advice) {
+IFTTT.prototype.processAdvice = function (advice) {
   if (advice.recommendation == 'soft' && iftttConfig.muteSoft) return;
 
   const text = [
@@ -64,20 +64,19 @@ IFTTT.prototype.processAdvice = function(advice) {
   this.send(text);
 };
 
-IFTTT.prototype.send = function(content) {
-  superagent.
-    post('https://maker.ifttt.com/trigger/' + iftttConfig.eventName + '/with/key/' + iftttConfig.makerKey)
-    .send({value1: content})
-    .end(function(err, res){
-      if(err || !res){
-        log.error('IFTTT ERROR:', error)
-      }else{
-        log.info('IFTTT Message Sent')
-      }
-    });
+IFTTT.prototype.send = function (content) {
+  superagent.post('https://maker.ifttt.com/trigger/' + iftttConfig.eventName + '/with/key/' + iftttConfig.makerKey)
+  .send({ value1: content })
+  .end(function (err, res) {
+    if (err || !res) {
+      log.error('IFTTT ERROR:', error)
+    } else {
+      log.info('IFTTT Message Sent')
+    }
+  });
 };
 
-IFTTT.prototype.checkResults = function(error) {
+IFTTT.prototype.checkResults = function (error) {
   if (error) {
     log.warn('error sending IFTTT', error);
   } else {

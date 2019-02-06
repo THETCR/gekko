@@ -4,7 +4,7 @@ const log = require('../core/log.js');
 const util = require('../core/util.js');
 const config = util.getConfig();
 
-const CandleUploader = function(done) {
+const CandleUploader = function (done) {
   _.bindAll(this);
 
   done();
@@ -12,16 +12,16 @@ const CandleUploader = function(done) {
   this.schedule();
 };
 
-CandleUploader.prototype.processCandle = function(candle, done) {
+CandleUploader.prototype.processCandle = function (candle, done) {
   this.candles.push(candle);
   done();
 };
 
-CandleUploader.prototype.schedule = function() {
+CandleUploader.prototype.schedule = function () {
   this.timer = setTimeout(this.upload, 10 * 1000);
 };
 
-CandleUploader.prototype.rawUpload = function(candles, count, next) {
+CandleUploader.prototype.rawUpload = function (candles, count, next) {
 
   const amount = candles.length;
 
@@ -34,31 +34,31 @@ CandleUploader.prototype.rawUpload = function(candles, count, next) {
       candles: candles
     }
   })
-    .then(r => {
-      if(r.data.success === false) {
-        console.log('error uploading:', r.data);
-      }
-      console.log(new Date, 'uploaded', amount, 'candles');
+  .then(r => {
+    if (r.data.success === false) {
+      console.log('error uploading:', r.data);
+    }
+    console.log(new Date, 'uploaded', amount, 'candles');
 
-      next();
-    })
-    .catch(e => {
-      console.log('error uploading:', e.message);
+    next();
+  })
+  .catch(e => {
+    console.log('error uploading:', e.message);
 
-      count++;
+    count++;
 
-      if(count > 10) {
-        console.log('FINAL error uploading:', e.message);
-        return next();
-      }
+    if (count > 10) {
+      console.log('FINAL error uploading:', e.message);
+      return next();
+    }
 
-      setTimeout(() => this.rawUpload(candles, count, next), 2000);
-    });
+    setTimeout(() => this.rawUpload(candles, count, next), 2000);
+  });
 };
 
-CandleUploader.prototype.upload = function() {
+CandleUploader.prototype.upload = function () {
   const amount = this.candles.length;
-  if(!amount) {
+  if (!amount) {
     return this.schedule();
   }
 
@@ -69,7 +69,7 @@ CandleUploader.prototype.upload = function() {
   this.candles = [];
 };
 
-CandleUploader.prototype.finish = function(next) {
+CandleUploader.prototype.finish = function (next) {
   this.upload();
   clearTimeout(this.timer);
 };

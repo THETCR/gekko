@@ -124,55 +124,55 @@ const candles = [
   },
 ];
 
-describe('core/candleBatcher', function() {
+describe('core/candleBatcher', function () {
   let cb;
 
-  it('should throw when not passed a number', function() {
-    expect(function() {
+  it('should throw when not passed a number', function () {
+    expect(function () {
       new CandleBatcher();
     }).to.throw('candleSize is not a number');
   });
 
-  it('should instantiate', function() {
+  it('should instantiate', function () {
     cb = new CandleBatcher(2);
   });
 
-  it('should throw when fed a candle', function() {
+  it('should throw when fed a candle', function () {
     const candle = _.first(candles);
     expect(
       cb.write.bind(cb, candle)
     ).to.throw('candles is not an array');
   });
 
-  it('should not emit an event when fed not enough candles', function() {
+  it('should not emit an event when fed not enough candles', function () {
     const candle = _.first(candles);
 
     const spy = sinon.spy();
     cb.on('candle', spy);
-    cb.write( [candle] );
+    cb.write([candle]);
     expect(spy.called).to.be.false;
   });
 
-  it('should not emit an event when not flushed', function() {
+  it('should not emit an event when not flushed', function () {
     cb = new CandleBatcher(2);
 
     const spy = sinon.spy();
     cb.on('candle', spy);
-    cb.write( candles );
+    cb.write(candles);
     expect(spy.called).to.be.false;
   });
 
-  it('should emit 5 events when fed 10 candles', function() {
+  it('should emit 5 events when fed 10 candles', function () {
     cb = new CandleBatcher(2);
 
     const spy = sinon.spy();
     cb.on('candle', spy);
-    cb.write( candles );
+    cb.write(candles);
     cb.flush();
     expect(spy.callCount).to.equal(5);
   });
 
-  it('should correctly add two candles together', function() {
+  it('should correctly add two candles together', function () {
     cb = new CandleBatcher(2);
     const _candles = _.first(candles, 2);
     const first = _.first(_candles);
@@ -193,7 +193,7 @@ describe('core/candleBatcher', function() {
 
     const spy = sinon.spy();
     cb.on('candle', spy);
-    cb.write( _candles );
+    cb.write(_candles);
     cb.flush();
 
     const cbResult = _.first(_.first(spy.args));

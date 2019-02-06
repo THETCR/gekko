@@ -5,7 +5,7 @@ const util = require('../core/util.js');
 const config = util.getConfig();
 const pushoverConfig = config.pushover;
 
-const Pushover = function() {
+const Pushover = function () {
   _.bindAll(this);
 
   this.p;
@@ -14,8 +14,8 @@ const Pushover = function() {
   this.setup();
 };
 
-Pushover.prototype.setup = function() {
-  const setupPushover = function() {
+Pushover.prototype.setup = function () {
+  const setupPushover = function () {
     this.p = new push({
       user: pushoverConfig.user,
       token: pushoverConfig.key,
@@ -40,7 +40,7 @@ Pushover.prototype.setup = function() {
   setupPushover.call(this);
 };
 
-Pushover.prototype.send = function(subject, content) {
+Pushover.prototype.send = function (subject, content) {
   const msg = {
     // These values correspond to the parameters detailed on https://pushover.net/api
     // 'message' is required. All other values are optional.
@@ -50,22 +50,22 @@ Pushover.prototype.send = function(subject, content) {
     priority: 1,
   };
 
-  this.p.send( msg, function( err, result ) {
-      if ( err ) {
-          throw err;
-      }
+  this.p.send(msg, function (err, result) {
+    if (err) {
+      throw err;
+    }
 
-      console.log( result );
+    console.log(result);
   });
 
 };
 
-Pushover.prototype.processCandle = function(candle, callback) {
+Pushover.prototype.processCandle = function (candle, callback) {
   this.price = candle.close;
   callback();
 };
 
-Pushover.prototype.processAdvice = function(advice) {
+Pushover.prototype.processAdvice = function (advice) {
   if (advice.recommendation == 'soft' && pushoverConfig.muteSoft) return;
   const text = [
     advice.recommendation,
@@ -75,8 +75,8 @@ Pushover.prototype.processAdvice = function(advice) {
   this.send(subject, text);
 };
 
-Pushover.prototype.checkResults = function(err) {
-  if(err)
+Pushover.prototype.checkResults = function (err) {
+  if (err)
     log.warn('error sending pushover', err);
   else
     log.info('Send advice via pushover.');

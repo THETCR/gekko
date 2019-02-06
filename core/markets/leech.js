@@ -19,21 +19,21 @@ const TICKINTERVAL = 20 * 1000; // 20 seconds
 const slug = config.watch.exchange.toLowerCase();
 const exchange = exchangeChecker.getExchangeCapabilities(slug);
 
-if(!exchange)
+if (!exchange)
   util.die(`Unsupported exchange: ${slug}`);
 
 const error = exchangeChecker.cantMonitor(config.watch);
-if(error)
+if (error)
   util.die(error, true);
 
 let fromTs;
-if(config.market.from)
+if (config.market.from)
   fromTs = moment.utc(config.market.from).unix();
 else
   fromTs = moment().startOf('minute').unix();
 
 
-const Market = function() {
+const Market = function () {
 
   _.bindAll(this);
 
@@ -53,11 +53,11 @@ Market.prototype = Object.create(Readable.prototype, {
   constructor: { value: Market }
 });
 
-Market.prototype._read = _.once(function() {
+Market.prototype._read = _.once(function () {
   this.get();
 });
 
-Market.prototype.get = function() {
+Market.prototype.get = function () {
   const future = moment().add(1, 'minute').unix();
 
   this.reader.get(
@@ -68,9 +68,9 @@ Market.prototype.get = function() {
   )
 };
 
-Market.prototype.processCandles = function(err, candles) {
+Market.prototype.processCandles = function (err, candles) {
   const amount = _.size(candles);
-  if(amount === 0) {
+  if (amount === 0) {
     // no new candles!
     return;
   }
@@ -81,7 +81,7 @@ Market.prototype.processCandles = function(err, candles) {
   // if `this.latestTs` was at 10:00 and we receive 3 candles with the latest at 11:00
   // we know we are missing 57 candles...
 
-  _.each(candles, function(c, i) {
+  _.each(candles, function (c, i) {
     c.start = moment.unix(c.start).utc();
     this.push(c);
   }, this);

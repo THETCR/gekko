@@ -42,13 +42,13 @@
 
 <script>
 
-import spinner from '../global/blockSpinner.vue'
-import marked from '../../tools/marked'
-import dataset from '../global/mixins/dataset'
-// global moment
-// global humanizeDuration
+  import spinner from '../global/blockSpinner.vue'
+  import marked from '../../tools/marked'
+  import dataset from '../global/mixins/dataset'
+  // global moment
+  // global humanizeDuration
 
-let intro = marked(`
+  let intro = marked(`
 
 ## Local data
 
@@ -58,46 +58,48 @@ live market.
 
 `);
 
-export default {
-  mixins: [ dataset ],
-  components: {
-    spinner
-  },
-  data: () => {
-    return {
-      intro,
-      viewUnscannable: false
+  export default {
+    mixins: [dataset],
+    components: {
+      spinner
+    },
+    data: () => {
+      return {
+        intro,
+        viewUnscannable: false
+      }
+    },
+    methods: {
+      toggleUnscannable: function () {
+        this.viewUnscannable = true
+      },
+      humanizeDuration: (n) => window.humanizeDuration(n),
+      fmt: mom => mom.format('YYYY-MM-DD HH:mm'),
     }
-  },
-  methods: {
-    toggleUnscannable: function() { this.viewUnscannable = true },
-    humanizeDuration: (n) => window.humanizeDuration(n),
-    fmt: mom => mom.format('YYYY-MM-DD HH:mm'),
   }
-}
 </script>
 
 <style>
 
-.clickable {
-  cursor: pointer;
-}
+  .clickable {
+    cursor: pointer;
+  }
 
-table.full {
-  width: 100%;
-}
+  table.full {
+    width: 100%;
+  }
 
-table.full td {
-  padding: 0.5rem 0;
-}
+  table.full td {
+    padding: 0.5rem 0;
+  }
 
-table.full.data th {
-  text-align: left;
-  padding: 0.5rem 0;
-}
+  table.full.data th {
+    text-align: left;
+    padding: 0.5rem 0;
+  }
 
-.warning p {
-  margin: 0;
-  padding: 0;
-}
+  .warning p {
+    margin: 0;
+    padding: 0;
+  }
 </style>

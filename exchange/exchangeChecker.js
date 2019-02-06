@@ -3,41 +3,41 @@ const fs = require('fs');
 const moment = require('moment');
 const errors = require('./exchangeErrors');
 
-const Checker = function() {
+const Checker = function () {
   _.bindAll(this);
 };
 
-Checker.prototype.getExchangeCapabilities = function(slug) {
-  if(!fs.existsSync(__dirname + '/wrappers/' + slug + '.js'))
+Checker.prototype.getExchangeCapabilities = function (slug) {
+  if (!fs.existsSync(__dirname + '/wrappers/' + slug + '.js'))
     throw new errors.ExchangeError(`Gekko does not know the exchange "${slug}"`);
 
   return require('./wrappers/' + slug).getCapabilities();
 };
 
 // check if the exchange is configured correctly for monitoring
-Checker.prototype.cantMonitor = function(conf) {
+Checker.prototype.cantMonitor = function (conf) {
   const slug = conf.exchange.toLowerCase();
   const exchange = this.getExchangeCapabilities(slug);
 
-  if(!exchange)
+  if (!exchange)
     return 'Gekko does not support the exchange ' + slug;
 
   const name = exchange.name;
 
-  if('monitorError' in exchange)
-    return 'At this moment Gekko can\'t monitor ' + name +  ', find out more info here:\n\n' + exchange.monitorError;
+  if ('monitorError' in exchange)
+    return 'At this moment Gekko can\'t monitor ' + name + ', find out more info here:\n\n' + exchange.monitorError;
 
-  if(!_.includes(exchange.currencies, conf.currency))
+  if (!_.includes(exchange.currencies, conf.currency))
     return 'Gekko only supports the currencies [ ' + exchange.currencies.join(', ') + ' ] at ' + name + ' (not ' + conf.currency + ')';
 
-  if(!_.includes(exchange.assets, conf.asset))
+  if (!_.includes(exchange.assets, conf.asset))
     return 'Gekko only supports the assets [ ' + exchange.assets.join(', ') + ' ]  at ' + name + ' (not ' + conf.asset + ')';
 
-  const pair = _.find(exchange.markets, function(p) {
+  const pair = _.find(exchange.markets, function (p) {
     return p.pair[0] === conf.currency && p.pair[1] === conf.asset;
   });
 
-  if(!pair)
+  if (!pair)
     return 'Gekko does not support this currency/assets pair at ' + name;
 
   // everything is okay
@@ -46,54 +46,55 @@ Checker.prototype.cantMonitor = function(conf) {
 
 // check if the exchange is configured correctly for fetching
 // full history
-Checker.prototype.cantFetchFullHistory = function(conf) {
+Checker.prototype.cantFetchFullHistory = function (conf) {
   const slug = conf.exchange.toLowerCase();
   const exchange = this.getExchangeCapabilities(slug);
 
-  if(this.cantMonitor(conf))
+  if (this.cantMonitor(conf))
     return this.cantMonitor(conf);
 
   const name = exchange.name;
 
-  if(!exchange.providesFullHistory)
+  if (!exchange.providesFullHistory)
     return 'The exchange ' + name + ' does not provide full history (or Gekko doesn\'t support importing it)';
 
   if ("exchangeMaxHistoryAge" in exchange) {
-    if (moment(config.importer.daterange.from) < moment().subtract(exchange.exchangeMaxHistoryAge, "days")) {
+    if (moment(config.importer.daterange.from) < moment().subtract(exchange.exchangeMaxHistoryAge,
+      "days")) {
       return 'Unsupported date from! ' + exchange.name + ' supports history of max ' + exchange.exchangeMaxHistoryAge + ' days..';
     }
   }
 };
 
 // check if the exchange if configured correctly for real trading
-Checker.prototype.cantTrade = function(conf) {
+Checker.prototype.cantTrade = function (conf) {
   const cantMonitor = this.cantMonitor(conf);
-  if(cantMonitor)
+  if (cantMonitor)
     return cantMonitor;
 
   const slug = conf.exchange.toLowerCase();
   const exchange = this.getExchangeCapabilities(slug);
   const name = exchange.name;
 
-  if(!exchange.tradable)
+  if (!exchange.tradable)
     return 'At this moment Gekko can\'t trade at ' + name + '.';
 
-  if(conf.key === 'your-key')
+  if (conf.key === 'your-key')
     return '"your-key" is not a valid API key';
 
-  if(conf.secret === 'your-secret')
+  if (conf.secret === 'your-secret')
     return '"your-secret" is not a valid API secret';
 
   let error = false;
-  _.each(exchange.requires, function(req) {
-    if(!conf[req])
+  _.each(exchange.requires, function (req) {
+    if (!conf[req])
       error = name + ' requires "' + req + '" to be set in the config';
   }, this);
 
   return error;
 };
 
-Checker.prototype.settings = function(conf) {
+Checker.prototype.settings = function (conf) {
   const slug = conf.exchange.toLowerCase();
   return this.getExchangeCapabilities(slug);
 

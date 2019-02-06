@@ -43,7 +43,7 @@ const handleFetch = (unk, trades) => {
   fetcher.emit('trades', trades);
 };
 
-module.exports = function(daterange) {
+module.exports = function (daterange) {
   from = daterange.from.clone().utc();
   end = daterange.to.clone().utc();
 

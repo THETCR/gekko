@@ -21,31 +21,31 @@ const options = {
 };
 
 request(options)
-  .then(body => {
-    if (!body && !body.data) {
-      throw new Error('Unable to fetch product list, response was empty');
-    }
+.then(body => {
+  if (!body && !body.data) {
+    throw new Error('Unable to fetch product list, response was empty');
+  }
 
-    let assets = _.uniqBy(_.map(body.data, market => market.baseAsset));
-    let currencies = _.uniqBy(_.map(body.data, market => market.quoteAsset));
-    let pairs = _.map(body.data, market => {
-      return {
-        pair: [market.quoteAsset, market.baseAsset],
-        minimalOrder: {
-          amount: parseFloat(market.minTrade),
-          price: parseFloat(market.tickSize),
-          order: getOrderMinSize(market.quoteAsset),
-        },
-      };
-    });
-
-    return { assets: assets, currencies: currencies, markets: pairs };
-  })
-  .then(markets => {
-    fs.writeFileSync('../../wrappers/binance-markets.json', JSON.stringify(markets, null, 2));
-    console.log(`Done writing Binance market data`);
-  })
-  .catch(err => {
-    console.log(`Couldn't import products from Binance`);
-    console.log(err);
+  let assets = _.uniqBy(_.map(body.data, market => market.baseAsset));
+  let currencies = _.uniqBy(_.map(body.data, market => market.quoteAsset));
+  let pairs = _.map(body.data, market => {
+    return {
+      pair: [market.quoteAsset, market.baseAsset],
+      minimalOrder: {
+        amount: parseFloat(market.minTrade),
+        price: parseFloat(market.tickSize),
+        order: getOrderMinSize(market.quoteAsset),
+      },
+    };
   });
+
+  return { assets: assets, currencies: currencies, markets: pairs };
+})
+.then(markets => {
+  fs.writeFileSync('../../wrappers/binance-markets.json', JSON.stringify(markets, null, 2));
+  console.log(`Done writing Binance market data`);
+})
+.catch(err => {
+  console.log(`Couldn't import products from Binance`);
+  console.log(err);
+});

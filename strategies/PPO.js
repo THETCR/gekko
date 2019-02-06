@@ -14,14 +14,14 @@ const log = require('../core/log');
 const method = {};
 
 // prepare everything our method needs
-method.init = function() {
+method.init = function () {
   this.name = 'PPO';
 
   this.trend = {
-   direction: 'none',
-   duration: 0,
-   persisted: false,
-   adviced: false
+    direction: 'none',
+    duration: 0,
+    persisted: false,
+    adviced: false
   };
 
   this.requiredHistory = this.tradingAdvisor.historySize;
@@ -31,13 +31,13 @@ method.init = function() {
 };
 
 // what happens on every new candle?
-method.update = function(candle) {
+method.update = function (candle) {
   // nothing!
 };
 
 // for debugging purposes log the last
 // calculated parameters.
-method.log = function() {
+method.log = function () {
   const digits = 8;
   const ppo = this.indicators.ppo;
   const long = ppo.result.longEMA;
@@ -58,7 +58,7 @@ method.log = function() {
   log.debug('\t', 'ppohist:', (result - ppoSignal).toFixed(digits));
 };
 
-method.check = function(candle) {
+method.check = function (candle) {
   const price = candle.close;
 
   const ppo = this.indicators.ppo;
@@ -73,10 +73,10 @@ method.check = function(candle) {
   // if it is it should move there
   const ppoHist = result - ppoSignal;
 
-  if(ppoHist > this.settings.thresholds.up) {
+  if (ppoHist > this.settings.thresholds.up) {
 
     // new trend detected
-    if(this.trend.direction !== 'up')
+    if (this.trend.direction !== 'up')
       this.trend = {
         duration: 0,
         persisted: false,
@@ -88,19 +88,19 @@ method.check = function(candle) {
 
     log.debug('In uptrend since', this.trend.duration, 'candle(s)');
 
-    if(this.trend.duration >= this.settings.thresholds.persistence)
+    if (this.trend.duration >= this.settings.thresholds.persistence)
       this.trend.persisted = true;
 
-    if(this.trend.persisted && !this.trend.adviced) {
+    if (this.trend.persisted && !this.trend.adviced) {
       this.trend.adviced = true;
       this.advice('long');
     } else
       this.advice();
 
-  } else if(ppoHist < this.settings.thresholds.down) {
+  } else if (ppoHist < this.settings.thresholds.down) {
 
     // new trend detected
-    if(this.trend.direction !== 'down')
+    if (this.trend.direction !== 'down')
       this.trend = {
         duration: 0,
         persisted: false,
@@ -112,10 +112,10 @@ method.check = function(candle) {
 
     log.debug('In downtrend since', this.trend.duration, 'candle(s)');
 
-    if(this.trend.duration >= this.settings.thresholds.persistence)
+    if (this.trend.duration >= this.settings.thresholds.persistence)
       this.trend.persisted = true;
 
-    if(this.trend.persisted && !this.trend.adviced) {
+    if (this.trend.persisted && !this.trend.adviced) {
       this.trend.adviced = true;
       this.advice('short');
     } else

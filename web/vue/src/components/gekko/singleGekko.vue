@@ -49,7 +49,7 @@
                   .grd-row-col-2-6 History size
                   .grd-row-col-4-6 {{ config.tradingAdvisor.historySize }}
         div(v-if='warmupRemaining', class='contain brdr--mid-gray p1 bg--orange')
-          | This stratrunner is still warming up for the next 
+          | This stratrunner is still warming up for the next
           i {{ warmupRemaining.replace(',', ' and ') }}
           | , it will not trade until it is warmed up.
         .grd-row(v-if='isStratrunner')
@@ -83,7 +83,7 @@
               .grd-row
                 .grd-row-col-3-6 Alpha
                 .grd-row-col-3-6 {{ round(report.alpha) }} {{ config.watch.currency }}
-        p(v-if='isStratrunner && !watcher && !isArchived') WARNING: stale gekko, not attached to a watcher, please report 
+        p(v-if='isStratrunner && !watcher && !isArchived') WARNING: stale gekko, not attached to a watcher, please report
           a(href='https://github.com/askmike/gekko/issues') here
           | .
         p(v-if='!isArchived')
@@ -91,7 +91,7 @@
         p(v-if='isArchived')
           a(v-on:click='deleteGekko', class='w100--s my1 btn--red') Delete Gekko
         p(v-if='isStratrunner && watcher && !isArchived')
-          em This gekko gets market data from 
+          em This gekko gets market data from
             router-link(:to='"/live-gekkos/" + watcher.id') this market watcher
           | .
       template(v-if='!isLoading')
@@ -104,257 +104,258 @@
 
 <script>
 
-import Vue from 'vue'
-import _ from 'lodash'
+  import Vue from 'vue'
+  import _ from 'lodash'
 
-import { post } from '../../tools/ajax'
-import spinner from '../global/blockSpinner.vue'
-import chart from '../backtester/result/chartWrapper.vue'
-import roundtrips from '../backtester/result/roundtripTable.vue'
-import paperTradeSummary from '../global/paperTradeSummary.vue'
-// global moment
+  import { post } from '../../tools/ajax'
+  import spinner from '../global/blockSpinner.vue'
+  import chart from '../backtester/result/chartWrapper.vue'
+  import roundtrips from '../backtester/result/roundtripTable.vue'
+  import paperTradeSummary from '../global/paperTradeSummary.vue'
+  // global moment
 
-export default {
-  created: function() {
-    if(!this.isLoading)
-      this.getCandles();
-  },
-  components: {
-    spinner,
-    chart,
-    paperTradeSummary,
-    roundtrips
-  },
-  data: () => {
-    return {
-      candleFetch: 'idle',
-      candles: false
-    }
-  },
-  computed: {
-    id: function() {
-      return this.$route.params.id;
+  export default {
+    created: function () {
+      if (!this.isLoading)
+        this.getCandles();
     },
-    gekkos: function() {
-      return this.$store.state.gekkos;
+    components: {
+      spinner,
+      chart,
+      paperTradeSummary,
+      roundtrips
     },
-    archivedGekkos: function() {
-      return this.$store.state.archivedGekkos;
-    },
-    data: function() {
-      if(!this.gekkos)
-        return false;
-      if(_.has(this.gekkos, this.id))
-        return this.gekkos[this.id];
-      if(_.has(this.archivedGekkos, this.id))
-        return this.archivedGekkos[this.id];
-
-      return false;
-    },
-    config: function() {
-      return _.get(this, 'data.config');
-    },
-    latestEvents: function() {
-      return _.get(this, 'data.events.latest');
-    },
-    initialEvents: function() {
-      return _.get(this, 'data.events.initial');
-    },
-    trades: function() {
-      return _.get(this, 'data.events.tradeCompleted') || [];
-    },
-    roundtrips: function() {
-      return _.get(this, 'data.events.roundtrip') || [];
-    },
-    isLive: function() {
-      return _.has(this.gekkos, this.id);
-    },
-    type: function() {
-      return this.data.logType;
-    },
-    isStratrunner: function() {
-      return this.type !== 'watcher';
-    },
-    isArchived: function() {
-      return this.data.stopped;
-    },
-    warmupRemaining: function() {
-      if(!this.isStratrunner) {
-        return false;
-      }
-
-      if(this.isArchived) {
-        return false;
-      }
-
-      if(this.initialEvents.stratWarmupCompleted) {
-        return false;
-      }
-
-      if(!this.initialEvents.candle) {
-        return false;
-      }
-
-      const historySize = _.get(this.config, 'tradingAdvisor.historySize');
-
-      if(!historySize) {
-        return false;
-      }
-
-      const warmupTime = _.get(this.config, 'tradingAdvisor.candleSize') * historySize;
-
-      return humanizeDuration(
-        moment(this.initialEvents.candle.start).add(warmupTime, 'm').diff(moment()),
-        { largest: 2 }
-      );
-    },
-    chartData: function() {
+    data: () => {
       return {
-        candles: this.candles,
-        trades: this.trades
+        candleFetch: 'idle',
+        candles: false
       }
     },
-    report: function() {
-      return _.get(this.latestEvents, 'performanceReport');
-    },
-    stratName: function() {
-      if(this.data)
-        return this.data.config.tradingAdvisor.method;
-    },
-    stratParams: function() {
-      if(!this.data)
-        return 'Loading...';
-
-      let stratParams = Vue.util.extend({}, this.data.config[this.stratName]);
-      delete stratParams.__empty;
-
-      if(_.isEmpty(stratParams))
-        return 'No parameters'
-
-      return JSON.stringify(stratParams, null, 4);
-    },
-    isLoading: function() {
-      if(!this.data)
-        return true;
-      if(!_.get(this.data, 'events.initial.candle'))
-        return true;
-      if(!_.get(this.data, 'events.latest.candle'))
-        return true;
-
-      return false;
-    },
-    watcher: function() {
-      if(!this.isStratrunner) {
-        return false;
-      }
-
-      let watch = Vue.util.extend({}, this.data.config.watch);
-      return _.find(this.gekkos, g => {
-        if(g.id === this.id)
+    computed: {
+      id: function () {
+        return this.$route.params.id;
+      },
+      gekkos: function () {
+        return this.$store.state.gekkos;
+      },
+      archivedGekkos: function () {
+        return this.$store.state.archivedGekkos;
+      },
+      data: function () {
+        if (!this.gekkos)
           return false;
+        if (_.has(this.gekkos, this.id))
+          return this.gekkos[this.id];
+        if (_.has(this.archivedGekkos, this.id))
+          return this.archivedGekkos[this.id];
 
-        return _.isEqual(watch, g.config.watch);
-      });
-    },
-    hasLeechers: function() {
-      if(this.isStratrunner) {
         return false;
-      }
-
-      let watch = Vue.util.extend({}, this.data.config.watch);
-
-      return _.find(this.gekkos, g => {
-        if(g.id === this.id)
+      },
+      config: function () {
+        return _.get(this, 'data.config');
+      },
+      latestEvents: function () {
+        return _.get(this, 'data.events.latest');
+      },
+      initialEvents: function () {
+        return _.get(this, 'data.events.initial');
+      },
+      trades: function () {
+        return _.get(this, 'data.events.tradeCompleted') || [];
+      },
+      roundtrips: function () {
+        return _.get(this, 'data.events.roundtrip') || [];
+      },
+      isLive: function () {
+        return _.has(this.gekkos, this.id);
+      },
+      type: function () {
+        return this.data.logType;
+      },
+      isStratrunner: function () {
+        return this.type !== 'watcher';
+      },
+      isArchived: function () {
+        return this.data.stopped;
+      },
+      warmupRemaining: function () {
+        if (!this.isStratrunner) {
           return false;
+        }
 
-        return _.isEqual(watch, g.config.watch);
-      });
-    }
-  },
-  watch: {
-    'data.events.latest.candle.start': function() {
-      setTimeout(this.getCandles, _.random(100, 2000));
-    }
-  },
-  methods: {
-    round: n => (+n).toFixed(5),
-    humanizeDuration: (n, x) => window.humanizeDuration(n, x),
-    moment: mom => moment.utc(mom),
-    fmt: mom => moment.utc(mom).format('YYYY-MM-DD HH:mm'),
-    getCandles: function() {
-      if(this.isLoading) {
-        return;
-      }
+        if (this.isArchived) {
+          return false;
+        }
 
-      if(this.candleFetch === 'fetching') {
-        return;
-      }
+        if (this.initialEvents.stratWarmupCompleted) {
+          return false;
+        }
 
-      this.candleFetch = 'fetching';
+        if (!this.initialEvents.candle) {
+          return false;
+        }
 
-      let to = this.data.events.latest.candle.start;
-      let from = this.data.events.initial.candle.start;
-      let candleSize = 1;
+        const historySize = _.get(this.config, 'tradingAdvisor.historySize');
 
-      if(this.type !== 'watcher') {
-        candleSize = this.data.config.tradingAdvisor.candleSize;
-      }
+        if (!historySize) {
+          return false;
+        }
 
-      let config = {
-        watch: this.data.config.watch,
-        daterange: {
-          to, from
-        },
-        candleSize
-      };
+        const warmupTime = _.get(this.config, 'tradingAdvisor.candleSize') * historySize;
 
-      // We timeout because of 2 reasons:
-      // - In case we get a batch of candles we only fetch once
-      // - This way we give the db (mostly sqlite) some time to write
-      //   the result before we query it.
-      setTimeout(() => {
-        post('getCandles', config, (err, res) => {
-          this.candleFetch = 'fetched';
-          if(!res || res.error || !_.isArray(res))
-            return console.log(res);
+        return humanizeDuration(
+          moment(this.initialEvents.candle.start).add(warmupTime, 'm').diff(moment()),
+          { largest: 2 }
+        );
+      },
+      chartData: function () {
+        return {
+          candles: this.candles,
+          trades: this.trades
+        }
+      },
+      report: function () {
+        return _.get(this.latestEvents, 'performanceReport');
+      },
+      stratName: function () {
+        if (this.data)
+          return this.data.config.tradingAdvisor.method;
+      },
+      stratParams: function () {
+        if (!this.data)
+          return 'Loading...';
 
-          this.candles = res.map(c => {
-            c.start = moment.unix(c.start).utc().format();
-            return c;
-          });
-        })
-      }, _.random(150, 2500));
-    },
-    stopGekko: function() {
-      if(this.hasLeechers) {
-        return alert('This Gekko is fetching market data for multiple stratrunners, stop these first.');
-      }
+        let stratParams = Vue.util.extend({}, this.data.config[this.stratName]);
+        delete stratParams.__empty;
 
-      if(!confirm('Are you sure you want to stop this Gekko?')) {
-        return;
-      }
+        if (_.isEmpty(stratParams))
+          return 'No parameters'
 
-      post('stopGekko', { id: this.data.id }, (err, res) => {
-        console.log('stopped gekko');
-      });
-    },
-    deleteGekko: function() {
-      if(!this.isArchived) {
-        return alert('This Gekko is still running, stop it first!');
-      }
+        return JSON.stringify(stratParams, null, 4);
+      },
+      isLoading: function () {
+        if (!this.data)
+          return true;
+        if (!_.get(this.data, 'events.initial.candle'))
+          return true;
+        if (!_.get(this.data, 'events.latest.candle'))
+          return true;
 
-      if(!confirm('Are you sure you want to delete this Gekko?')) {
-        return;
-      }
+        return false;
+      },
+      watcher: function () {
+        if (!this.isStratrunner) {
+          return false;
+        }
 
-      post('deleteGekko', { id: this.data.id }, (err, res) => {
-        this.$router.push({
-          path: `/live-gekkos/`
+        let watch = Vue.util.extend({}, this.data.config.watch);
+        return _.find(this.gekkos, g => {
+          if (g.id === this.id)
+            return false;
+
+          return _.isEqual(watch, g.config.watch);
         });
-      });
+      },
+      hasLeechers: function () {
+        if (this.isStratrunner) {
+          return false;
+        }
+
+        let watch = Vue.util.extend({}, this.data.config.watch);
+
+        return _.find(this.gekkos, g => {
+          if (g.id === this.id)
+            return false;
+
+          return _.isEqual(watch, g.config.watch);
+        });
+      }
+    },
+    watch: {
+      'data.events.latest.candle.start': function () {
+        setTimeout(this.getCandles, _.random(100, 2000));
+      }
+    },
+    methods: {
+      round: n => (+n).toFixed(5),
+      humanizeDuration: (n, x) => window.humanizeDuration(n, x),
+      moment: mom => moment.utc(mom),
+      fmt: mom => moment.utc(mom).format('YYYY-MM-DD HH:mm'),
+      getCandles: function () {
+        if (this.isLoading) {
+          return;
+        }
+
+        if (this.candleFetch === 'fetching') {
+          return;
+        }
+
+        this.candleFetch = 'fetching';
+
+        let to = this.data.events.latest.candle.start;
+        let from = this.data.events.initial.candle.start;
+        let candleSize = 1;
+
+        if (this.type !== 'watcher') {
+          candleSize = this.data.config.tradingAdvisor.candleSize;
+        }
+
+        let config = {
+          watch: this.data.config.watch,
+          daterange: {
+            to, from
+          },
+          candleSize
+        };
+
+        // We timeout because of 2 reasons:
+        // - In case we get a batch of candles we only fetch once
+        // - This way we give the db (mostly sqlite) some time to write
+        //   the result before we query it.
+        setTimeout(() => {
+          post('getCandles', config, (err, res) => {
+            this.candleFetch = 'fetched';
+            if (!res || res.error || !_.isArray(res))
+              return console.log(res);
+
+            this.candles = res.map(c => {
+              c.start = moment.unix(c.start).utc().format();
+              return c;
+            });
+          })
+        }, _.random(150, 2500));
+      },
+      stopGekko: function () {
+        if (this.hasLeechers) {
+          return alert(
+            'This Gekko is fetching market data for multiple stratrunners, stop these first.');
+        }
+
+        if (!confirm('Are you sure you want to stop this Gekko?')) {
+          return;
+        }
+
+        post('stopGekko', { id: this.data.id }, (err, res) => {
+          console.log('stopped gekko');
+        });
+      },
+      deleteGekko: function () {
+        if (!this.isArchived) {
+          return alert('This Gekko is still running, stop it first!');
+        }
+
+        if (!confirm('Are you sure you want to delete this Gekko?')) {
+          return;
+        }
+
+        post('deleteGekko', { id: this.data.id }, (err, res) => {
+          this.$router.push({
+            path: `/live-gekkos/`
+          });
+        });
+      }
     }
   }
-}
 </script>
 
 <style>

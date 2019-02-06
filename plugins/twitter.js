@@ -7,7 +7,7 @@ const TwitterApi = require('twitter');
 
 require('dotenv').config();
 
-const Twitter = function(done) {
+const Twitter = function (done) {
   _.bindAll(this);
 
   this.twitter;
@@ -17,8 +17,8 @@ const Twitter = function(done) {
 
 };
 
-Twitter.prototype.setup = function(done){
-  const setupTwitter = function(err, result) {
+Twitter.prototype.setup = function (done) {
+  const setupTwitter = function (err, result) {
     this.client = new TwitterApi({
       consumer_key: twitterConfig.consumer_key,
       consumer_secret: twitterConfig.consumer_secret,
@@ -44,14 +44,14 @@ Twitter.prototype.setup = function(done){
   setupTwitter.call(this)
 };
 
-Twitter.prototype.processCandle = function(candle, done) {
-    this.price = candle.close;
+Twitter.prototype.processCandle = function (candle, done) {
+  this.price = candle.close;
 
-    done();
+  done();
 };
 
-Twitter.prototype.processAdvice = function(advice) {
-	if (advice.recommendation == "soft" && twitterConfig.muteSoft) return;
+Twitter.prototype.processAdvice = function (advice) {
+  if (advice.recommendation == "soft" && twitterConfig.muteSoft) return;
   const text = [
     'New  ', config.watch.asset, ' trend. Attempting to ',
     advice.recommendation == 'short' ? 'sell' : 'buy',
@@ -62,22 +62,22 @@ Twitter.prototype.processAdvice = function(advice) {
   this.mail(text);
 };
 
-Twitter.prototype.mail = function(content, done) {
-    log.info("trying to tweet");
-    this.client.post('statuses/update', {status: content},  function(error, tweet, response) {
-      if(error || !response) {
-          log.error('Twitter ERROR:', error)
-      } else if(response && response.active){
-          log.info('Twitter Message Sent')
-      }
-    });
+Twitter.prototype.mail = function (content, done) {
+  log.info("trying to tweet");
+  this.client.post('statuses/update', { status: content }, function (error, tweet, response) {
+    if (error || !response) {
+      log.error('Twitter ERROR:', error)
+    } else if (response && response.active) {
+      log.info('Twitter Message Sent')
+    }
+  });
 };
 
-Twitter.prototype.checkResults = function(err) {
-    if(err)
-        log.warn('error sending email', err);
-    else
-        log.info('Send advice via email.');
+Twitter.prototype.checkResults = function (err) {
+  if (err)
+    log.warn('error sending email', err);
+  else
+    log.info('Send advice via email.');
 };
 
 

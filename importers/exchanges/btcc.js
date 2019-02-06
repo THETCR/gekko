@@ -11,9 +11,9 @@ const dirs = util.dirs();
 const Fetcher = require(dirs.exchanges + 'btcc');
 
 // patch getTrades..
-Fetcher.prototype.getTrades = function(fromTid, sinceTime, callback) {
+Fetcher.prototype.getTrades = function (fromTid, sinceTime, callback) {
   const args = _.toArray(arguments);
-  const process = function(err, result) {
+  const process = function (err, result) {
     if (err)
       return this.retry(this.getTrades, args);
 
@@ -22,15 +22,15 @@ Fetcher.prototype.getTrades = function(fromTid, sinceTime, callback) {
 
   let params;
 
-  if(sinceTime)
-     params = {
+  if (sinceTime)
+    params = {
       limit: 1,
       sincetype: 'time',
       since: sinceTime
     };
 
-  else if(fromTid)
-     params = {
+  else if (fromTid)
+    params = {
       limit: 5000,
       since: fromTid
     };
@@ -66,7 +66,7 @@ const handleFetch = trades => {
   iterator = _.last(trades).tid;
   const last = moment.unix(_.last(trades).date);
 
-  if(last > end) {
+  if (last > end) {
     fetcher.emit('done');
 
     const endUnix = end.unix();

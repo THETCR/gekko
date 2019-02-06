@@ -16,7 +16,7 @@ const Reader = require(dirs.gekko + adapter.path + '/reader');
 const reader = new Reader();
 
 // todo: rewrite with generators or async/await..
-const scan = function(done) {
+const scan = function (done) {
   log.info('Scanning local history for backtestable dateranges.');
 
   reader.tableExists('candles', (err, exists) => {

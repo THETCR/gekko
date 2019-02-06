@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 const BASEPATH = __dirname + '/../../logs/';
 
-const Logger = function(id) {
+const Logger = function (id) {
 
   this.fileName = `${id}.log`;
 
@@ -13,8 +13,8 @@ const Logger = function(id) {
   _.bindAll(this);
 };
 
-Logger.prototype.write = function(line) {
-  if(!this.writing) {
+Logger.prototype.write = function (line) {
+  if (!this.writing) {
     this.writing = true;
     fs.appendFile(
       BASEPATH + this.fileName,
@@ -25,13 +25,13 @@ Logger.prototype.write = function(line) {
     this.queue.push(line);
 };
 
-Logger.prototype.handleWriteCallback = function(err) {
-  if(err)
+Logger.prototype.handleWriteCallback = function (err) {
+  if (err)
     console.error(`ERROR WRITING LOG FILE ${this.fileName}:`, err);
 
   this.writing = false;
 
-  if(_.size(this.queue))
+  if (_.size(this.queue))
     this.write(this.queue.shift())
 };
 

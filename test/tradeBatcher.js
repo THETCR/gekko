@@ -30,54 +30,54 @@ const empty_trades = [
   { tid: 5, price: 10, amount: 0, date: 1466115797 },
 ];
 
-describe('budfox/tradeBatcher', function() {
+describe('budfox/tradeBatcher', function () {
   let tb;
 
-  it('should throw when not passed a number', function() {
-    expect(function() {
+  it('should throw when not passed a number', function () {
+    expect(function () {
       new TradeBatcher()
     }).to.throw('tid is not a string');
   });
 
-  it('should instantiate', function() {
+  it('should instantiate', function () {
     tb = new TradeBatcher('tid');
   });
 
-  it('should throw when not fed an array', function() {
+  it('should throw when not fed an array', function () {
     const trade = _.first(trades_tid_1);
     expect(
       tb.write.bind(tb, trade)
     ).to.throw('batch is not an array');
   });
 
-  it('should emit an event when fed trades', function() {
+  it('should emit an event when fed trades', function () {
     tb = new TradeBatcher('tid');
 
     const spy = sinon.spy();
     tb.on('new batch', spy);
-    tb.write( trades_tid_1 );
+    tb.write(trades_tid_1);
     expect(spy.callCount).to.equal(1);
   });
 
-  it('should only emit once when fed the same trades twice', function() {
+  it('should only emit once when fed the same trades twice', function () {
     tb = new TradeBatcher('tid');
 
     const spy = sinon.spy();
     tb.on('new batch', spy);
-    tb.write( trades_tid_1 );
-    tb.write( trades_tid_1 );
+    tb.write(trades_tid_1);
+    tb.write(trades_tid_1);
     expect(spy.callCount).to.equal(1);
   });
 
-  it('should correctly set meta data', function() {
+  it('should correctly set meta data', function () {
     tb = new TradeBatcher('tid');
 
     const spy = sinon.spy();
     tb.on('new batch', spy);
 
-    tb.write( trades_tid_1 );
+    tb.write(trades_tid_1);
 
-    const transformedTrades = _.map(_.cloneDeep(trades_tid_1), function(trade) {
+    const transformedTrades = _.map(_.cloneDeep(trades_tid_1), function (trade) {
       trade.date = moment.unix(trade.date).utc();
       return trade;
     });
@@ -97,21 +97,21 @@ describe('budfox/tradeBatcher', function() {
     expect(tbResult.end.unix()).to.equal(result.end.unix());
     expect(tbResult.data.length).to.equal(result.data.length);
 
-    _.each(tbResult.data, function(t, i) {
+    _.each(tbResult.data, function (t, i) {
       expect(tbResult.data[i].tid).to.equal(result.data[i].tid);
       expect(tbResult.data[i].price).to.equal(result.data[i].price);
       expect(tbResult.data[i].amount).to.equal(result.data[i].amount);
     });
   });
 
-  it('should correctly filter trades', function() {
+  it('should correctly filter trades', function () {
     tb = new TradeBatcher('tid');
 
     const spy = sinon.spy();
     tb.on('new batch', spy);
 
-    tb.write( trades_tid_1 );
-    tb.write( trades_tid_2 );
+    tb.write(trades_tid_1);
+    tb.write(trades_tid_2);
 
     expect(spy.callCount).to.equal(2);
 
@@ -125,7 +125,7 @@ describe('budfox/tradeBatcher', function() {
 
   // see @link
   // https://github.com/askmike/gekko/issues/486
-  it('should filter out empty trades', function() {
+  it('should filter out empty trades', function () {
     tb = new TradeBatcher('tid');
 
     const spy = sinon.spy();

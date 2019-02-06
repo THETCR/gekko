@@ -18,12 +18,12 @@ module.exports = (mode, config, callback) => {
     config: config,
   };
 
-  child.on('message', function(m) {
-    if(m === 'ready')
+  child.on('message', function (m) {
+    if (m === 'ready')
       return child.send(message);
 
-    if(m === 'done')
-      return child.send({what: 'exit'});
+    if (m === 'done')
+      return child.send({ what: 'exit' });
 
     handle.message(m);
   });

@@ -9,7 +9,7 @@ const settings = {
 
 module.exports = {
   settings: settings,
-  table: function(name) {
+  table: function (name) {
     return [name, settings.pair.join('_')].join('_');
   }
 };

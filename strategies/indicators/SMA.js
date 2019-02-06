@@ -1,7 +1,7 @@
 // required indicators
 // Simple Moving Average - O(1) implementation
 
-const Indicator = function(windowLength) {
+const Indicator = function (windowLength) {
   this.input = 'price';
   this.windowLength = windowLength;
   this.prices = [];
@@ -10,7 +10,7 @@ const Indicator = function(windowLength) {
   this.sum = 0;
 };
 
-Indicator.prototype.update = function(price) {
+Indicator.prototype.update = function (price) {
   const tail = this.prices[this.age] || 0; // oldest price in window
   this.prices[this.age] = price;
   this.sum += price - tail;

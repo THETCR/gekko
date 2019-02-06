@@ -7,15 +7,15 @@ const _ = require('lodash');
 const moment = require('moment');
 
 let TICKRATE;
-if (util.getConfig().watch.tickrate){
+if (util.getConfig().watch.tickrate) {
   TICKRATE = util.getConfig().watch.tickrate;
-} else if(util.getConfig().watch.exchange === 'okcoin'){
+} else if (util.getConfig().watch.exchange === 'okcoin') {
   TICKRATE = 2;
-} else{
+} else {
   TICKRATE = 20;
 }
 
-const Heart = function() {
+const Heart = function () {
   this.lastTick = false;
 
   _.bindAll(this);
@@ -23,24 +23,25 @@ const Heart = function() {
 
 util.makeEventEmitter(Heart);
 
-Heart.prototype.pump = function() {
+Heart.prototype.pump = function () {
   log.debug('scheduling ticks');
   this.scheduleTicks();
 };
 
-Heart.prototype.tick = function() {
-  if(this.lastTick) {
+Heart.prototype.tick = function () {
+  if (this.lastTick) {
     // make sure the last tick happened not to lang ago
     // @link https://github.com/askmike/gekko/issues/514
-    if(this.lastTick < moment().unix() - TICKRATE * 3)
-      util.die('Failed to tick in time, see https://github.com/askmike/gekko/issues/514 for details', true);
+    if (this.lastTick < moment().unix() - TICKRATE * 3)
+      util.die('Failed to tick in time, see https://github.com/askmike/gekko/issues/514 for details',
+        true);
   }
 
   this.lastTick = moment().unix();
   this.emit('tick');
 };
 
-Heart.prototype.scheduleTicks = function() {
+Heart.prototype.scheduleTicks = function () {
   setInterval(
     this.tick,
     +moment.duration(TICKRATE, 's')

@@ -1,7 +1,7 @@
 // required indicators
 const EMA = require('./EMA.js');
 
-const Indicator = function(config) {
+const Indicator = function (config) {
   this.result = {};
   this.input = 'price';
   this.macd = 0;
@@ -12,7 +12,7 @@ const Indicator = function(config) {
   this.PPOsignal = new EMA(config.signal);
 };
 
-Indicator.prototype.update = function(price) {
+Indicator.prototype.update = function (price) {
   this.short.update(price);
   this.long.update(price);
   this.calculatePPO();
@@ -27,7 +27,7 @@ Indicator.prototype.update = function(price) {
   this.result.PPOhist = this.PPOhist;
 };
 
-Indicator.prototype.calculatePPO = function() {
+Indicator.prototype.calculatePPO = function () {
   this.result.shortEMA = this.short.result;
   this.result.longEMA = this.long.result;
   this.result.macd = this.result.shortEMA - this.result.longEMA;

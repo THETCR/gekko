@@ -7,22 +7,22 @@ const CryptoJS = require("crypto-js");
 const querystring = require('querystring');
 const request = require('request');
 
-API_URL='https://api.exmo.com/v1/';
+API_URL = 'https://api.exmo.com/v1/';
 
 const marketData = require('./exmo-markets.json');
 
 
-const Trader = function(config) {
+const Trader = function (config) {
   _.bindAll(this);
-  this.key="";
-  this.secret="";
+  this.key = "";
+  this.secret = "";
 
-  if(_.isObject(config)) {
-      if(_.isString(config.key)) this.key = config.key;
-      if(_.isString(config.secret)) this.secret = config.secret;
-      this.currency = config.currency;
-      this.asset = config.asset;
-      this.pair = this.asset + '_' + this.currency;
+  if (_.isObject(config)) {
+    if (_.isString(config.key)) this.key = config.key;
+    if (_.isString(config.secret)) this.secret = config.secret;
+    this.currency = config.currency;
+    this.asset = config.asset;
+    this.pair = this.asset + '_' + this.currency;
   }
   this.name = 'EXMO';
   this.nonce = new Date() * 1000;
@@ -39,51 +39,54 @@ const recoverableErrors = [
 ];
 
 const includes = (str, list) => {
-  if(!_.isString(str))
+  if (!_.isString(str))
     return false;
 
   return _.some(list, item => str.includes(item));
 };
 
 
-Trader.prototype.api_query = function(method, params, callback){
-	params.nonce = this.nonce++;
+Trader.prototype.api_query = function (method, params, callback) {
+  params.nonce = this.nonce++;
   const post_data = querystring.stringify(params);
 
   const options = {
     url: API_URL + method,
-    headers: { 'Key': this.key, 'Sign': CryptoJS.HmacSHA512(post_data, this.secret).toString(CryptoJS.enc.hex) },
+    headers: {
+      'Key': this.key,
+      'Sign': CryptoJS.HmacSHA512(post_data, this.secret).toString(CryptoJS.enc.hex)
+    },
     form: params,
   };
 
   request.post(options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            const data=JSON.parse(body);
-            if(data.error) error = { message: data.error };
-            else if (data.result!=undefined && data.result==false)  error = { message: '"result": false' } ;
-            callback(error, data);
-        } else {
-            console.log('cb request error');
-            console.log(body);
+    if (!error && response.statusCode == 200) {
+      const data = JSON.parse(body);
+      if (data.error) error = { message: data.error };
+      else if (data.result != undefined && data.result == false) error = { message: '"result": false' };
+      callback(error, data);
+    } else {
+      console.log('cb request error');
+      console.log(body);
 
-			if(error) {
-			  if(includes(error.message, recoverableErrors)) {
-				error.notFatal = true;
-			  }
-            console.log(error);
-        	callback(error);
-      }
+      if (error) {
+        if (includes(error.message, recoverableErrors)) {
+          error.notFatal = true;
         }
+        console.log(error);
+        callback(error);
+      }
+    }
   });
 };
 
-Trader.prototype.getTrades = function(since, callback, descending) {
+Trader.prototype.getTrades = function (since, callback, descending) {
   const processResponse = (error, data) => {
     if (error) return callback(error);
 
-    data=data[this.pair];
+    data = data[this.pair];
 
-    const parsedTrades = _.map(data, function(trade) {
+    const parsedTrades = _.map(data, function (trade) {
       return {
         tid: trade.trade_id,
         date: trade.date,
@@ -96,38 +99,38 @@ Trader.prototype.getTrades = function(since, callback, descending) {
     else callback(undefined, parsedTrades.reverse());
   };
 
-  const fetch = cb => this.api_query("trades", { pair: this.pair} , cb);
+  const fetch = cb => this.api_query("trades", { pair: this.pair }, cb);
   retry(null, fetch, processResponse);
 
 };
 
-Trader.prototype.getTicker = function(callback) {
+Trader.prototype.getTicker = function (callback) {
   const processResponse = (err, data) => {
     if (err)
       return callback(err);
 
-    data=data[this.pair];
+    data = data[this.pair];
 
-    callback(undefined, {bid: +data.sell_price, ask: +data.buy_price});
+    callback(undefined, { bid: +data.sell_price, ask: +data.buy_price });
   };
 
-  const fetch = cb => this.api_query("ticker", { pair: this.pair} , cb);
+  const fetch = cb => this.api_query("ticker", { pair: this.pair }, cb);
   retry(null, fetch, processResponse);
 };
 
-Trader.prototype.getFee = function(callback) {
+Trader.prototype.getFee = function (callback) {
   callback(undefined, 0.002);
 };
 
-Trader.prototype.roundAmount = function(amount) {
+Trader.prototype.roundAmount = function (amount) {
   return _.floor(amount, 8);
 };
 
-Trader.prototype.roundPrice = function(price) {
+Trader.prototype.roundPrice = function (price) {
   return price;
 };
 
-Trader.prototype.submitOrder = function(type, amount, price, callback) {
+Trader.prototype.submitOrder = function (type, amount, price, callback) {
   const processResponse = (err, data) => {
     if (err)
       return callback(err);
@@ -135,64 +138,72 @@ Trader.prototype.submitOrder = function(type, amount, price, callback) {
     callback(null, data.order_id);
   };
 
-  const fetch = cb => this.api_query("order_create", { pair: this.pair, quantity: amount, price: price, type: type } , cb);
+  const fetch = cb => this.api_query("order_create",
+    { pair: this.pair, quantity: amount, price: price, type: type },
+    cb);
   retry(null, fetch, processResponse);
   //callback(null, 1177669837);
 };
 
-Trader.prototype.buy = function(amount, price, callback) {
+Trader.prototype.buy = function (amount, price, callback) {
   this.submitOrder('buy', amount, price, callback);
 };
 
-Trader.prototype.sell = function(amount, price, callback) {
+Trader.prototype.sell = function (amount, price, callback) {
   this.submitOrder('sell', amount, price, callback);
 };
 
-Trader.prototype.getOrder = function(order_id, callback) {
+Trader.prototype.getOrder = function (order_id, callback) {
   const processResponse = (err, data) => {
 
-    if(err)
+    if (err)
       return callback(err);
 
-    data=data[this.pair];
+    data = data[this.pair];
 
-    if(data==undefined) return callback(new Error('Orders not found'));
+    if (data == undefined) return callback(new Error('Orders not found'));
 
-    const order = _.find(data, function(o) { return o.order_id === +order_id });
+    const order = _.find(data, function (o) {
+      return o.order_id === +order_id
+    });
 
-    if(!order) return callback(new Error('Order not found'));
+    if (!order) return callback(new Error('Order not found'));
 
-    callback(undefined, { price: order.price, amount: order.amount, date: moment.unix(order.date) });
+    callback(undefined,
+      { price: order.price, amount: order.amount, date: moment.unix(order.date) });
   };
 
-  const fetch = cb => this.api_query("user_trades", { pair: this.pair} , cb);
+  const fetch = cb => this.api_query("user_trades", { pair: this.pair }, cb);
   retry(null, fetch, processResponse);
 };
 
-Trader.prototype.checkOrder = function(order_id, callback) {
+Trader.prototype.checkOrder = function (order_id, callback) {
   const processResponse = (err, data) => {
 
-    if(err)
+    if (err)
       return callback(err);
 
-    data=data[this.pair];
+    data = data[this.pair];
 
-    if(data==undefined) {
+    if (data == undefined) {
       return callback(undefined, { executed: true, open: false });
     }
 
-    const order = _.find(data, function(o) { return o.order_id === +order_id });
-    if(!order)
+    const order = _.find(data, function (o) {
+      return o.order_id === +order_id
+    });
+    if (!order)
       return callback(undefined, { executed: true, open: false });
 
-    callback(undefined, { executed: false, open: true /*, filledAmount: order.startingAmount - order.amount*/ });
+    callback(undefined,
+      { executed: false, open: true /*, filledAmount: order.startingAmount - order.amount*/ });
   };
 
-  const fetch = cb => this.api_query("user_open_orders", { } , cb);
+  const fetch = cb => this.api_query("user_open_orders", {}, cb);
   retry(null, fetch, processResponse);
 };
 
-Trader.prototype.cancelOrder = function(order_id, callback) {
+Trader.prototype.cancelOrder = function (order_id, callback) {
   const processResponse = (err, data) => {
     if (err) {
       return callback(err);
@@ -201,17 +212,19 @@ Trader.prototype.cancelOrder = function(order_id, callback) {
     return callback(undefined, false);
   };
 
-  const fetch = cb => this.api_query("order_cancel", { order_id } , cb);
+  const fetch = cb => this.api_query("order_cancel", { order_id }, cb);
   retry(null, fetch, processResponse);
 };
 
-Trader.prototype.getPortfolio = function(callback) {
+Trader.prototype.getPortfolio = function (callback) {
   const processResponse = (err, data) => {
     if (err) return callback(err);
 
-    data=data["balances"];
-    const balances = _.map(data, function (v,k){ return {name: k, amount: +v};});
-    const portfolio = balances.filter(c => c.name===this.asset || c.name===this.currency);
+    data = data["balances"];
+    const balances = _.map(data, function (v, k) {
+      return { name: k, amount: +v };
+    });
+    const portfolio = balances.filter(c => c.name === this.asset || c.name === this.currency);
 
     callback(undefined, portfolio);
   };

@@ -12,7 +12,7 @@
 const _ = require('lodash');
 const util = require(__dirname + '/util');
 
-const CandleBatcher = function(candleSize) {
+const CandleBatcher = function (candleSize) {
   if (!_.isNumber(candleSize))
     throw new Error('candleSize is not a number');
 
@@ -25,14 +25,14 @@ const CandleBatcher = function(candleSize) {
 
 util.makeEventEmitter(CandleBatcher);
 
-CandleBatcher.prototype.write = function(candles) {
-  if(!_.isArray(candles)) {
+CandleBatcher.prototype.write = function (candles) {
+  if (!_.isArray(candles)) {
     throw new Error('candles is not an array');
   }
 
   this.emitted = 0;
 
-  _.each(candles, function(candle) {
+  _.each(candles, function (candle) {
     this.smallCandles.push(candle);
     this.check();
   }, this);
@@ -40,8 +40,8 @@ CandleBatcher.prototype.write = function(candles) {
   return this.emitted;
 };
 
-CandleBatcher.prototype.check = function() {
-  if(_.size(this.smallCandles) % this.candleSize !== 0)
+CandleBatcher.prototype.check = function () {
+  if (_.size(this.smallCandles) % this.candleSize !== 0)
     return;
 
   this.emitted++;
@@ -49,7 +49,7 @@ CandleBatcher.prototype.check = function() {
   this.smallCandles = [];
 };
 
-CandleBatcher.prototype.flush = function() {
+CandleBatcher.prototype.flush = function () {
   _.each(
     this.calculatedCandles,
     candle => this.emit('candle', candle)
@@ -58,7 +58,7 @@ CandleBatcher.prototype.flush = function() {
   this.calculatedCandles = [];
 };
 
-CandleBatcher.prototype.calculate = function() {
+CandleBatcher.prototype.calculate = function () {
   // remove the id property of the small candle
   const { id, ...first } = this.smallCandles.shift();
 
@@ -66,7 +66,7 @@ CandleBatcher.prototype.calculate = function() {
 
   const candle = _.reduce(
     this.smallCandles,
-    function(candle, m) {
+    function (candle, m) {
       candle.high = _.max([candle.high, m.high]);
       candle.low = _.min([candle.low, m.low]);
       candle.close = m.close;
@@ -78,12 +78,12 @@ CandleBatcher.prototype.calculate = function() {
     first,
   );
 
-  if(candle.volume)
-    // we have added up all prices (relative to volume)
-    // now divide by volume to get the Volume Weighted Price
+  if (candle.volume)
+  // we have added up all prices (relative to volume)
+  // now divide by volume to get the Volume Weighted Price
     candle.vwp /= candle.volume;
   else
-    // empty candle
+  // empty candle
     candle.vwp = candle.open;
 
   candle.start = first.start;

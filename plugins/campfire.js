@@ -4,7 +4,7 @@ const Ranger = require('ranger');
 
 const config = require('../core/util').getConfig().campfire;
 
-const Actor = function() {
+const Actor = function () {
   _.bindAll(this);
 
   this.commands = [{
@@ -36,14 +36,14 @@ const Actor = function() {
 };
 
 Actor.prototype = {
-  processCandle: function(candle, done) {
+  processCandle: function (candle, done) {
     this.price = candle.close;
     this.priceTime = candle.date.start();
 
     done();
   },
 
-  processAdvice: function(advice) {
+  processAdvice: function (advice) {
     if (campfire.muteSoft && advice.recommendation === 'soft') return;
     this.advice = advice.recommendation;
     this.adviceTime = Moment.utc();
@@ -53,7 +53,7 @@ Actor.prototype = {
     }
   },
 
-  sayAdvice: function() {
+  sayAdvice: function () {
     let message;
 
     if (this.advice !== null) {
@@ -65,7 +65,7 @@ Actor.prototype = {
     this.room.speak(message.join(' '));
   },
 
-  sayPrice: function() {
+  sayPrice: function () {
     let message;
 
     if (this.price !== null) {
@@ -77,43 +77,44 @@ Actor.prototype = {
     this.room.speak(message.join(' '));
   },
 
-  sayDonate: function() {
-    this.room.speak("If you'd like to donate a few coins, you can send them here: 13r1jyivitShUiv9FJvjLH7Nh1ZZptumwW");
+  sayDonate: function () {
+    this.room.speak(
+      "If you'd like to donate a few coins, you can send them here: 13r1jyivitShUiv9FJvjLH7Nh1ZZptumwW");
   },
 
-  sayHelp: function() {
+  sayHelp: function () {
     this.room.speak("I listen for the following inquiries...", this.pasteDescriptions);
   },
 
-  pasteDescriptions: function() {
-    const descriptions = _.map(this.commands, function(command) {
+  pasteDescriptions: function () {
+    const descriptions = _.map(this.commands, function (command) {
       return [command.handler + ':', command.description].join(' ');
     }, this).join('\n');
 
     this.room.paste(descriptions);
   },
 
-  joinRoom: function(room) {
+  joinRoom: function (room) {
     this.room = room;
     this.room.join(this.listenForCommands);
   },
 
-  listenForCommands: function() {
+  listenForCommands: function () {
     this.room.listen(this.executeCommands);
   },
 
-  executeCommands: function(message) {
+  executeCommands: function (message) {
     if (message.userId === this.user.id) return false; // Make the bot ignore itself
     if (message.body === null) return false; // Handle weird cases where body is null sometimes
 
-    _.each(this.commands, function(command) {
+    _.each(this.commands, function (command) {
       if (this.textHasCommandForBot(message.body, config.nickname, command.handler)) {
         command.callback();
       }
     }, this);
   },
 
-  textHasCommandForBot: function(text, nickname, handler) {
+  textHasCommandForBot: function (text, nickname, handler) {
     const normalizedText = text.toLowerCase(),
       normalizedNickname = nickname.toLowerCase(),
       normalizedHandler = handler.toLowerCase();
@@ -124,7 +125,7 @@ Actor.prototype = {
     return nicknameWasMentioned && handlerWasMentioned;
   },
 
-  whoAmI: function(user) {
+  whoAmI: function (user) {
     this.user = user;
   }
 };

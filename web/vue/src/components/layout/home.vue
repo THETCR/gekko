@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import marked from '../../tools/marked';
+  import marked from '../../tools/marked';
 
-const left = marked(`
+  const left = marked(`
 
 ## Gekko
 
@@ -24,11 +24,11 @@ and runs on nodejs.
 
 `);
 
-export default {
-  data: () => {
-    return {
-      left
+  export default {
+    data: () => {
+      return {
+        left
+      }
     }
   }
-}
 </script>

@@ -2,7 +2,7 @@ const config = require('../../core/util.js').getConfig();
 
 const watch = config.watch;
 let settings;
-if(watch) {
+if (watch) {
   settings = {
     exchange: watch.exchange,
     pair: [watch.currency, watch.asset]
@@ -17,7 +17,7 @@ if(watch) {
  * Set config.postgresql.database to use single db setup
  */
 function useSingleDatabase() {
-    return !!config.postgresql.database;
+  return !!config.postgresql.database;
 }
 
 /**
@@ -39,14 +39,14 @@ module.exports = {
   database: function () {
     return useSingleDatabase() ?
       config.postgresql.database :
-      config.watch.exchange.toLowerCase().replace(/\-/g,'');
+      config.watch.exchange.toLowerCase().replace(/\-/g, '');
   },
 
   // returns table name which can be different if we use
   // single or multiple db setup.
   table: function (name) {
     if (useSingleDatabase()) {
-      name = watch.exchange.replace(/\-/g,'') + '_' + name;
+      name = watch.exchange.replace(/\-/g, '') + '_' + name;
     }
     const fullName = [name, settings.pair.join('_')].join('_');
     return useLowerCaseTableNames() ? fullName.toLowerCase() : fullName;
@@ -54,7 +54,7 @@ module.exports = {
 
   startconstraint: function (name) {
     if (useSingleDatabase()) {
-      name = watch.exchange.replace(/\-/g,'') + '_' + name;
+      name = watch.exchange.replace(/\-/g, '') + '_' + name;
     }
     const fullName = [name, settings.pair.join('_')].join('_');
     return useLowerCaseTableNames() ? fullName.toLowerCase() + '_start_key' : fullName + '_start_key';

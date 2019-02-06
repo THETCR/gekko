@@ -19,7 +19,8 @@ describe('exchange/triggers/trailingStop', () => {
       const ts = new TrailingStop({
         trail: 10,
         initialPrice: 100,
-        onTrigger: () => {}
+        onTrigger: () => {
+        }
       })
     }).to.not.throw()
   });
@@ -153,7 +154,7 @@ describe('exchange/triggers/trailingStop', () => {
     expect(spy2.called).to.be.false;
   });
 
-    it('should not trigger when the the price swings above the trail', () => {
+  it('should not trigger when the the price swings above the trail', () => {
     const spy = sinon.spy();
 
     const ts = new TrailingStop({

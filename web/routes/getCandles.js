@@ -32,7 +32,7 @@ const promisify = require('tiny-promisify');
 const candleLoader = promisify(require('../../core/workers/loadCandles/parent'));
 const base = require('./baseConfig');
 
-module.exports = function *() {
+module.exports = function* () {
 
   config = {};
   _.merge(config, base, this.request.body);

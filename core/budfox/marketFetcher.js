@@ -18,8 +18,8 @@ const exchangeChecker = require(dirs.gekko + 'exchange/exchangeChecker');
 
 const TradeBatcher = require(util.dirs().budfox + 'tradeBatcher');
 
-const Fetcher = function(config) {
-  if(!_.isObject(config))
+const Fetcher = function (config) {
+  if (!_.isObject(config))
     throw new Error('TradeFetcher expects a config');
 
   const exchangeName = config.watch.exchange.toLowerCase();
@@ -36,10 +36,10 @@ const Fetcher = function(config) {
 
   // If the trading adviser is enabled we might need a very specific fetch since
   // to line up [local db, trading method, and fetching]
-  if(config.tradingAdvisor.enabled && config.tradingAdvisor.firstFetchSince) {
+  if (config.tradingAdvisor.enabled && config.tradingAdvisor.firstFetchSince) {
     this.firstSince = config.tradingAdvisor.firstFetchSince;
 
-    if(this.exchange.providesHistory === 'date') {
+    if (this.exchange.providesHistory === 'date') {
       this.firstSince = moment.unix(this.firstSince).utc();
     }
   }
@@ -69,16 +69,16 @@ const Fetcher = function(config) {
 
 util.makeEventEmitter(Fetcher);
 
-Fetcher.prototype._fetch = function(since) {
-  if(++this.tries >= this.limit)
+Fetcher.prototype._fetch = function (since) {
+  if (++this.tries >= this.limit)
     return;
 
   this.exchangeTrader.getTrades(since, this.processTrades, false);
 };
 
-Fetcher.prototype.fetch = function() {
+Fetcher.prototype.fetch = function () {
   let since = false;
-  if(this.firstFetch) {
+  if (this.firstFetch) {
     since = this.firstSince;
     this.firstFetch = false;
   } else
@@ -89,9 +89,9 @@ Fetcher.prototype.fetch = function() {
   this._fetch(since);
 };
 
-Fetcher.prototype.processTrades = function(err, trades) {
-  if(err || _.isEmpty(trades)) {
-    if(err) {
+Fetcher.prototype.processTrades = function (err, trades) {
+  if (err || _.isEmpty(trades)) {
+    if (err) {
       log.warn(this.exchange.name, 'returned an error while fetching trades:', err);
       log.debug('refetching...');
     } else
@@ -102,7 +102,7 @@ Fetcher.prototype.processTrades = function(err, trades) {
   this.batcher.write(trades);
 };
 
-Fetcher.prototype.relayTrades = function(batch) {
+Fetcher.prototype.relayTrades = function (batch) {
   this.emit('trades batch', batch);
 };
 

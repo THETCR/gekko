@@ -18,13 +18,13 @@
 
 <script>
 
-import { post } from '../../../tools/ajax'
-import spinner from '../../global/blockSpinner.vue'
-import importConfigBuilder from './importConfigBuilder.vue'
+  import { post } from '../../../tools/ajax'
+  import spinner from '../../global/blockSpinner.vue'
+  import importConfigBuilder from './importConfigBuilder.vue'
 
-import marked from '../../../tools/marked'
+  import marked from '../../../tools/marked'
 
-let intro = marked(`
+  let intro = marked(`
 
 ## Import data
 
@@ -32,58 +32,59 @@ The importer can download historical market data directly from the exchange.
 
 `)
 
-export default {
-  components: {
-    importConfigBuilder,
-    spinner
-  },
-  data: () => {
-    return {
-      intro,
-      config: {}
-    }
-  },
-  computed: {
-    imports: function() {
-      return this.$store.state.imports
-    }
-  },
-  methods: {
-    daysApart: function(range) {
-      let to = moment(range.to);
-      let from = moment(range.from);
-
-      return to.diff(from, 'days');
+  export default {
+    components: {
+      importConfigBuilder,
+      spinner
     },
-    updateConfig: function(config) {
-      this.config = config;
-    },
-    run: function() {
-      let daysApart = this.daysApart(this.config.importer.daterange);
-
-      if(daysApart < 1)
-        return alert('You can only import at least one day of data..')
-
-      let exchange = this.$store.state.exchanges[this.config.watch.exchange];
-      if ("exchangeMaxHistoryAge" in exchange) {
-        if (moment(this.config.importer.daterange.from) < moment().subtract(exchange.exchangeMaxHistoryAge, "days")) {
-          return alert('Your date from is too old for ' + this.config.watch.exchange + '. It supports only the last ' + exchange.exchangeMaxHistoryAge + ' days..');
-        }
+    data: () => {
+      return {
+        intro,
+        config: {}
       }
+    },
+    computed: {
+      imports: function () {
+        return this.$store.state.imports
+      }
+    },
+    methods: {
+      daysApart: function (range) {
+        let to = moment(range.to);
+        let from = moment(range.from);
 
-      post('import', this.config, (error, response) => {
-        if(error)
-          return alert(error);
+        return to.diff(from, 'days');
+      },
+      updateConfig: function (config) {
+        this.config = config;
+      },
+      run: function () {
+        let daysApart = this.daysApart(this.config.importer.daterange);
 
-        this.$store.commit('addImport', response);
+        if (daysApart < 1)
+          return alert('You can only import at least one day of data..')
 
-        this.$router.push({
-          path: `/data/importer/import/${response.id}`,
-        })
-      });
+        let exchange = this.$store.state.exchanges[this.config.watch.exchange];
+        if ("exchangeMaxHistoryAge" in exchange) {
+          if (moment(this.config.importer.daterange.from) < moment()
+          .subtract(exchange.exchangeMaxHistoryAge, "days")) {
+            return alert('Your date from is too old for ' + this.config.watch.exchange + '. It supports only the last ' + exchange.exchangeMaxHistoryAge + ' days..');
+          }
+        }
+
+        post('import', this.config, (error, response) => {
+          if (error)
+            return alert(error);
+
+          this.$store.commit('addImport', response);
+
+          this.$router.push({
+            path: `/data/importer/import/${response.id}`,
+          })
+        });
+      }
     }
   }
-}
 </script>
 
 <style>

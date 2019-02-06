@@ -34,47 +34,47 @@ const fetch = () => {
 };
 
 const handleFetch = (err, trades) => {
-    if(!err && !trades.length) {
-        console.log('no trades');
-        err = 'No trades';
-    }
+  if (!err && !trades.length) {
+    console.log('no trades');
+    err = 'No trades';
+  }
 
-    if (err) {
-        log.error(`There was an error importing from Kraken ${err}`);
-        fetcher.emit('done');
-        return fetcher.emit('trades', []);
-    }
+  if (err) {
+    log.error(`There was an error importing from Kraken ${err}`);
+    fetcher.emit('done');
+    return fetcher.emit('trades', []);
+  }
 
   const last = moment.unix(_.last(trades).date).utc();
   lastId = _.last(trades).tid;
-    if(last < from) {
-        log.debug('Skipping data, they are before from date', last.format());
-        return fetch();
-    }
+  if (last < from) {
+    log.debug('Skipping data, they are before from date', last.format());
+    return fetch();
+  }
 
-    if  (last > end || lastId === prevLastId) {
-        fetcher.emit('done');
+  if (last > end || lastId === prevLastId) {
+    fetcher.emit('done');
 
-      const endUnix = end.unix();
-      trades = _.filter(
-            trades,
-            t => t.date <= endUnix
-        )
-    }
+    const endUnix = end.unix();
+    trades = _.filter(
+      trades,
+      t => t.date <= endUnix
+    )
+  }
 
-    prevLastId = lastId;
-    fetcher.emit('trades', trades);
+  prevLastId = lastId;
+  fetcher.emit('trades', trades);
 };
 
 module.exports = function (daterange) {
 
-    from = daterange.from.clone();
-    end = daterange.to.clone();
+  from = daterange.from.clone();
+  end = daterange.to.clone();
 
-    return {
-        bus: fetcher,
-        fetch: fetch
-    }
+  return {
+    bus: fetcher,
+    fetch: fetch
+  }
 };
 
 

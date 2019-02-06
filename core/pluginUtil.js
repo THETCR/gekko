@@ -19,17 +19,18 @@ const pluginHelper = {
   // @return String
   //    error message if we can't
   //    use the module.
-  cannotLoad: function(plugin) {
+  cannotLoad: function (plugin) {
 
     // verify plugin dependencies are installed
     let error;
     if (_.has(plugin, 'dependencies'))
       error = false;
 
-    _.each(plugin.dependencies, function(dep) {
+    _.each(plugin.dependencies, function (dep) {
       try {
         const a = require(dep.module);
-      } catch (e) {
+      }
+      catch (e) {
         log.error('ERROR LOADING DEPENDENCY', dep.module);
 
         if (!e.message) {
@@ -40,7 +41,7 @@ const pluginHelper = {
         if (!e.message.startsWith('Cannot find module'))
           return util.die(e);
 
-         error = [
+        error = [
           'The plugin',
           plugin.slug,
           'expects the module',
@@ -62,7 +63,7 @@ const pluginHelper = {
   //    plugin config object
   // @param Function next
   //    callback
-  load: function(plugin, next) {
+  load: function (plugin, next) {
 
     plugin.config = config[plugin.slug];
 
@@ -97,7 +98,7 @@ const pluginHelper = {
     let instance;
     if (plugin.async) {
       inherits(Constructor, Emitter);
-      instance = new Constructor(util.defer(function(err) {
+      instance = new Constructor(util.defer(function (err) {
         next(err, instance);
       }), plugin);
       Emitter.call(instance);
@@ -109,7 +110,7 @@ const pluginHelper = {
       Emitter.call(instance);
 
       instance.meta = plugin;
-      _.defer(function() {
+      _.defer(function () {
         next(null, instance);
       });
     }

@@ -1,4 +1,3 @@
-
 // if you need to test Gekko against real mocked data
 // uncomment the following:
 
@@ -31,10 +30,10 @@ const TRADES = require('./data/bitstamp_trades.json');
 
 return; // TEMP
 
-const FakeExchange = function() {
+const FakeExchange = function () {
 };
 FakeExchange.prototype = {
-  transactions: function(since, handler, descending) {
+  transactions: function (since, handler, descending) {
     handler(
       null,
       TRADES
@@ -46,15 +45,15 @@ let spoofer = {
   bitstamp: FakeExchange
 };
 
-describe('exchanges/bitstamp', function() {
+describe('exchanges/bitstamp', function () {
   const Bitstamp = proxyquire(dirs.gekko + 'exchange/wrappers/bitstamp', spoofer);
   let bs;
 
-  it('should instantiate', function() {
+  it('should instantiate', function () {
     bs = new Bitstamp(config.watch);
   });
 
-  it('should correctly fetch historical trades', function() {
+  it('should correctly fetch historical trades', function () {
     bs.getTrades(null, _.noop, false);
 
     expect(transactionsSpy.callCount).to.equal(1);
@@ -65,11 +64,11 @@ describe('exchanges/bitstamp', function() {
     expect(args[0]).to.equal('btcusd');
   });
 
-  it('should retry on exchange error', function() {
-    const ErrorFakeExchange = function() {
+  it('should retry on exchange error', function () {
+    const ErrorFakeExchange = function () {
     };
     ErrorFakeExchange.prototype = {
-      transactions: function(since, handler, descending) {
+      transactions: function (since, handler, descending) {
         handler('Auth error');
       }
     };
@@ -92,8 +91,8 @@ describe('exchanges/bitstamp', function() {
     expect(args[1][0]).to.equal(null);
   });
 
-  it('should correctly parse historical trades', function(done) {
-    const check = function(err, trades) {
+  it('should correctly parse historical trades', function (done) {
+    const check = function (err, trades) {
 
       expect(err).to.equal(null);
 

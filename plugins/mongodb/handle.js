@@ -41,7 +41,7 @@ if (mode === 'backtest') {
   })
 }
 
-if(mongoUtil.settings.exchange) {
-    collection.createIndex({start: 1, pair: 1}, {unique: true}); // create unique index on "time" and "pair"
+if (mongoUtil.settings.exchange) {
+  collection.createIndex({ start: 1, pair: 1 }, { unique: true }); // create unique index on "time" and "pair"
 }
 module.exports = connection;

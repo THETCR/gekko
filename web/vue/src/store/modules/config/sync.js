@@ -3,7 +3,7 @@ import store from '../../'
 import { bus } from '../../../components/global/ws'
 
 const transformMarkets = backendData => {
-  if(!backendData) {
+  if (!backendData) {
     return {};
   }
 
@@ -11,12 +11,12 @@ const transformMarkets = backendData => {
   var exchangesTemp = {};
 
   exchangesRaw.forEach(e => {
-    exchangesTemp[e.slug] = exchangesTemp[e.slug] || {markets: {}};
+    exchangesTemp[e.slug] = exchangesTemp[e.slug] || { markets: {} };
 
-    e.markets.forEach( pair => {
-      let [ currency, asset ] = pair['pair'];
+    e.markets.forEach(pair => {
+      let [currency, asset] = pair['pair'];
       exchangesTemp[e.slug].markets[currency] = exchangesTemp[e.slug].markets[currency] || [];
-      exchangesTemp[e.slug].markets[currency].push( asset );
+      exchangesTemp[e.slug].markets[currency].push(asset);
     });
 
     if ("exchangeMaxHistoryAge" in e) {
@@ -48,7 +48,7 @@ const sync = () => {
   });
 }
 
-export default function() {
+export default function () {
   init();
   sync();
 }

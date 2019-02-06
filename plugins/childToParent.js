@@ -6,18 +6,18 @@ const _ = require('lodash');
 const subscriptions = require('../subscriptions');
 const config = require('../core/util').getConfig();
 
-const ChildToParent = function() {
+const ChildToParent = function () {
 
   subscriptions
-    // .filter(sub => config.childToParent.events.includes(sub.event))
-    .forEach(sub => {
-      this[sub.handler] = (event, next) => {
-        process.send({type: sub.event, payload: event});
-        if(_.isFunction(next)) {
-          next();
-        }
+  // .filter(sub => config.childToParent.events.includes(sub.event))
+  .forEach(sub => {
+    this[sub.handler] = (event, next) => {
+      process.send({ type: sub.event, payload: event });
+      if (_.isFunction(next)) {
+        next();
       }
-    }, this);
+    }
+  }, this);
 
 };
 

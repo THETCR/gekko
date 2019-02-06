@@ -1,7 +1,7 @@
 // required indicators
 const SMA = require('./SMA.js');
 
-const Indicator = function(settings) {
+const Indicator = function (settings) {
   this.input = 'candle';
   this.lastClose = 0;
   this.uo = 0;
@@ -16,7 +16,7 @@ const Indicator = function(settings) {
   this.thirdHigh = new SMA(settings.third.period);
 };
 
-Indicator.prototype.update = function(candle) {
+Indicator.prototype.update = function (candle) {
   const close = candle.close;
   const prevClose = this.lastClose;
   const low = candle.low;

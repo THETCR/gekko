@@ -9,7 +9,7 @@ const _ = require('lodash');
 
 const redis = require('redis');
 
-const Actor = function(done) {
+const Actor = function (done) {
   _.bindAll(this);
 
   this.market = [
@@ -29,19 +29,19 @@ const Actor = function(done) {
 // emit.
 
 const proto = {};
-_.each(redisBeacon.broadcast, function(e) {
+_.each(redisBeacon.broadcast, function (e) {
   // grab the corresponding subscription
-  const subscription = _.find(subscriptions, function(s) {
+  const subscription = _.find(subscriptions, function (s) {
     return s.event === e;
   });
 
-  if(!subscription)
+  if (!subscription)
     util.die('Gekko does not know this event:' + e);
 
   const channel = redisBeacon.channelPrefix + subscription.event;
 
-  proto[subscription.handler] = function(message, cb) {
-    if(!_.isFunction(cb))
+  proto[subscription.handler] = function (message, cb) {
+    if (!_.isFunction(cb))
       cb = _.noop;
 
     this.emit(channel, {
@@ -54,12 +54,12 @@ _.each(redisBeacon.broadcast, function(e) {
 
 Actor.prototype = proto;
 
-Actor.prototype.init = function(done) {
+Actor.prototype.init = function (done) {
   this.client = redis.createClient(redisBeacon.port, redisBeacon.host);
   this.client.on('ready', _.once(done));
 };
 
-Actor.prototype.emit = function(channel, message) {
+Actor.prototype.emit = function (channel, message) {
   log.debug('Going to publish to redis channel:', channel);
 
   const data = JSON.stringify(message);

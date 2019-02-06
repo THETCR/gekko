@@ -8,7 +8,7 @@ const util = require('util');
 const events = require('events');
 const NativeEventEmitter = events.EventEmitter;
 
-const GekkoEventEmitter = function() {
+const GekkoEventEmitter = function () {
   NativeEventEmitter.call(this);
   this.defferedEvents = [];
 };
@@ -16,13 +16,13 @@ const GekkoEventEmitter = function() {
 util.inherits(GekkoEventEmitter, NativeEventEmitter);
 
 // push to stack
-GekkoEventEmitter.prototype.deferredEmit = function(name, payload) {
-  this.defferedEvents.push({name, payload});
+GekkoEventEmitter.prototype.deferredEmit = function (name, payload) {
+  this.defferedEvents.push({ name, payload });
 };
 
 // resolve FIFO
-GekkoEventEmitter.prototype.broadcastDeferredEmit = function() {
-  if(this.defferedEvents.length === 0)
+GekkoEventEmitter.prototype.broadcastDeferredEmit = function () {
+  if (this.defferedEvents.length === 0)
     return false;
 
   const event = this.defferedEvents.shift();

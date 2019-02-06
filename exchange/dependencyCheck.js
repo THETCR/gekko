@@ -5,14 +5,15 @@ const missing = [];
 Object.keys(deps).forEach(dep => {
   try {
     require(dep);
-  } catch(e) {
-    if(e.code === 'MODULE_NOT_FOUND') {
+  }
+  catch (e) {
+    if (e.code === 'MODULE_NOT_FOUND') {
       missing.push(dep);
     }
   }
 });
 
-if(missing.length) {
+if (missing.length) {
   console.error(
     '\nThe following Gekko Broker dependencies are not installed: [',
     missing.join(', '),

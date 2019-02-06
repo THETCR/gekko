@@ -8,7 +8,7 @@
 const method = {};
 
 // Prepare everything our method needs
-method.init = function() {
+method.init = function () {
   this.name = 'talib-macd';
   this.input = 'candle';
   // keep state about the current trend
@@ -28,28 +28,28 @@ method.init = function() {
 };
 
 // What happens on every new candle?
-method.update = function(candle) {
+method.update = function (candle) {
   // nothing!
 };
 
 
-method.log = function() {
+method.log = function () {
   // nothing!
 };
 
 // Based on the newly calculated
 // information, check if we should
 // update or not.
-method.check = function(candle) {
+method.check = function (candle) {
   const price = candle.close;
   const result = this.talibIndicators.mymacd.result;
   const macddiff = result['outMACD'] - result['outMACDSignal'];
 
-  if(this.settings.thresholds.down > macddiff && this.trend !== 'short') {
+  if (this.settings.thresholds.down > macddiff && this.trend !== 'short') {
     this.trend = 'short';
     this.advice('short');
 
-  } else if(this.settings.thresholds.up < macddiff && this.trend !== 'long'){
+  } else if (this.settings.thresholds.up < macddiff && this.trend !== 'long') {
     this.trend = 'long';
     this.advice('long');
 

@@ -1,7 +1,7 @@
 const ForkTask = require('relieve').tasks.ForkTask;
 const fork = require('child_process').fork;
 
-module.exports = function(config, done) {
+module.exports = function (config, done) {
   const debug = typeof v8debug === 'object';
   if (debug) {
     process.execArgv = [];
@@ -15,7 +15,7 @@ module.exports = function(config, done) {
     return done(false, ranges);
   });
   task.on('exit', code => {
-    if(code !== 0)
+    if (code !== 0)
       done('ERROR, unable to scan dateranges, please check the console.');
   });
 };

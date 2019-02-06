@@ -8,7 +8,7 @@ const TSI = require('./indicators/TSI.js');
 const method = {};
 
 // prepare everything our method needs
-method.init = function() {
+method.init = function () {
   this.name = 'TSI';
 
   this.trend = {
@@ -26,7 +26,7 @@ method.init = function() {
 
 // for debugging purposes log the last
 // calculated parameters.
-method.log = function(candle) {
+method.log = function (candle) {
   const digits = 8;
   const tsi = this.indicators.tsi;
 
@@ -35,14 +35,14 @@ method.log = function(candle) {
   log.debug('\t', 'price:', candle.close.toFixed(digits));
 };
 
-method.check = function() {
+method.check = function () {
   const tsi = this.indicators.tsi;
   const tsiVal = tsi.tsi;
 
-  if(tsiVal > this.settings.thresholds.high) {
+  if (tsiVal > this.settings.thresholds.high) {
 
     // new trend detected
-    if(this.trend.direction !== 'high')
+    if (this.trend.direction !== 'high')
       this.trend = {
         duration: 0,
         persisted: false,
@@ -54,19 +54,19 @@ method.check = function() {
 
     log.debug('In high since', this.trend.duration, 'candle(s)');
 
-    if(this.trend.duration >= this.settings.thresholds.persistence)
+    if (this.trend.duration >= this.settings.thresholds.persistence)
       this.trend.persisted = true;
 
-    if(this.trend.persisted && !this.trend.adviced) {
+    if (this.trend.persisted && !this.trend.adviced) {
       this.trend.adviced = true;
       this.advice('short');
     } else
       this.advice();
 
-  } else if(tsiVal < this.settings.thresholds.low) {
+  } else if (tsiVal < this.settings.thresholds.low) {
 
     // new trend detected
-    if(this.trend.direction !== 'low')
+    if (this.trend.direction !== 'low')
       this.trend = {
         duration: 0,
         persisted: false,
@@ -78,10 +78,10 @@ method.check = function() {
 
     log.debug('In low since', this.trend.duration, 'candle(s)');
 
-    if(this.trend.duration >= this.settings.thresholds.persistence)
+    if (this.trend.duration >= this.settings.thresholds.persistence)
       this.trend.persisted = true;
 
-    if(this.trend.persisted && !this.trend.adviced) {
+    if (this.trend.persisted && !this.trend.adviced) {
       this.trend.adviced = true;
       this.advice('long');
     } else

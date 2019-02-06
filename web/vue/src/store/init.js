@@ -6,7 +6,7 @@ import syncGekkos from './modules/gekkos/sync'
 import syncNotifications from './modules/notifications/sync'
 import syncConfig from './modules/config/sync'
 
-export default function() {
+export default function () {
   syncImports();
   syncGekkos();
   syncNotifications();

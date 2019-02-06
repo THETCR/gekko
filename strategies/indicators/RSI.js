@@ -1,7 +1,7 @@
 // required indicators
 const SMMA = require('./SMMA.js');
 
-const Indicator = function(settings) {
+const Indicator = function (settings) {
   this.input = 'candle';
   this.lastClose = null;
   this.weight = settings.interval;

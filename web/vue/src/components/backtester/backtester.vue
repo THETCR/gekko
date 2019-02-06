@@ -13,43 +13,43 @@
 </template>
 
 <script>
-import configBuilder from './backtestConfigBuilder.vue'
-import result from './result/result.vue'
-import { post } from '../../tools/ajax'
-import spinner from '../global/blockSpinner.vue'
+  import configBuilder from './backtestConfigBuilder.vue'
+  import result from './result/result.vue'
+  import { post } from '../../tools/ajax'
+  import spinner from '../global/blockSpinner.vue'
 
-export default {
-  data: () => {
-    return {
-      backtestable: false,
-      backtestState: 'idle',
-      backtestResult: false,
-      config: false,
-    }
-  },
-  methods: {
-    check: function(config) {
-      // console.log('CHECK', config);
-      this.config = config;
-
-      if(!config.valid)
-        return this.backtestable = false;
-
-      this.backtestable = true;
+  export default {
+    data: () => {
+      return {
+        backtestable: false,
+        backtestState: 'idle',
+        backtestResult: false,
+        config: false,
+      }
     },
-    run: function() {
-      this.backtestState = 'fetching';
+    methods: {
+      check: function (config) {
+        // console.log('CHECK', config);
+        this.config = config;
 
-      post('backtest', this.config, (error, response) => {
-        this.backtestState = 'fetched';
-        this.backtestResult = response;
-      });
+        if (!config.valid)
+          return this.backtestable = false;
+
+        this.backtestable = true;
+      },
+      run: function () {
+        this.backtestState = 'fetching';
+
+        post('backtest', this.config, (error, response) => {
+          this.backtestState = 'fetched';
+          this.backtestResult = response;
+        });
+      }
+    },
+    components: {
+      configBuilder,
+      result,
+      spinner
     }
-  },
-  components: {
-    configBuilder,
-    result,
-    spinner
   }
-}
 </script>

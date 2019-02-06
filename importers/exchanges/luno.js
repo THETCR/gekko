@@ -13,7 +13,7 @@ let end = false;
 let from = false;
 const REQUEST_INTERVAL = 5 * 1000;
 
-Fetcher.prototype.getTrades = function(since, callback, descending) {
+Fetcher.prototype.getTrades = function (since, callback, descending) {
   const recoverableErrors = [
     'SOCKETTIMEDOUT',
     'TIMEDOUT',
@@ -22,7 +22,7 @@ Fetcher.prototype.getTrades = function(since, callback, descending) {
     'NOTFOUND'
   ];
 
-  const processResponse = function(funcName, callback) {
+  const processResponse = function (funcName, callback) {
     return (error, body) => {
       if (!error && !body) {
         error = new Error('Empty response');
@@ -51,7 +51,7 @@ Fetcher.prototype.getTrades = function(since, callback, descending) {
       console.log('Error importing trades:', err);
       return;
     }
-    const trades = _.map(result.trades, function(t) {
+    const trades = _.map(result.trades, function (t) {
       return {
         price: t.price,
         date: Math.round(t.timestamp / 1000),
@@ -63,11 +63,14 @@ Fetcher.prototype.getTrades = function(since, callback, descending) {
   };
 
   if (moment.isMoment(since)) since = since.valueOf();
-  (_.isNumber(since) && since > 0) ? since: since = 0;
+  (_.isNumber(since) && since > 0) ? since : since = 0;
 
-  console.log('importer getting trades from Luno since', moment.utc(since).format('YYYY-MM-DD HH:mm:ss'), 'UTC');
+  console.log('importer getting trades from Luno since',
+    moment.utc(since).format('YYYY-MM-DD HH:mm:ss'),
+    'UTC');
 
-  const handler = cb => this.luno.getTrades({ since: since, pair: this.pair }, processResponse('getTrades', cb));
+  const handler = cb => this.luno.getTrades({ since: since, pair: this.pair },
+    processResponse('getTrades', cb));
   retry(null, handler, process);
 };
 
@@ -100,7 +103,7 @@ const handleFetch = (err, trades) => {
   fetcher.emit('trades', trades);
 };
 
-module.exports = function(daterange) {
+module.exports = function (daterange) {
   from = daterange.from.clone().utc();
   end = daterange.to.clone().utc();
 

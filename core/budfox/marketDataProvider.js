@@ -11,7 +11,7 @@ const util = require(__dirname + '/../util');
 const MarketFetcher = require('./marketFetcher');
 const dirs = util.dirs();
 
-const Manager = function(config) {
+const Manager = function (config) {
 
   _.bindAll(this);
 
@@ -20,25 +20,25 @@ const Manager = function(config) {
 
   // relay newly fetched trades
   this.source
-    .on('trades batch', this.relayTrades);
+  .on('trades batch', this.relayTrades);
 };
 
 util.makeEventEmitter(Manager);
 
 // HANDLERS
-Manager.prototype.retrieve = function() {
+Manager.prototype.retrieve = function () {
   this.source.fetch();
 };
 
 
-Manager.prototype.relayTrades = function(batch) {
+Manager.prototype.relayTrades = function (batch) {
   this.sendMarketStart(batch);
   this.emit('marketUpdate', batch.last.date);
 
   this.emit('trades', batch);
 };
 
-Manager.prototype.sendMarketStart = _.once(function(batch) {
+Manager.prototype.sendMarketStart = _.once(function (batch) {
   this.emit('marketStart', batch.first.date);
 });
 

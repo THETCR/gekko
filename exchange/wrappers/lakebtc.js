@@ -4,7 +4,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const log = require('../core/log');
 
-const Trader = function(config) {
+const Trader = function (config) {
   _.bindAll(this);
   if (_.isObject(config)) {
     this.key = config.key;
@@ -20,7 +20,7 @@ const Trader = function(config) {
 
 // if the exchange errors we try the same call again after
 // waiting 10 seconds
-Trader.prototype.retry = function(method, args) {
+Trader.prototype.retry = function (method, args) {
   const wait = +moment.duration(10, 'seconds');
   log.debug(this.name, 'returned an error, retrying..');
 
@@ -28,23 +28,25 @@ Trader.prototype.retry = function(method, args) {
 
   // make sure the callback (and any other fn)
   // is bound to Trader
-  _.each(args, function(arg, i) {
-    if(_.isFunction(arg))
+  _.each(args, function (arg, i) {
+    if (_.isFunction(arg))
       args[i] = _.bind(arg, self);
   });
 
   // run the failed method again with the same
   // arguments after wait
   setTimeout(
-    function() { method.apply(self, args) },
+    function () {
+      method.apply(self, args)
+    },
     wait
   );
 };
 
-Trader.prototype.getPortfolio = function(callback) {
-  const set = function(err, data) {
+Trader.prototype.getPortfolio = function (callback) {
+  const set = function (err, data) {
     const portfolio = [];
-    _.map(data.balance, function(amount, asset) {
+    _.map(data.balance, function (amount, asset) {
       portfolio.push({ name: asset, amount: parseFloat(amount) });
     });
     callback(err, portfolio);
@@ -52,16 +54,16 @@ Trader.prototype.getPortfolio = function(callback) {
   this.lakebtc.getAccountInfo(_.bind(set, this));
 };
 
-Trader.prototype.getTicker = function(callback) {
+Trader.prototype.getTicker = function (callback) {
   this.lakebtc.ticker(callback);
 };
 
-Trader.prototype.getFee = function(callback) {
+Trader.prototype.getFee = function (callback) {
   callback(false, 0.002);
 };
 
-Trader.prototype.buy = function(amount, price, callback) {
-  const set = function(err, result) {
+Trader.prototype.buy = function (amount, price, callback) {
+  const set = function (err, result) {
     if (err || result.error)
       return log.error('unable to buy:', err, result);
 
@@ -77,8 +79,8 @@ Trader.prototype.buy = function(amount, price, callback) {
   this.lakebtc.buyOrder(_.bind(set, this), [price, amount, 'USD']);
 };
 
-Trader.prototype.sell = function(amount, price, callback) {
-  const set = function(err, result) {
+Trader.prototype.sell = function (amount, price, callback) {
+  const set = function (err, result) {
     if (err || result.error)
       return log.error('unable to sell:', err, result);
 
@@ -88,9 +90,9 @@ Trader.prototype.sell = function(amount, price, callback) {
   this.lakebtc.sell(_.bind(set, this), [price, amount, 'USD']);
 };
 
-Trader.prototype.checkOrder = function(order, callback) {
-  const check = function(err, result) {
-    const stillThere = _.find(result, function(o) {
+Trader.prototype.checkOrder = function (order, callback) {
+  const check = function (err, result) {
+    const stillThere = _.find(result, function (o) {
       return o.id === order;
     });
     callback(err, !stillThere);
@@ -99,8 +101,8 @@ Trader.prototype.checkOrder = function(order, callback) {
   this.lakebtc.getOrders(_.bind(check, this));
 };
 
-Trader.prototype.cancelOrder = function(order, callback) {
-  const cancel = function(err, result) {
+Trader.prototype.cancelOrder = function (order, callback) {
+  const cancel = function (err, result) {
     if (err || !result.result)
       log.error('unable to cancel order', order, '(', err, result, ')');
   };
@@ -108,15 +110,15 @@ Trader.prototype.cancelOrder = function(order, callback) {
   this.lakebtc.cancelOrder(_.bind(cancel, this), [order]);
 };
 
-Trader.prototype.getTrades = function(since, callback, descending) {
+Trader.prototype.getTrades = function (since, callback, descending) {
   const args = _.toArray(arguments);
-  const process = function(err, result) {
+  const process = function (err, result) {
     if (err)
       return this.retry(this.getTrades, args);
     callback(null, descending ? result.reverse() : result);
   };
   since = since ? since.unix() : moment().subtract(5, 'minutes').unix();
-  this.lakebtc.bctrades( _.bind(process, this), since);
+  this.lakebtc.bctrades(_.bind(process, this), since);
 };
 
 Trader.getCapabilities = function () {

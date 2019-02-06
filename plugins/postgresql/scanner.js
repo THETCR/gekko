@@ -16,7 +16,7 @@ module.exports = done => {
   let markets = [];
 
   scanClient.connect(function (err) {
-    if(err){
+    if (err) {
       util.die(err);
     }
 
@@ -27,14 +27,14 @@ module.exports = done => {
       sql = "select datname from pg_database where datname='" + postgresUtil.database() + "'";
     }
 
-    const query = scanClient.query(sql, function(err, result) {
+    const query = scanClient.query(sql, function (err, result) {
 
       async.each(result.rows, (dbRow, next) => {
 
           const scanTablesClient = new pg.Client(connectionString + '/' + dbRow.datname);
           const dbName = dbRow.datname;
 
-          scanTablesClient.connect(function(err) {
+          scanTablesClient.connect(function (err) {
             if (err) {
               return next();
             }
@@ -43,7 +43,7 @@ module.exports = done => {
             SELECT table_name
             FROM information_schema.tables
             WHERE table_schema='${postgresUtil.schema()}';
-          `, function(err, result) {
+          `, function (err, result) {
               if (err) {
                 return util.die('DB error at `scanning tables`');
               }

@@ -5,7 +5,7 @@ const util = require('../core/util.js');
 const config = util.getConfig();
 const mailConfig = config.mailer;
 
-const Mailer = function(done) {
+const Mailer = function (done) {
   _.bindAll(this);
 
   this.server;
@@ -15,8 +15,8 @@ const Mailer = function(done) {
   this.setup();
 };
 
-Mailer.prototype.setup = function(done) {
-  const setupMail = function(err, result) {
+Mailer.prototype.setup = function (done) {
+  const setupMail = function (err, result) {
     if (result) {
       console.log('Got it.');
       mailConfig.password = result.password;
@@ -50,7 +50,7 @@ Mailer.prototype.setup = function(done) {
           config.watch.asset,
           '. I\'ll let you know when I got some advice',
         ].join(''),
-        _.bind(function(err) {
+        _.bind(function (err) {
           this.checkResults(err);
           this.done();
         }, this),
@@ -61,7 +61,7 @@ Mailer.prototype.setup = function(done) {
     log.debug('Setup email adviser.');
   };
 
-  if(!mailConfig.password) {
+  if (!mailConfig.password) {
     // ask for the mail password
     const prompt = require('prompt-lite');
     prompt.start();
@@ -74,13 +74,13 @@ Mailer.prototype.setup = function(done) {
       'CANNOT guarantuee that your email address & password are safe!\n',
     ].join('\n\t');
     log.warn(warning);
-    prompt.get({name: 'password', hidden: true}, _.bind(setupMail, this));
+    prompt.get({ name: 'password', hidden: true }, _.bind(setupMail, this));
   } else {
     setupMail.call(this);
   }
 };
 
-Mailer.prototype.mail = function(subject, content, done) {
+Mailer.prototype.mail = function (subject, content, done) {
 
   this.server.send({
     text: content,
@@ -90,13 +90,13 @@ Mailer.prototype.mail = function(subject, content, done) {
   }, done || this.checkResults);
 };
 
-Mailer.prototype.processCandle = function(candle, done) {
+Mailer.prototype.processCandle = function (candle, done) {
   this.price = candle.close;
 
   done();
 };
 
-Mailer.prototype.processAdvice = function(advice) {
+Mailer.prototype.processAdvice = function (advice) {
 
   if (advice.recommendation == "soft" && mailConfig.muteSoft) return;
 
@@ -118,7 +118,7 @@ Mailer.prototype.processAdvice = function(advice) {
   this.mail(subject, text);
 };
 
-Mailer.prototype.processStratNotification = function({ content }) {
+Mailer.prototype.processStratNotification = function ({ content }) {
   const subject = `New notification from ${config.tradingAdvisor.method}`;
   const text = [
     'Gekko received new notification :\n\n',
@@ -128,8 +128,8 @@ Mailer.prototype.processStratNotification = function({ content }) {
   this.mail(subject, text);
 };
 
-Mailer.prototype.checkResults = function(err) {
-  if(err)
+Mailer.prototype.checkResults = function (err) {
+  if (err)
     log.warn('error sending email', err);
   else
     log.info('Send advice via email.');

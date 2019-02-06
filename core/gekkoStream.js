@@ -12,14 +12,14 @@ const mode = util.gekkoMode();
 const config = util.getConfig();
 const log = require(util.dirs().core + 'log');
 
-const Gekko = function(plugins) {
+const Gekko = function (plugins) {
   this.plugins = plugins;
   this.candleConsumers = plugins
-    .filter(plugin => plugin.processCandle);
+  .filter(plugin => plugin.processCandle);
   Writable.call(this, { objectMode: true });
 
   this.producers = this.plugins
-    .filter(p => p.meta.emits);
+  .filter(p => p.meta.emits);
 
   this.finalize = _.bind(this.finalize, this);
 };
@@ -28,11 +28,11 @@ Gekko.prototype = Object.create(Writable.prototype, {
   constructor: { value: Gekko }
 });
 
-if(config.debug && mode !== 'importer') {
+if (config.debug && mode !== 'importer') {
   // decorate with more debug information
-  Gekko.prototype._write = function(chunk, encoding, _done) {
+  Gekko.prototype._write = function (chunk, encoding, _done) {
 
-    if(chunk.isFinished) {
+    if (chunk.isFinished) {
       return this.finalize();
     }
 
@@ -41,7 +41,7 @@ if(config.debug && mode !== 'importer') {
     let at = null;
 
     const timer = setTimeout(() => {
-      if(!relayed)
+      if (!relayed)
         log.error([
           `The plugin "${at}" has not processed a candle for 1 second.`,
           `This will cause Gekko to slow down or stop working completely.`
@@ -54,15 +54,15 @@ if(config.debug && mode !== 'importer') {
       this.flushDefferedEvents();
       _done();
     });
-    _.each(this.candleConsumers, function(c) {
+    _.each(this.candleConsumers, function (c) {
       at = c.meta.name;
       c.processCandle(chunk, flushEvents);
     }, this);
   }
 } else {
   // skip decoration
-  Gekko.prototype._write = function(chunk, encoding, _done) {
-    if(chunk.isFinished) {
+  Gekko.prototype._write = function (chunk, encoding, _done) {
+    if (chunk.isFinished) {
       return this.finalize();
     }
 
@@ -70,13 +70,13 @@ if(config.debug && mode !== 'importer') {
       this.flushDefferedEvents();
       _done();
     });
-    _.each(this.candleConsumers, function(c) {
+    _.each(this.candleConsumers, function (c) {
       c.processCandle(chunk, flushEvents);
     }, this);
   }
 }
 
-Gekko.prototype.flushDefferedEvents = function() {
+Gekko.prototype.flushDefferedEvents = function () {
   const broadcasted = _.find(
     this.producers,
     producer => producer.broadcastDeferredEmit()
@@ -85,27 +85,27 @@ Gekko.prototype.flushDefferedEvents = function() {
   // If we braodcasted anything we might have
   // triggered more events, recurse until we
   // have fully broadcasted everything.
-  if(broadcasted)
+  if (broadcasted)
     this.flushDefferedEvents();
 };
 
-Gekko.prototype.finalize = function() {
+Gekko.prototype.finalize = function () {
   const tradingMethod = _.find(
     this.candleConsumers,
     c => c.meta.name === 'Trading Advisor',
   );
 
-  if(!tradingMethod)
+  if (!tradingMethod)
     return this.shutdown();
 
   tradingMethod.finish(this.shutdown.bind(this));
 };
 
-Gekko.prototype.shutdown = function() {
+Gekko.prototype.shutdown = function () {
   this.end();
   async.eachSeries(
     this.plugins,
-    function(c, callback) {
+    function (c, callback) {
       if (c.finalize) c.finalize(callback);
       else callback();
     },

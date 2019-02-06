@@ -19,10 +19,10 @@ const start = (config, candleSize, daterange) => {
 process.send('ready');
 
 process.on('message', (m) => {
-  if(m.what === 'start')
+  if (m.what === 'start')
     start(m.config, m.candleSize, m.daterange);
 });
 
-process.on('disconnect', function() {
+process.on('disconnect', function () {
   process.exit(0);
 });

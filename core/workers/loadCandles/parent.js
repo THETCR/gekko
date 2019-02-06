@@ -50,8 +50,8 @@ module.exports = (config, callback) => {
 
   const done = _.once(callback);
 
-  child.on('message', function(m) {
-    if(m === 'ready')
+  child.on('message', function (m) {
+    if (m === 'ready')
       return child.send(message);
 
     // else we are done and have candles!
@@ -62,7 +62,7 @@ module.exports = (config, callback) => {
   });
 
   child.on('exit', code => {
-    if(code !== 0)
+    if (code !== 0)
       done('ERROR, unable to load candles, please check the console.');
   });
 };

@@ -37,98 +37,98 @@
 
 <script>
 
-import { post } from '../../tools/ajax'
-import _ from 'lodash'
-import spinner from '../global/blockSpinner.vue'
-import Vue from 'vue'
-import chart from '../backtester/result/chartWrapper.vue'
-// global moment
+  import { post } from '../../tools/ajax'
+  import _ from 'lodash'
+  import spinner from '../global/blockSpinner.vue'
+  import Vue from 'vue'
+  import chart from '../backtester/result/chartWrapper.vue'
+  // global moment
 
-export default {
-  created: function() {
-    if(!this.isLoading)
-      this.getCandles();
-  },
-  components: {
-    spinner,
-    chart
-  },
-  data: () => {
-    return {
-      candleFetch: 'idle',
-      candles: []
-    }
-  },
-  computed: {
-    watchers: function() {
-      return this.$store.state.watchers;
+  export default {
+    created: function () {
+      if (!this.isLoading)
+        this.getCandles();
     },
-    data: function() {
-      return _.find(this.watchers, {id: this.$route.params.id});
+    components: {
+      spinner,
+      chart
     },
-    chartData: function() {
+    data: () => {
       return {
-        candles: this.candles,
-        trades: []
+        candleFetch: 'idle',
+        candles: []
       }
     },
-    isLoading: function() {
-      if(!this.data)
-        return true;
-      if(!_.isObject(this.data.firstCandle))
-        return true;
-      if(!_.isObject(this.data.lastCandle))
-        return true;
+    computed: {
+      watchers: function () {
+        return this.$store.state.watchers;
+      },
+      data: function () {
+        return _.find(this.watchers, { id: this.$route.params.id });
+      },
+      chartData: function () {
+        return {
+          candles: this.candles,
+          trades: []
+        }
+      },
+      isLoading: function () {
+        if (!this.data)
+          return true;
+        if (!_.isObject(this.data.firstCandle))
+          return true;
+        if (!_.isObject(this.data.lastCandle))
+          return true;
 
-      return false;
+        return false;
+      },
     },
-  },
-  watch: {
-    'data.lastCandle.start': function() {
-      this.candleFetch = 'dirty';
+    watch: {
+      'data.lastCandle.start': function () {
+        this.candleFetch = 'dirty';
+      },
+      data: function (val, prev) {
+        let complete = val && val.firstCandle && val.lastCandle;
+
+        if (!complete)
+          return;
+
+        if (this.candleFetch !== 'fetched')
+          this.getCandles();
+      }
     },
-    data: function(val, prev) {
-      let complete = val && val.firstCandle && val.lastCandle;
+    methods: {
+      humanizeDuration: (n) => window.humanizeDuration(n),
+      moment: mom => moment.utc(mom),
+      fmt: mom => moment.utc(mom).format('YYYY-MM-DD HH:mm'),
+      getCandles: function () {
 
-      if(!complete)
-        return;
+        this.candleFetch = 'fetching';
 
-      if(this.candleFetch !== 'fetched' )
-        this.getCandles();
-    }
-  },
-  methods: {
-    humanizeDuration: (n) => window.humanizeDuration(n),
-    moment: mom => moment.utc(mom),
-    fmt: mom => moment.utc(mom).format('YYYY-MM-DD HH:mm'),
-    getCandles: function() {
+        // up unto we have data
+        let to = moment.utc(
+          this.data.lastCandle.start
+        ).unix();
 
-      this.candleFetch = 'fetching';
+        // max 7 days of data
+        let from = Math.max(
+          moment.utc(this.data.firstCandle.start).unix(),
+          moment.utc(to).subtract(7, 'days').unix()
+        );
 
-      // up unto we have data
-      let to = moment.utc(
-        this.data.lastCandle.start
-      ).unix();
+        // TODO...
+        const diff = to - from;
+        let candleSize = 60;
+        if (diff < 60 * 60 * 24) // a day
+          if (diff < 60 * 60 * 12) // 3 hours
+            candleSize = 1;
+          else
+            candleSize = 5;
 
-      // max 7 days of data
-      let from = Math.max(
-        moment.utc(this.data.firstCandle.start).unix(),
-        moment.utc(to).subtract(7, 'days').unix()
-      );
+        from = moment.unix(from).utc().format();
+        to = moment.unix(to).utc().format();
 
-      // TODO...
-      const diff = to - from;
-      let candleSize = 60;
-      if(diff < 60 * 60 * 24) // a day
-        if(diff < 60 * 60 * 12) // 3 hours
-          candleSize = 1;
-        else
-          candleSize = 5;
-
-      from = moment.unix(from).utc().format();
-      to = moment.unix(to).utc().format();
-
-      let config = {
+        let config = {
           watch: this.data.watch,
           daterange: {
             to, from
@@ -137,16 +137,16 @@ export default {
           candleSize
         };
 
-      post('getCandles', config, (err, res) => {
-        this.candleFetch = 'fetched';
-        this.candles = res.map(c => {
-          c.start = moment.unix(c.start).utc().format();
-          return c;
-        });
-      })
+        post('getCandles', config, (err, res) => {
+          this.candleFetch = 'fetched';
+          this.candles = res.map(c => {
+            c.start = moment.unix(c.start).utc().format();
+            return c;
+          });
+        })
+      }
     }
   }
-}
 </script>
 
 <style>

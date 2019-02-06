@@ -9,21 +9,21 @@ const dirs = util.dirs();
 const mode = util.gekkoMode();
 const log = require(dirs.core + 'log');
 
-const Logger = function(watchConfig) {
+const Logger = function (watchConfig) {
   this.currency = watchConfig.currency;
   this.asset = watchConfig.asset;
 
   this.roundtrips = [];
 };
 
-Logger.prototype.round = function(amount) {
+Logger.prototype.round = function (amount) {
   return amount.toFixed(8);
 };
 
 // used for:
 // - realtime logging (per advice)
 // - backtest logging (on finalize)
-Logger.prototype.logReport = function(trade, report) {
+Logger.prototype.logReport = function (trade, report) {
   // ignore the trade
 
   const start = this.round(report.startBalance);
@@ -37,11 +37,11 @@ Logger.prototype.logReport = function(trade, report) {
   );
 };
 
-Logger.prototype.logRoundtripHeading = function() {
+Logger.prototype.logRoundtripHeading = function () {
   log.info('(ROUNDTRIP)', 'entry date (UTC)  \texit date (UTC)  \texposed duration\tP&L \tprofit');
 };
 
-Logger.prototype.logRoundtrip = function(rt) {
+Logger.prototype.logRoundtrip = function (rt) {
   const display = [
     rt.entryAt.utc().format('YYYY-MM-DD HH:mm'),
     rt.exitAt.utc().format('YYYY-MM-DD HH:mm'),
@@ -53,26 +53,26 @@ Logger.prototype.logRoundtrip = function(rt) {
   log.info('(ROUNDTRIP)', display.join('\t'));
 };
 
-if(mode === 'backtest') {
+if (mode === 'backtest') {
   // we only want to log a summarized one line report, like:
   // 2016-12-19 20:12:00: Paper trader simulated a BUY 0.000 USDT => 1.098 BTC
-  Logger.prototype.handleTrade = function(trade) {
-    if(trade.action !== 'sell' && trade.action !== 'buy')
+  Logger.prototype.handleTrade = function (trade) {
+    if (trade.action !== 'sell' && trade.action !== 'buy')
       return;
 
     const at = trade.date.format('YYYY-MM-DD HH:mm:ss');
 
 
-    if(trade.action === 'sell')
+    if (trade.action === 'sell')
 
-        log.info(
-          `${at}: Paper trader simulated a SELL`,
-          `\t${this.round(trade.portfolio.currency)}`,
-          `${this.currency} <= ${this.round(trade.portfolio.asset)}`,
-          `${this.asset}`
-        );
+      log.info(
+        `${at}: Paper trader simulated a SELL`,
+        `\t${this.round(trade.portfolio.currency)}`,
+        `${this.currency} <= ${this.round(trade.portfolio.asset)}`,
+        `${this.asset}`
+      );
 
-    else if(trade.action === 'buy')
+    else if (trade.action === 'buy')
 
       log.info(
         `${at}: Paper trader simulated a BUY`,
@@ -82,7 +82,7 @@ if(mode === 'backtest') {
       );
   };
 
-  Logger.prototype.finalize = function(report) {
+  Logger.prototype.finalize = function (report) {
 
     log.info();
     log.info('(ROUNDTRIP) REPORT:');
@@ -114,21 +114,19 @@ if(mode === 'backtest') {
     log.info(`(PROFIT REPORT) ratio roundtrips:\t\t ${report.ratioRoundTrips}%`);
   };
 
-  Logger.prototype.handleRoundtrip = function(rt) {
+  Logger.prototype.handleRoundtrip = function (rt) {
     this.roundtrips.push(rt);
   }
 
-} else if(mode === 'realtime') {
+} else if (mode === 'realtime') {
   Logger.prototype.handleTrade = Logger.prototype.logReport;
 
-  Logger.prototype.handleRoundtrip = function(rt) {
+  Logger.prototype.handleRoundtrip = function (rt) {
     this.logRoundtripHeading();
     this.logRoundtrip(rt);
   }
 
 }
-
-
 
 
 module.exports = Logger;

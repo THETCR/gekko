@@ -18,7 +18,7 @@ const pluginMock = {
 };
 
 const cannotLoad = pluginHelper.cannotLoad(pluginMock);
-if(cannotLoad) {
+if (cannotLoad) {
   util.die(cannotLoad);
 }
 
@@ -44,18 +44,18 @@ const pool = new pg.Pool({
 // postgres database first. Your postgres
 // user will need appropriate rights.
 checkClient.connect((err, client, done) => {
-  if(err) {
+  if (err) {
     util.die(err);
   }
 
   log.debug("Check database exists: " + dbName);
   client.query("select count(*) from pg_catalog.pg_database where datname = $1", [dbName],
     (err, res) => {
-      if(err) {
+      if (err) {
         util.die(err);
       }
 
-      if(res.rows[0].count !== '0') {
+      if (res.rows[0].count !== '0') {
         // database exists
         log.debug("Database exists: " + dbName);
         log.debug("Postgres connection pool is ready, db " + dbName);
@@ -66,7 +66,7 @@ checkClient.connect((err, client, done) => {
 
       // database dot NOT exist
 
-      if(mode === 'backtest') {
+      if (mode === 'backtest') {
         // no point in trying to backtest with
         // non existing data.
         util.die(`History does not exist for exchange ${config.watch.exchange}.`);
@@ -78,7 +78,7 @@ checkClient.connect((err, client, done) => {
 
 const createDatabase = (client, done) => {
   client.query("CREATE DATABASE " + dbName, err => {
-    if(err) {
+    if (err) {
       util.die(err);
     }
 
@@ -104,7 +104,7 @@ const upsertTables = () => {
     );`;
 
   pool.query(upsertQuery, (err) => {
-    if(err) {
+    if (err) {
       util.die(err);
     }
   });

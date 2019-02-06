@@ -21,13 +21,13 @@ const to = moment.utc(daterange.to).startOf('minute');
 const from = moment.utc(daterange.from).startOf('minute');
 const toUnix = to.unix();
 
-if(to <= from)
+if (to <= from)
   util.die('This daterange does not make sense.');
 
-if(!from.isValid())
+if (!from.isValid())
   util.die('invalid `from`');
 
-if(!to.isValid())
+if (!to.isValid())
   util.die('invalid `to`');
 
 let iterator = {
@@ -47,11 +47,11 @@ const doneFn = () => {
   });
 };
 
-module.exports = function(candleSize, _next) {
+module.exports = function (candleSize, _next) {
   next = _.once(_next);
 
   batcher = new CandleBatcher(candleSize)
-    .on('candle', handleBatchedCandles);
+  .on('candle', handleBatchedCandles);
 
   getBatch();
 };
@@ -73,18 +73,18 @@ const shiftIterator = () => {
 };
 
 const handleCandles = (err, data) => {
-  if(err) {
+  if (err) {
     console.error(err);
     util.die('Encountered an error..')
   }
 
-  if(_.size(data) && _.last(data).start >= toUnix || iterator.from.unix() >= toUnix)
+  if (_.size(data) && _.last(data).start >= toUnix || iterator.from.unix() >= toUnix)
     DONE = true;
 
   batcher.write(data);
   batcher.flush();
 
-  if(DONE) {
+  if (DONE) {
     reader.close();
 
     setTimeout(doneFn, 100);

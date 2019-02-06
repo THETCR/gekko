@@ -8,13 +8,13 @@ const apiKeysFile = __dirname + '/../SECRET-api-keys.json';
 // on init:
 const noApiKeysFile = !fs.existsSync(apiKeysFile);
 
-if(noApiKeysFile)
+if (noApiKeysFile)
   fs.writeFileSync(
     apiKeysFile,
     JSON.stringify({})
   );
 
-const apiKeys = JSON.parse( fs.readFileSync(apiKeysFile, 'utf8') );
+const apiKeys = JSON.parse(fs.readFileSync(apiKeysFile, 'utf8'));
 
 module.exports = {
   get: () => _.keys(apiKeys),
@@ -30,7 +30,7 @@ module.exports = {
     });
   },
   remove: exchange => {
-    if(!apiKeys[exchange])
+    if (!apiKeys[exchange])
       return;
 
     delete apiKeys[exchange];

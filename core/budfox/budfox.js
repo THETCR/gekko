@@ -17,7 +17,7 @@ const Heart = require(dirs.budfox + 'heart');
 const MarketDataProvider = require(dirs.budfox + 'marketDataProvider');
 const CandleManager = require(dirs.budfox + 'candleManager');
 
-const BudFox = function(config) {
+const BudFox = function (config) {
   _.bindAll(this);
 
   Readable.call(this, { objectMode: true });
@@ -69,9 +69,10 @@ BudFox.prototype = Object.create(Readable.prototype, {
   constructor: { value: BudFox }
 });
 
-BudFox.prototype._read = function noop() {};
+BudFox.prototype._read = function noop() {
+};
 
-BudFox.prototype.pushCandles = function(candles) {
+BudFox.prototype.pushCandles = function (candles) {
   _.each(candles, this.push);
 };
 

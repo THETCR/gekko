@@ -19,7 +19,7 @@ if (cannotLoad) util.die(cannotLoad);
 
 // should be good now
 let sqlite3;
-if (config.debug){
+if (config.debug) {
   sqlite3 = require('sqlite3').verbose();
 } else {
   sqlite3 = require('sqlite3');
@@ -44,7 +44,7 @@ if (mode === 'realtime' || mode === 'importer') {
     util.die(
       `History database does not exist for exchange ${
         config.watch.exchange
-      } at version ${version}.`
+        } at version ${version}.`
     );
 }
 

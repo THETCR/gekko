@@ -26,7 +26,7 @@ const handleFetch = (err, trades) => {
     log.error(`There was an error importing from Binance ${err}`);
     fetcher.emit('done');
     return fetcher.emit('trades', []);
-}
+  }
 
   let next;
   if (trades.length > 0) {
@@ -50,7 +50,7 @@ const handleFetch = (err, trades) => {
   fetcher.emit('trades', trades);
 };
 
-module.exports = function(daterange) {
+module.exports = function (daterange) {
   from = daterange.from.clone().utc();
   end = daterange.to.clone().utc();
 

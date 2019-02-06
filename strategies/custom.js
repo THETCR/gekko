@@ -14,14 +14,14 @@ const log = require('../core/log');
 const strat = {};
 
 // Prepare everything our method needs
-strat.init = function() {
+strat.init = function () {
   this.input = 'candle';
   this.currentTrend = 'long';
   this.requiredHistory = 0;
 };
 
 // What happens on every new candle?
-strat.update = function(candle) {
+strat.update = function (candle) {
 
   // Get a random number between 0 and 1.
   this.randomNumber = Math.random();
@@ -31,7 +31,7 @@ strat.update = function(candle) {
 };
 
 // For debugging purposes.
-strat.log = function() {
+strat.log = function () {
   log.debug('calculated random number:');
   log.debug('\t', this.randomNumber.toFixed(3));
 };
@@ -39,13 +39,13 @@ strat.log = function() {
 // Based on the newly calculated
 // information, check if we should
 // update or not.
-strat.check = function() {
+strat.check = function () {
 
   // Only continue if we have a new update.
-  if(!this.toUpdate)
+  if (!this.toUpdate)
     return;
 
-  if(this.currentTrend === 'long') {
+  if (this.currentTrend === 'long') {
 
     // If it was long, set it to short
     this.currentTrend = 'short';

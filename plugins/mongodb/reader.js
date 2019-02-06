@@ -13,67 +13,69 @@ const Reader = function Reader() {
 };
 
 // returns the furtherst point (up to `from`) in time we have valid data from
-Reader.prototype.mostRecentWindow = function mostRecentWindow (from, to, next) {
+Reader.prototype.mostRecentWindow = function mostRecentWindow(from, to, next) {
   const mFrom = from.unix();
   const mTo = to.unix();
 
   const maxAmount = mTo - mFrom + 1;
 
   // Find some documents
-  this.collection.find({ pair: this.pair, start: { $gte: mFrom, $lte: mTo } }).sort({ start: -1 }, (err, docs) => {
-    if (err) {
-      return util.die('DB error at `mostRecentWindow`');
-    }
-    // no candles are available
-    if (docs.length === 0) {
-      log.debug('no candles are available');
-      return next(false);
-    }
+  this.collection.find({ pair: this.pair, start: { $gte: mFrom, $lte: mTo } }).sort({ start: -1 },
+    (err, docs) => {
+      if (err) {
+        return util.die('DB error at `mostRecentWindow`');
+      }
+      // no candles are available
+      if (docs.length === 0) {
+        log.debug('no candles are available');
+        return next(false);
+      }
 
-    if (docs.length === maxAmount) {
-      // full history is available!
-      log.debug('full history is available!');
+      if (docs.length === maxAmount) {
+        // full history is available!
+        log.debug('full history is available!');
+        return next({
+          mFrom,
+          mTo
+        });
+      }
+
+      // we have at least one gap, figure out where
+      const mostRecent = _.first(docs).start;
+
+      const gapIndex = _.findIndex(docs, (r, i) => r.start !== mostRecent - i * 60);
+
+      // if there was no gap in the records, but
+      // there were not enough records.
+      if (gapIndex === -1) {
+        const leastRecent = _.last(docs).start;
+        return next({
+          from: leastRecent,
+          to: mostRecent
+        });
+      }
+
+      // else return mostRecent and the
+      // the minute before the gap
       return next({
-        mFrom,
-        mTo
-      });
-    }
-
-    // we have at least one gap, figure out where
-    const mostRecent = _.first(docs).start;
-
-    const gapIndex = _.findIndex(docs, (r, i) => r.start !== mostRecent - i * 60);
-
-    // if there was no gap in the records, but
-    // there were not enough records.
-    if (gapIndex === -1) {
-      const leastRecent = _.last(docs).start;
-      return next({
-        from: leastRecent,
+        from: docs[gapIndex - 1].start,
         to: mostRecent
       });
-    }
-
-    // else return mostRecent and the
-    // the minute before the gap
-    return next({
-      from: docs[gapIndex - 1].start,
-      to: mostRecent
-    });
-  })
+    })
 };
 
-Reader.prototype.get = function get (from, to, what, next) { // returns all fields in general
+Reader.prototype.get = function get(from, to, what, next) { // returns all fields in general
   // Find some documents
-  this.collection.find({ pair: this.pair, start: { $gte: from, $lte: to } }).sort({ start: 1 }, (err, docs) => {
-    if (err) {
-      return util.die('DB error at `get`');
-    }
-    return next(null, docs);
-  });
+  this.collection.find({ pair: this.pair, start: { $gte: from, $lte: to } }).sort({ start: 1 },
+    (err, docs) => {
+      if (err) {
+        return util.die('DB error at `get`');
+      }
+      return next(null, docs);
+    });
 };
 
-Reader.prototype.count = function fCount (from, to, next) {
+Reader.prototype.count = function fCount(from, to, next) {
   this.collection.count({ pair: this.pair, start: { $gte: from, $lte: to } }, (err, count) => {
     if (err) {
       return util.die('DB error at `count`');
@@ -82,7 +84,7 @@ Reader.prototype.count = function fCount (from, to, next) {
   })
 };
 
-Reader.prototype.countTotal = function countTotal (next) {
+Reader.prototype.countTotal = function countTotal(next) {
   this.collection.count({ pair: this.pair }, (err, count) => {
     if (err) {
       return util.die('DB error at `countTotal`');
@@ -91,29 +93,31 @@ Reader.prototype.countTotal = function countTotal (next) {
   })
 };
 
-Reader.prototype.getBoundry = function getBoundry (next) {
-  this.collection.find({ pair: this.pair }, { start: 1 }).sort({ start: 1 }).limit(1, (err, docs) => {
-    if (err) {
-      return util.die('DB error at `getBoundry`');
-    }
-    const start = _.first(docs).start;
-
-    this.collection.find({ pair: this.pair }, { start: 1 }).sort({ start: -1 }).limit(1, (err2, docs2) => {
-      if (err2) {
+Reader.prototype.getBoundry = function getBoundry(next) {
+  this.collection.find({ pair: this.pair }, { start: 1 }).sort({ start: 1 }).limit(1,
+    (err, docs) => {
+      if (err) {
         return util.die('DB error at `getBoundry`');
       }
-      const end = _.first(docs2).start;
-      return next(null, { first: start, last: end });
+      const start = _.first(docs).start;
+
+      this.collection.find({ pair: this.pair }, { start: 1 }).sort({ start: -1 }).limit(1,
+        (err2, docs2) => {
+          if (err2) {
+            return util.die('DB error at `getBoundry`');
+          }
+          const end = _.first(docs2).start;
+          return next(null, { first: start, last: end });
+        });
+      return null;
     });
-    return null;
-  });
 };
 
-Reader.prototype.tableExists = function(name, next) {
+Reader.prototype.tableExists = function (name, next) {
   return next(null, true); // Return true for backtest
 };
 
-Reader.prototype.close = function close () {
+Reader.prototype.close = function close() {
   this.db = null;
 };
 
