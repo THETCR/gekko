@@ -1,6 +1,7 @@
 {
   "parser": "vue-eslint-parser",
   "parserOptions": {
+    "parser": "babel-eslint",
     "ecmaVersion": 2017,
     "sourceType": "module"
   },
@@ -9,7 +10,7 @@
     "import"
   ],
   "extends": [
-    "airbnb",
+    "airbnb-base",
     "eslint:recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
