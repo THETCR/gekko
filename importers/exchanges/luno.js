@@ -51,7 +51,7 @@ Fetcher.prototype.getTrades = function(since, callback, descending) {
       console.log('Error importing trades:', err);
       return;
     }
-    trades = _.map(result.trades, function(t) {
+    const trades = _.map(result.trades, function(t) {
       return {
         price: t.price,
         date: Math.round(t.timestamp / 1000),

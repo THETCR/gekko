@@ -399,7 +399,7 @@ Trader.prototype.getMaxDecimalsNumber = function(number, decimalLimit = 8) {
     .length;
 
   let decimalMultiplier = 1;
-  for (i = 0; i < decimalLimit; i++) {
+  for (let i = 0; i < decimalLimit; i++) {
     decimalMultiplier *= 10;
   }
 

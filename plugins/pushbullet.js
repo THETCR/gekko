@@ -264,7 +264,7 @@ function getNumStr(num, fixed = 4) {
   }
 
   let insPos = dp - 3;
-  insCount = 0;
+  let insCount = 0;
   while (insPos > 0) {
     insCount++;
     numStr = numStr.slice(0, insPos) + ',' + numStr.slice(insPos);

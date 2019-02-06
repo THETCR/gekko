@@ -22,8 +22,9 @@ const pluginHelper = {
   cannotLoad: function(plugin) {
 
     // verify plugin dependencies are installed
+    let error;
     if (_.has(plugin, 'dependencies'))
-      let error = false;
+      error = false;
 
     _.each(plugin.dependencies, function(dep) {
       try {
@@ -39,7 +40,7 @@ const pluginHelper = {
         if (!e.message.startsWith('Cannot find module'))
           return util.die(e);
 
-        error = [
+         error = [
           'The plugin',
           plugin.slug,
           'expects the module',

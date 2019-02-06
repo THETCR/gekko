@@ -42,7 +42,7 @@ FakeExchange.prototype = {
   }
 };
 const transactionsSpy = sinon.spy(FakeExchange.prototype, 'transactions');
-spoofer = {
+let spoofer = {
   bitstamp: FakeExchange
 };
 

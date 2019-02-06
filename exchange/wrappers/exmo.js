@@ -58,7 +58,7 @@ Trader.prototype.api_query = function(method, params, callback){
 
   request.post(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            data=JSON.parse(body);
+            const data=JSON.parse(body);
             if(data.error) error = { message: data.error };
             else if (data.result!=undefined && data.result==false)  error = { message: '"result": false' } ;
             callback(error, data);
