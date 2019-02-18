@@ -10,20 +10,20 @@
 
 <script>
 
+  import _ from 'lodash'
   import marketPicker from '../../global/configbuilder/marketpicker.vue'
   import rangeCreator from '../../global/configbuilder/rangecreator.vue'
-  import _ from 'lodash'
 
   export default {
+    components: {
+      marketPicker,
+      rangeCreator
+    },
     data: () => {
       return {
         market: {},
         range: {}
       }
-    },
-    components: {
-      marketPicker,
-      rangeCreator
     },
     computed: {
       config: function () {

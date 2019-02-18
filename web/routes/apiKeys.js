@@ -1,4 +1,5 @@
 const cache = require('../state/cache');
+
 const manager = cache.get('apiKeyManager');
 
 module.exports = {

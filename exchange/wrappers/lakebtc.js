@@ -1,7 +1,7 @@
 const Lakebtc = require('lakebtc_nodejs');
-const util = require('../core/util.js');
 const _ = require('lodash');
 const moment = require('moment');
+const util = require('../core/util.js');
 const log = require('../core/log');
 
 const Trader = function (config) {

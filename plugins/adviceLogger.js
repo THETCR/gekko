@@ -1,7 +1,8 @@
-const log = require('../core/log');
 const moment = require('moment');
 const _ = require('lodash');
+const log = require('../core/log');
 const util = require('../core/util.js');
+
 const config = util.getConfig();
 const adviceLoggerConfig = config.adviceLogger;
 

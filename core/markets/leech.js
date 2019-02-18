@@ -6,6 +6,7 @@ const _ = require('lodash');
 const moment = require('moment');
 
 const util = require('../util');
+
 const dirs = util.dirs();
 const config = util.getConfig();
 
@@ -49,6 +50,7 @@ const Market = function () {
 };
 
 const Readable = require('stream').Readable;
+
 Market.prototype = Object.create(Readable.prototype, {
   constructor: { value: Market }
 });

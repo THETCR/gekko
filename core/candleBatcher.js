@@ -10,6 +10,7 @@
 // input are transported candles.
 
 const _ = require('lodash');
+
 const util = require(__dirname + '/util');
 
 const CandleBatcher = function (candleSize) {

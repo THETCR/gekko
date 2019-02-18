@@ -5,6 +5,7 @@ const moment = require('moment');
 const humanizeDuration = require('humanize-duration');
 
 const util = require('../../core/util.js');
+
 const dirs = util.dirs();
 const mode = util.gekkoMode();
 const log = require(dirs.core + 'log');

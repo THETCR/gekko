@@ -34,6 +34,7 @@ const moment = require('moment');
 const request = require('request');
 const log = require('../core/log.js');
 const util = require('../core/util.js');
+
 const config = util.getConfig();
 const pbConf = config.pushbullet;
 

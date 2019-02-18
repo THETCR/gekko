@@ -1,5 +1,5 @@
 import { get } from '../../../tools/ajax'
-import store from '../../'
+import store from "../.."
 import { bus } from '../../../components/global/ws'
 
 const transformMarkets = backendData => {

@@ -5,6 +5,7 @@ const broadcast = require('./cache').get('broadcast');
 const Logger = require('./logger');
 const pipelineRunner = require('../../core/workers/pipeline/parent');
 const reduceState = require('./reduceState.js');
+
 const now = () => moment().format('YYYY-MM-DD HH:mm');
 
 const GekkoManager = function () {

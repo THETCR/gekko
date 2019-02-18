@@ -1,8 +1,9 @@
-const log = require('../core/log');
 const moment = require('moment');
 const _ = require('lodash');
 const xmpp = require('node-xmpp-client');
+const log = require('../core/log');
 const config = require('../core/util').getConfig();
+
 const xmppbot = config.xmppbot;
 const utc = moment.utc;
 

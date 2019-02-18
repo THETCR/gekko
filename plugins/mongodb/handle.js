@@ -2,6 +2,7 @@ const mongojs = require('mongojs');
 const mongoUtil = require('./util');
 
 const util = require('../../core/util.js');
+
 const config = util.getConfig();
 const dirs = util.dirs();
 

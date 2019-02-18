@@ -21,9 +21,6 @@
         exchange: 'poloniex',
       };
     },
-    created: function () {
-      this.emitExchange();
-    },
     computed: {
       exchanges: function () {
 
@@ -57,6 +54,9 @@
       exchange: function () {
         this.emitExchange()
       }
+    },
+    created: function () {
+      this.emitExchange();
     },
 
     methods: {

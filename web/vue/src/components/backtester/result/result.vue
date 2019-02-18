@@ -16,15 +16,14 @@
   import roundtripTable from './roundtripTable.vue'
 
   export default {
-    props: ['result'],
-    data: () => {
-      return {}
-    },
-    methods: {},
     components: {
       roundtripTable,
       resultSummary,
       chart
+    },
+    props: ['result'],
+    data: () => {
+      return {}
     },
     computed: {
       candles: function () {
@@ -33,7 +32,8 @@
           trades: this.result.trades
         };
       }
-    }
+    },
+    methods: {}
   }
 </script>
 

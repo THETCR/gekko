@@ -10,6 +10,7 @@ const moment = require('moment');
 const fmt = require('util').format;
 const _ = require('lodash');
 const util = require('./util');
+
 const config = util.getConfig();
 const debug = config.debug;
 const silent = config.silent;

@@ -30,6 +30,16 @@
         addApiToggle: false,
       }
     },
+    computed: {
+      apiKeySets: function () {
+        return this.$store.state.apiKeys
+      }
+    },
+    watch: {
+      apiKeySets: function () {
+        this.addApiToggle = false;
+      }
+    },
     methods: {
       openAddApi: function () {
         this.addApiToggle = true;
@@ -42,16 +52,6 @@
           if (error)
             return alert(error);
         });
-      }
-    },
-    computed: {
-      apiKeySets: function () {
-        return this.$store.state.apiKeys
-      }
-    },
-    watch: {
-      apiKeySets: function () {
-        this.addApiToggle = false;
       }
     }
   }

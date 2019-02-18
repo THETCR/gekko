@@ -5,7 +5,7 @@
   import modal from './components/layout/modal.vue'
 
   export default {
-    name: 'app',
+    name: 'App',
     components: {
       top,
       bottom,

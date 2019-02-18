@@ -54,13 +54,14 @@
   import Vue from 'vue'
 
   import { post } from '../../../tools/ajax'
-  import spinner from '../../global/blockSpinner.vue'
-  import dataset from '../../global/mixins/dataset'
+  import spinner from "../blockSpinner.vue"
+  import dataset from "../mixins/dataset"
 
   export default {
     components: {
       spinner
     },
+    mixins: [dataset],
     data: () => {
       return {
         setIndex: -1,
@@ -70,7 +71,23 @@
         set: false
       };
     },
-    mixins: [dataset],
+    watch: {
+
+      setIndex: function () {
+        this.set = this.datasets[this.setIndex];
+
+        this.updateCustomRange();
+
+        this.emitSet(this.set);
+      },
+
+      customTo: function () {
+        this.emitSet(this.set);
+      },
+      customFrom: function () {
+        this.emitSet(this.set);
+      }
+    },
     methods: {
       humanizeDuration: (n) => {
         return window.humanizeDuration(n, { largest: 4 });
@@ -103,23 +120,6 @@
         }
 
         this.$emit('dataset', set);
-      }
-    },
-    watch: {
-
-      setIndex: function () {
-        this.set = this.datasets[this.setIndex];
-
-        this.updateCustomRange();
-
-        this.emitSet(this.set);
-      },
-
-      customTo: function () {
-        this.emitSet(this.set);
-      },
-      customFrom: function () {
-        this.emitSet(this.set);
       }
     }
   }

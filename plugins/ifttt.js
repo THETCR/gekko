@@ -2,6 +2,7 @@ const superagent = require('superagent');
 const _ = require('lodash');
 const log = require('../core/log.js');
 const util = require('../core/util.js');
+
 const config = util.getConfig();
 const iftttConfig = config.ifttt;
 

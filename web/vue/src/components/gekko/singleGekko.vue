@@ -115,10 +115,6 @@
   // global moment
 
   export default {
-    created: function () {
-      if (!this.isLoading)
-        this.getCandles();
-    },
     components: {
       spinner,
       chart,
@@ -275,6 +271,10 @@
       'data.events.latest.candle.start': function () {
         setTimeout(this.getCandles, _.random(100, 2000));
       }
+    },
+    created: function () {
+      if (!this.isLoading)
+        this.getCandles();
     },
     methods: {
       round: n => (+n).toFixed(5),

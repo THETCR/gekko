@@ -4,6 +4,7 @@ const _ = require('lodash');
 const Errors = require('../exchangeErrors');
 const marketData = require('./binance-markets.json');
 const exchangeUtils = require('../exchangeUtils');
+
 const retry = exchangeUtils.retry;
 const scientificToDecimal = exchangeUtils.scientificToDecimal;
 

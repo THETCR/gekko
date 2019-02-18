@@ -1,7 +1,7 @@
 /*
  * Linear regression curve
  */
-const log = require('../../core/log');
+// const log = require('../../core/log');
 
 const Indicator = function (settings) {
   this.input = 'price';

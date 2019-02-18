@@ -40,7 +40,7 @@ method.log = function () {
 // information, check if we should
 // update or not.
 method.check = function (candle) {
-  const price = candle.close;
+  // const price = candle.close;
   const result = this.tulipIndicators.mymacd.result;
   const macddiff = result['macd'] - result['macdSignal'];
 

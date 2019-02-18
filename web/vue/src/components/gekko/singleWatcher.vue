@@ -37,18 +37,14 @@
 
 <script>
 
-  import { post } from '../../tools/ajax'
   import _ from 'lodash'
-  import spinner from '../global/blockSpinner.vue'
   import Vue from 'vue'
+  import { post } from '../../tools/ajax'
+  import spinner from '../global/blockSpinner.vue'
   import chart from '../backtester/result/chartWrapper.vue'
   // global moment
 
   export default {
-    created: function () {
-      if (!this.isLoading)
-        this.getCandles();
-    },
     components: {
       spinner,
       chart
@@ -96,6 +92,10 @@
         if (this.candleFetch !== 'fetched')
           this.getCandles();
       }
+    },
+    created: function () {
+      if (!this.isLoading)
+        this.getCandles();
     },
     methods: {
       humanizeDuration: (n) => window.humanizeDuration(n),

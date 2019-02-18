@@ -2,6 +2,7 @@ const _ = require('lodash');
 
 const cache = require('../state/cache');
 const Logger = require('../state/logger');
+
 const apiKeyManager = cache.get('apiKeyManager');
 const gekkoManager = cache.get('gekkos');
 

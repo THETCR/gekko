@@ -24,10 +24,6 @@
 
   export default {
     props: ['report'],
-    methods: {
-      round2: n => (+n).toFixed(2),
-      round: n => (+n).toFixed(5)
-    },
     computed: {
       profitClass: function () {
         if (this.report.relativeProfit > 0)
@@ -35,6 +31,10 @@
         else
           return 'loss'
       }
+    },
+    methods: {
+      round2: n => (+n).toFixed(2),
+      round: n => (+n).toFixed(5)
     }
   }
 </script>

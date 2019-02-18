@@ -1,6 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 const cache = require('./state/cache');
+
 const broadcast = cache.get('broadcast');
 
 const apiKeysFile = __dirname + '/../SECRET-api-keys.json';

@@ -1,9 +1,7 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import App from './App.vue'
 
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter);
 
 import store from './store'
 
@@ -19,6 +17,8 @@ import gekkoList from './components/gekko/list.vue'
 import newGekko from './components/gekko/new.vue'
 import singleGekko from './components/gekko/singleGekko.vue'
 import { connect as connectWS } from './components/global/ws'
+
+Vue.use(VueRouter);
 
 const router = new VueRouter({
   mode: 'hash',

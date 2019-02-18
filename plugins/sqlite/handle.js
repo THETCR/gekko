@@ -2,6 +2,7 @@ const _ = require('lodash');
 const fs = require('fs');
 
 const util = require('../../core/util.js');
+
 const config = util.getConfig();
 const dirs = util.dirs();
 

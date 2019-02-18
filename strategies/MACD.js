@@ -7,7 +7,7 @@
  */
 
 // helpers
-const _ = require('lodash');
+// const _ = require('lodash');
 const log = require('../core/log.js');
 
 // let's create our own method

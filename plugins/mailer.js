@@ -2,6 +2,7 @@ const email = require('emailjs');
 const _ = require('lodash');
 const log = require('../core/log.js');
 const util = require('../core/util.js');
+
 const config = util.getConfig();
 const mailConfig = config.mailer;
 

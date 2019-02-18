@@ -1,8 +1,8 @@
 const moment = require('moment');
 const _ = require('lodash');
+const CoinFalcon = require('coinfalcon');
 const marketData = require('./coinfalcon-markets.json');
 
-const CoinFalcon = require('coinfalcon');
 
 const Trader = function (config) {
   _.bindAll(this, [

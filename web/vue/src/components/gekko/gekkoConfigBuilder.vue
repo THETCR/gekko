@@ -15,23 +15,19 @@
 
 <script>
 
+  import _ from 'lodash'
   import marketPicker from '../global/configbuilder/marketpicker.vue'
   import typePicker from '../global/configbuilder/typepicker.vue'
   import stratPicker from '../global/configbuilder/stratpicker.vue'
   import paperTrader from '../global/configbuilder/papertrader.vue'
   import { get } from '../../tools/ajax'
-  import _ from 'lodash'
 
   export default {
-
-    created: function () {
-      get('configPart/candleWriter', (error, response) => {
-        this.candleWriter = toml.parse(response.part);
-      });
-      get('configPart/performanceAnalyzer', (error, response) => {
-        this.performanceAnalyzer = toml.parse(response.part);
-        this.performanceAnalyzer.enabled = true;
-      });
+    components: {
+      marketPicker,
+      typePicker,
+      stratPicker,
+      paperTrader
     },
     data: () => {
       return {
@@ -43,12 +39,6 @@
         candleWriter: {},
         performanceAnalyzer: {}
       }
-    },
-    components: {
-      marketPicker,
-      typePicker,
-      stratPicker,
-      paperTrader
     },
     computed: {
       isTradebot: function () {
@@ -75,6 +65,16 @@
 
         return config;
       }
+    },
+
+    created: function () {
+      get('configPart/candleWriter', (error, response) => {
+        this.candleWriter = toml.parse(response.part);
+      });
+      get('configPart/performanceAnalyzer', (error, response) => {
+        this.performanceAnalyzer = toml.parse(response.part);
+        this.performanceAnalyzer.enabled = true;
+      });
     },
     methods: {
       validConfig: config => {

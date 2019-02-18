@@ -1,11 +1,12 @@
-const log = require('../core/log');
 const moment = require('moment');
 const _ = require('lodash');
 const config = require('../core/util').getConfig();
+
 const telegrambot = config.telegrambot;
 const emitTrades = telegrambot.emitTrades;
 const utc = moment.utc;
 const telegram = require("node-telegram-bot-api");
+const log = require('../core/log');
 
 const Actor = function () {
   _.bindAll(this);

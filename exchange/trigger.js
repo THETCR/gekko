@@ -4,6 +4,7 @@
 const _ = require('lodash');
 
 const exchangeUtils = require('./exchangeUtils');
+
 const bindAll = exchangeUtils.bindAll;
 
 const triggers = require('./triggers');

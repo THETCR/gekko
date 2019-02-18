@@ -1,4 +1,5 @@
 const chai = require('chai');
+
 const expect = chai.expect;
 const should = chai.should;
 const sinon = require('sinon');
@@ -6,6 +7,7 @@ const sinon = require('sinon');
 const _ = require('lodash');
 
 const util = require('../../core/util');
+
 const dirs = util.dirs();
 const INDICATOR_PATH = dirs.indicators;
 

@@ -15,11 +15,6 @@
   import { get } from '../../../tools/ajax'
 
   export default {
-    created: function () {
-      get('configPart/paperTrader', (error, response) => {
-        this.rawPaperTraderParams = response.part;
-      });
-    },
     data: () => {
       return {
         rawPaperTraderParams: '',
@@ -32,6 +27,11 @@
       rawPaperTraderParams: function () {
         this.emitConfig()
       }
+    },
+    created: function () {
+      get('configPart/paperTrader', (error, response) => {
+        this.rawPaperTraderParams = response.part;
+      });
     },
     methods: {
       switchToggle: function () {

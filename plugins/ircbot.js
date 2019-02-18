@@ -1,11 +1,12 @@
-const log = require('../core/log');
 const moment = require('moment');
 const _ = require('lodash');
 const config = require('../core/util').getConfig();
+
 const ircbot = config.ircbot;
 const utc = moment.utc;
 
 const irc = require('irc');
+const log = require('../core/log');
 
 const Actor = function () {
   _.bindAll(this);

@@ -1,8 +1,8 @@
 // helpers
-const _ = require('lodash');
+// const _ = require('lodash');
 const log = require('../core/log.js');
 
-const TSI = require('./indicators/TSI.js');
+// const TSI = require('./indicators/TSI.js');
 
 // let's create our own method
 const method = {};

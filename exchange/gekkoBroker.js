@@ -16,6 +16,7 @@ const Portfolio = require('./portfolioManager');
 const orders = require('./orders');
 const Trigger = require('./trigger');
 const exchangeUtils = require('./exchangeUtils');
+
 const bindAll = exchangeUtils.bindAll;
 const isValidOrder = exchangeUtils.isValidOrder;
 

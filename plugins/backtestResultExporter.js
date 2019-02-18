@@ -1,13 +1,14 @@
 // Small plugin that subscribes to some events, stores
 // them and sends it to the parent process.
 
-const log = require('../core/log');
 const _ = require('lodash');
-const util = require('../core/util.js');
+
 const env = util.gekkoEnv();
 const config = util.getConfig();
 const moment = require('moment');
 const fs = require('fs');
+const util = require('../core/util.js');
+const log = require('../core/log');
 
 const BacktestResultExporter = function () {
   this.performanceReport;

@@ -1,4 +1,5 @@
 const cache = require('../state/cache');
+
 const gekkoManager = cache.get('gekkos');
 
 // stops a Gekko

@@ -2,6 +2,7 @@ const axios = require('axios');
 const _ = require('lodash');
 const log = require('../core/log.js');
 const util = require('../core/util.js');
+
 const config = util.getConfig();
 
 const CandleUploader = function (done) {

@@ -1,6 +1,7 @@
 const _ = require('lodash');
 
 const util = require('../util');
+
 const dirs = util.dirs();
 
 const exchangeChecker = require(dirs.gekko + 'exchange/exchangeChecker');

@@ -4,6 +4,7 @@ const moment = require('moment');
 const node_util = require('util');
 const Errors = require('../exchangeErrors');
 const retry = require('../exchangeUtils').retry;
+
 const name = 'Luno';
 
 let tradeAttempt = 0;

@@ -10,18 +10,17 @@
 
 <script>
 
+  import _ from 'lodash'
   import datasetPicker from '../global/configbuilder/datasetpicker.vue'
   import stratPicker from '../global/configbuilder/stratpicker.vue'
   import paperTrader from '../global/configbuilder/papertrader.vue'
-  import _ from 'lodash'
   import { get } from '../../tools/ajax'
 
   export default {
-    created: function () {
-      get('configPart/performanceAnalyzer', (error, response) => {
-        this.performanceAnalyzer = toml.parse(response.part);
-        this.performanceAnalyzer.enabled = true;
-      });
+    components: {
+      stratPicker,
+      datasetPicker,
+      paperTrader
     },
     data: () => {
       return {
@@ -30,11 +29,6 @@
         paperTrader: {},
         performanceAnalyzer: {}
       }
-    },
-    components: {
-      stratPicker,
-      datasetPicker,
-      paperTrader
     },
     computed: {
       market: function () {
@@ -87,6 +81,12 @@
 
         return config;
       }
+    },
+    created: function () {
+      get('configPart/performanceAnalyzer', (error, response) => {
+        this.performanceAnalyzer = toml.parse(response.part);
+        this.performanceAnalyzer.enabled = true;
+      });
     },
     methods: {
       validConfig: function (config) {

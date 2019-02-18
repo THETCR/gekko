@@ -1,4 +1,3 @@
-const util = require('../../core/util');
 const _ = require('lodash');
 const fs = require('fs');
 const toml = require('toml');
@@ -9,6 +8,8 @@ const log = require(dirs.core + 'log');
 const CandleBatcher = require(dirs.core + 'candleBatcher');
 
 const moment = require('moment');
+const util = require('../../core/util');
+
 const isLeecher = config.market && config.market.type === 'leech';
 
 const Actor = function (done) {

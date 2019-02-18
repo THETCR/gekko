@@ -2,6 +2,7 @@ const EventEmitter = require('events');
 const _ = require('lodash');
 
 const exchangeUtils = require('../exchangeUtils');
+
 const bindAll = exchangeUtils.bindAll;
 const isValidOrder = exchangeUtils.isValidOrder;
 const states = require('./states');

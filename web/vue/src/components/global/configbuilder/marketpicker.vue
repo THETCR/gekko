@@ -35,9 +35,6 @@
         asset: 'BTC',
       };
     },
-    created: function () {
-      this.emitConfig();
-    },
     computed: {
       exchanges: function () {
 
@@ -100,6 +97,9 @@
       exchange: function () {
         this.emitConfig()
       }
+    },
+    created: function () {
+      this.emitConfig();
     },
 
     methods: {

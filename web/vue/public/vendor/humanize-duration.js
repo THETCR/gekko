@@ -1,6 +1,6 @@
 // HumanizeDuration.js - http://git.io/j0HgmQ
 
-;(function () {
+(function () {
   var languages = {
     en: {
       y: function (c) { return 'year' + (c !== 1 ? 's' : '') },

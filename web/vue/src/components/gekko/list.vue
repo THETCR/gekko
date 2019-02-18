@@ -66,14 +66,6 @@
   // global humanizeDuration
 
   export default {
-    created: function () {
-      this.timer = setInterval(() => {
-        this.now = moment();
-      }, 1000)
-    },
-    destroyed: function () {
-      clearTimeout(this.timer);
-    },
     data: () => {
       return {
         timer: false,
@@ -99,6 +91,14 @@
         .concat(_.values(this.$store.state.archivedGekkos))
         .filter(g => g.logType === 'watcher')
       }
+    },
+    created: function () {
+      this.timer = setInterval(() => {
+        this.now = moment();
+      }, 1000)
+    },
+    destroyed: function () {
+      clearTimeout(this.timer);
     },
     methods: {
       humanizeDuration: (n) => window.humanizeDuration(n),

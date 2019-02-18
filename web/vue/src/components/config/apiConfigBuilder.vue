@@ -17,19 +17,19 @@
 
 <script>
 
-  import exchangePicker from '../global/configbuilder/exchangepicker.vue'
   import _ from 'lodash'
+  import exchangePicker from '../global/configbuilder/exchangepicker.vue'
   import { post } from '../../tools/ajax';
 
   export default {
+    components: {
+      exchangePicker
+    },
     data: () => {
       return {
         exchange: false,
         credentials: {}
       }
-    },
-    components: {
-      exchangePicker
     },
     computed: {
       apiKeySets: function () {

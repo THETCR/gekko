@@ -6,6 +6,7 @@
 
 const util = require('util');
 const events = require('events');
+
 const NativeEventEmitter = events.EventEmitter;
 
 const GekkoEventEmitter = function () {

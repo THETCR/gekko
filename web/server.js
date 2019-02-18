@@ -1,4 +1,3 @@
-const config = require('./vue/dist/UIconfig');
 
 const koa = require('koa');
 const serve = require('koa-static');
@@ -10,9 +9,12 @@ const opn = require('opn');
 const server = require('http').createServer();
 const router = require('koa-router')();
 const ws = require('ws');
+
 const app = koa();
 
 const WebSocketServer = require('ws').Server;
+const config = require('./vue/dist/UIconfig');
+
 const wss = new WebSocketServer({ server: server });
 
 const cache = require('./state/cache');

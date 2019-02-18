@@ -1,9 +1,10 @@
 const _ = require('lodash');
-const util = require('../util');
+
 const config = util.getConfig();
 const dirs = util.dirs();
 const log = require(dirs.core + 'log');
 const moment = require('moment');
+
 const gekkoEnv = util.gekkoEnv();
 
 const adapter = config[config.adapter];
@@ -83,6 +84,8 @@ const Market = function () {
 };
 
 const Readable = require('stream').Readable;
+const util = require('../util');
+
 Market.prototype = Object.create(Readable.prototype, {
   constructor: { value: Market }
 });

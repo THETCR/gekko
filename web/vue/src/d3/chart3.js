@@ -150,4 +150,4 @@ export default function (_data, _trades) {
     valueText.text("Trade: " + dateFormat(d.date) + ", " + d.type + ", " + valueFormat(d.price));
   }
 
-};
+}

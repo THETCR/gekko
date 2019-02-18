@@ -59,10 +59,10 @@ live market.
 `);
 
   export default {
-    mixins: [dataset],
     components: {
       spinner
     },
+    mixins: [dataset],
     data: () => {
       return {
         intro,

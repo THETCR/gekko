@@ -22,6 +22,26 @@
         to: ''
       }
     },
+    watch: {
+      from: function () {
+        this.emitManualEntry();
+      },
+      to: function () {
+        this.emitManualEntry();
+      },
+      config: function () {
+        this.scanned = false;
+      },
+      tab: function () {
+        this.scanned = false;
+        this.$emit('range', {})
+      },
+      selectedRangeIndex: function () {
+        let selectedRange = this.ranges[this.selectedRangeIndex];
+        if (selectedRange)
+          this.emitRange(selectedRange);
+      }
+    },
     created: function () {
       let now = moment().startOf('minute');
       let then = now.clone().subtract(3, 'months');
@@ -54,26 +74,6 @@
         } else {
           this.$emit('range', {})
         }
-      }
-    },
-    watch: {
-      from: function () {
-        this.emitManualEntry();
-      },
-      to: function () {
-        this.emitManualEntry();
-      },
-      config: function () {
-        this.scanned = false;
-      },
-      tab: function () {
-        this.scanned = false;
-        this.$emit('range', {})
-      },
-      selectedRangeIndex: function () {
-        let selectedRange = this.ranges[this.selectedRangeIndex];
-        if (selectedRange)
-          this.emitRange(selectedRange);
       }
     }
   }

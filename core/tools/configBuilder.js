@@ -3,6 +3,7 @@ const _ = require('lodash');
 const toml = require('toml');
 
 const util = require('../util');
+
 const dirs = util.dirs();
 
 const getTOML = function (fileName) {

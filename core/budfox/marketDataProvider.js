@@ -6,9 +6,11 @@
 //   will be the most recent one.
 
 const _ = require('lodash');
+
 const util = require(__dirname + '/../util');
 
 const MarketFetcher = require('./marketFetcher');
+
 const dirs = util.dirs();
 
 const Manager = function (config) {

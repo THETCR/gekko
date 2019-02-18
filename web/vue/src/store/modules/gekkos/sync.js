@@ -1,7 +1,7 @@
-import { get } from '../../../tools/ajax'
-import store from '../../'
-import { bus } from '../../../components/global/ws'
 import _ from 'lodash'
+import { get } from '../../../tools/ajax'
+import store from "../.."
+import { bus } from '../../../components/global/ws'
 
 const init = () => {
   get('gekkos', (err, resp) => {

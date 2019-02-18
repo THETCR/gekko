@@ -1,5 +1,5 @@
 // helpers
-const _ = require('lodash');
+// const _ = require('lodash');
 const log = require('../core/log.js');
 
 // let's create our own method
@@ -7,7 +7,7 @@ const method = {};
 
 // prepare everything our method needs
 method.init = function () {
-  this.currentTrend;
+  this.currentTrend='';
   this.requiredHistory = this.tradingAdvisor.historySize;
 
   this.age = 0;
@@ -57,7 +57,7 @@ method.log = function (candle) {
  */
 method.check = function (candle) {
 
-  const lastPrice = candle.close;
+  // const lastPrice = candle.close;
 
   this.age++;
   const cci = this.indicators.cci;

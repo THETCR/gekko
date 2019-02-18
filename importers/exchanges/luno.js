@@ -1,6 +1,6 @@
 const moment = require('moment');
-const util = require('../../core/util.js');
 const _ = require('lodash');
+const util = require('../../core/util.js');
 const retry = require('../../exchange/exchangeUtils').retry;
 
 const config = util.getConfig();

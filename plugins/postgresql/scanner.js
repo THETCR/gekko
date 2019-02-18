@@ -3,6 +3,7 @@ const async = require('async');
 const pg = require('pg');
 
 const util = require('../../core/util.js');
+
 const config = util.getConfig();
 const dirs = util.dirs();
 const postgresUtil = require('./util');

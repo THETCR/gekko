@@ -1,6 +1,6 @@
-const log = require('../core/log');
 const moment = require('moment');
 const _ = require('lodash');
+const log = require('../core/log');
 const Server = require('../web/server.js');
 
 const Actor = function (next) {

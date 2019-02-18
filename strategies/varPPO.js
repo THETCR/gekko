@@ -1,9 +1,10 @@
 // helpers
-const _ = require('lodash');
+// const _ = require('lodash');
 const log = require('../core/log');
 
 // configuration
 const config = require('../core/util').getConfig();
+
 const settings = config.varPPO;
 const momentum = settings.momentum;
 const momentumName = momentum.toLowerCase();

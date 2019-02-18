@@ -1,8 +1,8 @@
 // generic low level reusuable utils for interacting with exchanges.
 
 const retry = require('retry');
-const errors = require('./exchangeErrors');
 const _ = require('lodash');
+const errors = require('./exchangeErrors');
 
 const retryInstance = (options, checkFn, callback, e) => {
   if (!options) {

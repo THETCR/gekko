@@ -12,18 +12,15 @@
 <script>
 
   export default {
-    created: function () {
-      this.emitType();
-    },
     data: () => {
       return {
         types: ['paper trader', 'market watcher', 'tradebot'],
         selectedTypeIndex: 0,
       }
     },
-    methods: {
-      emitType: function () {
-        this.$emit('type', this.type);
+    computed: {
+      type: function () {
+        return this.types[this.selectedTypeIndex];
       }
     },
     watch: {
@@ -31,9 +28,12 @@
         this.emitType();
       }
     },
-    computed: {
-      type: function () {
-        return this.types[this.selectedTypeIndex];
+    created: function () {
+      this.emitType();
+    },
+    methods: {
+      emitType: function () {
+        this.$emit('type', this.type);
       }
     }
   }

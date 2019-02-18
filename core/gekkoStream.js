@@ -7,6 +7,7 @@ const async = require('async');
 const moment = require('moment');
 
 const util = require('./util');
+
 const env = util.gekkoEnv();
 const mode = util.gekkoMode();
 const config = util.getConfig();

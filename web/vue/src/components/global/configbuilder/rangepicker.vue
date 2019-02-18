@@ -54,6 +54,25 @@
         to: ''
       }
     },
+    watch: {
+      from: function () {
+        this.emitManualEntry();
+      },
+      to: function () {
+        this.emitManualEntry();
+      },
+      config: function () {
+        this.reset();
+      },
+      tab: function () {
+        this.reset();
+      },
+      selectedRangeIndex: function () {
+        let selectedRange = this.ranges[this.selectedRangeIndex];
+        if (selectedRange)
+          this.emitRange(selectedRange);
+      }
+    },
     methods: {
       scan: function () {
         this.scanned = 'fetching';
@@ -100,25 +119,6 @@
       reset: function () {
         this.scanned = false;
         this.$emit('range', {})
-      }
-    },
-    watch: {
-      from: function () {
-        this.emitManualEntry();
-      },
-      to: function () {
-        this.emitManualEntry();
-      },
-      config: function () {
-        this.reset();
-      },
-      tab: function () {
-        this.reset();
-      },
-      selectedRangeIndex: function () {
-        let selectedRange = this.ranges[this.selectedRangeIndex];
-        if (selectedRange)
-          this.emitRange(selectedRange);
       }
     }
   }

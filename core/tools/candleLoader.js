@@ -7,6 +7,7 @@ const fs = require('fs');
 const moment = require('moment');
 
 const util = require('../../core/util');
+
 const config = util.getConfig();
 const dirs = util.dirs();
 const log = require(dirs.core + '/log');

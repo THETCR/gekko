@@ -11,11 +11,11 @@
 */
 
 
-const util = require('./util');
 const dirs = util.dirs();
 
 const _ = require('lodash');
 const async = require('async');
+const util = require('./util');
 
 const log = require(dirs.core + 'log');
 

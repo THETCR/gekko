@@ -1,5 +1,5 @@
 // helpers
-const _ = require('lodash');
+// const _ = require('lodash');
 const log = require('../core/log.js');
 
 // let's create our own method
@@ -9,7 +9,7 @@ const method = {};
 method.init = function () {
   this.name = 'DEMA';
 
-  this.currentTrend;
+  this.currentTrend='';
   this.requiredHistory = this.tradingAdvisor.historySize;
 
   // define the indicators we need

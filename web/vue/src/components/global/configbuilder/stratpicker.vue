@@ -54,37 +54,6 @@
         stratParams: {}
       };
     },
-    created: function () {
-      get('strategies', (err, data) => {
-        this.strategies = data;
-
-        _.each(this.strategies, function (s) {
-          s.empty = s.params === '';
-        });
-
-        this.rawStratParams = _.find(this.strategies, { name: this.strategy }).params;
-        this.emptyStrat = _.find(this.strategies, { name: this.strategy }).empty;
-        this.emitConfig();
-      });
-    },
-    watch: {
-      strategy: function (strat) {
-        strat = _.find(this.strategies, { name: strat });
-        this.rawStratParams = strat.params;
-        this.emptyStrat = strat.empty;
-
-        this.emitConfig();
-      },
-      candleSize: function () {
-        this.emitConfig()
-      },
-      historySize: function () {
-        this.emitConfig()
-      },
-      rawStratParams: function () {
-        this.emitConfig()
-      }
-    },
     computed: {
       candleSize: function () {
         if (this.candleSizeUnit === 'minutes')
@@ -115,6 +84,37 @@
 
         return config;
       }
+    },
+    watch: {
+      strategy: function (strat) {
+        strat = _.find(this.strategies, { name: strat });
+        this.rawStratParams = strat.params;
+        this.emptyStrat = strat.empty;
+
+        this.emitConfig();
+      },
+      candleSize: function () {
+        this.emitConfig()
+      },
+      historySize: function () {
+        this.emitConfig()
+      },
+      rawStratParams: function () {
+        this.emitConfig()
+      }
+    },
+    created: function () {
+      get('strategies', (err, data) => {
+        this.strategies = data;
+
+        _.each(this.strategies, function (s) {
+          s.empty = s.params === '';
+        });
+
+        this.rawStratParams = _.find(this.strategies, { name: this.strategy }).params;
+        this.emptyStrat = _.find(this.strategies, { name: this.strategy }).empty;
+        this.emitConfig();
+      });
     },
     methods: {
       humanizeDuration: (n) => window.humanizeDuration(n),

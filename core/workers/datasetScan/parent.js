@@ -4,6 +4,7 @@ const async = require('async');
 const os = require('os');
 
 const util = require('../../util');
+
 const dirs = util.dirs();
 
 const dateRangeScan = require('../dateRangeScan/parent');

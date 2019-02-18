@@ -32,13 +32,10 @@
   import paperTradeSummary from '../../global/paperTradeSummary.vue'
 
   export default {
-    props: ['report'],
     components: {
       paperTradeSummary
     },
-    methods: {
-      round: n => (+n).toFixed(5)
-    },
+    props: ['report'],
     computed: {
       profitClass: function () {
         if (this.report.relativeProfit > 0)
@@ -46,6 +43,9 @@
         else
           return 'loss'
       }
+    },
+    methods: {
+      round: n => (+n).toFixed(5)
     }
   }
 </script>

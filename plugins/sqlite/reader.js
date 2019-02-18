@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const util = require('../../core/util.js');
+
 const config = util.getConfig();
 const log = require(util.dirs().core + 'log');
 

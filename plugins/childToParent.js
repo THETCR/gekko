@@ -1,8 +1,8 @@
 // Small plugin that subscribes to some events, stores
 // them and sends it to the parent process.
 
-const log = require('../core/log');
 const _ = require('lodash');
+const log = require('../core/log');
 const subscriptions = require('../subscriptions');
 const config = require('../core/util').getConfig();
 

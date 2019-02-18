@@ -7,7 +7,7 @@
  */
 
 // helpers
-const _ = require('lodash');
+// const _ = require('lodash');
 const log = require('../core/log');
 
 // let's create our own method
@@ -59,14 +59,14 @@ method.log = function () {
 };
 
 method.check = function (candle) {
-  const price = candle.close;
+  // const price = candle.close;
 
   const ppo = this.indicators.ppo;
-  const long = ppo.result.longEMA;
-  const short = ppo.result.shortEMA;
-  const macd = ppo.result.macd;
+  // const long = ppo.result.longEMA;
+  // const short = ppo.result.shortEMA;
+  // const macd = ppo.result.macd;
   const result = ppo.result.ppo;
-  const macdSignal = ppo.result.MACDsignal;
+  // const macdSignal = ppo.result.MACDsignal;
   const ppoSignal = ppo.result.PPOsignal;
 
   // TODO: is this part of the indicator or not?

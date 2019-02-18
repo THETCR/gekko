@@ -1,5 +1,6 @@
 const log = require('../core/log.js');
 const util = require('../core/util');
+
 const config = util.getConfig();
 const redisBeacon = config.redisBeacon;
 const watch = config.watch;

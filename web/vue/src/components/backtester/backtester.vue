@@ -19,6 +19,11 @@
   import spinner from '../global/blockSpinner.vue'
 
   export default {
+    components: {
+      configBuilder,
+      result,
+      spinner
+    },
     data: () => {
       return {
         backtestable: false,
@@ -45,11 +50,6 @@
           this.backtestResult = response;
         });
       }
-    },
-    components: {
-      configBuilder,
-      result,
-      spinner
     }
   }
 </script>

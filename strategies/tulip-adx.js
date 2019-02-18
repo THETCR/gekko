@@ -14,7 +14,7 @@ method.log = function () {
   // nothing!
 };
 method.check = function (candle) {
-  const price = candle.close;
+  // const price = candle.close;
   const adx = this.tulipIndicators.myadx.result.result;
   // console.dir(adx)
 
